@@ -1,0 +1,3 @@
+Arm
+A single arm template.
+E:/python_projects/Maya_Tools/RiggingTool/Templates/02_Arm.png

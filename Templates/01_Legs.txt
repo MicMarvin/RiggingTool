@@ -1,0 +1,3 @@
+Left and Right Legs
+This is a template for both legs.
+E:/python_projects/Maya_Tools/RiggingTool/Templates/01_Legs.png
