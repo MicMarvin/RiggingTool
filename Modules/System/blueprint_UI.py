@@ -476,7 +476,7 @@ class Blueprint_UI(QtWidgets.QDialog):
     ##################
     def create_connections(self):
         self.lockBtn.clicked.connect(self.lock)
-        self.publishBtn.clicked.connect(self.close)
+        self.publishBtn.clicked.connect(self.publish)
         self.deleteModuleBtn.clicked.connect(self.deleteModule)
         self.moduleName_lineedit.editingFinished.connect(self.renameModule)
         self.rehookBtn.clicked.connect(self.rehookModule_setup)
@@ -595,7 +595,7 @@ class Blueprint_UI(QtWidgets.QDialog):
 
         sceneLockedLocator = cmds.spaceLocator(n="Scene_Locked")[0]
         cmds.setAttr(sceneLockedLocator + ".visibility", 0)
-        cmds.lockNode(sceneLockedLocator, lock=True, lockUnpublished=True)
+        # cmds.lockNode(sceneLockedLocator, lock=True, lockUnpublished=True)
 
         cmds.select(clear=True)
         self.modifySelected()
@@ -1488,6 +1488,150 @@ class Blueprint_UI(QtWidgets.QDialog):
                     returnModules.extend(self.duplicateModule_processGroup(c))
 
         return returnModules
+
+    def publish(self, *args):
+        result = cmds.confirmDialog(messageAlign="center", title="Publish Character",
+                                    message="The action of publishing cannot be undone. Are you sure you wish to continue?",
+                                    button=["Accept", "Cancel"], defaultButton="Accept", cancelButton="Cancel",
+                                    dismissString="Cancel")
+
+        if result != "Accept":
+            return
+
+        result = cmds.promptDialog(title="Publish Character",
+                                   message="Please specify a character name ([a-z] [A-Z] [0-9] and _ only) :",
+                                   button=["Accept", "Cancel"], defaultButton="Accept", cancelButton="Cancel",
+                                   dismissString="Cancel")
+        if result == "Accept":
+            characterName = cmds.promptDialog(q=True, text=True)
+
+            characterFileName = os.environ["RIGGING_TOOL_ROOT"] + "/RiggingTool/Characters/" + characterName + ".ma"
+
+            if os.path.exists(characterFileName):
+                cmds.confirmDialog(title="Publish Character",
+                                   message="Character already exists with that name. Aborting publish",
+                                   button=["Accept"], defaultButton="Accept")
+                return
+
+            # cmds.lockNode("Scene_Locked", lock=False, lockUnpublished=False)
+            cmds.delete("Scene_Locked")
+
+            cmds.namespace(setNamespace=":")
+            namespaces = cmds.namespaceInfo(listOnlyNamespaces=True)
+
+            moduleNameInfo = utils.findAllModuleNames("/Modules/Blueprint")
+            validModules = moduleNameInfo[0]
+            validModuleNames = moduleNameInfo[1]
+
+            foundModuleInstances = []
+            for n in namespaces:
+                splitString = n.partition("__")
+                if splitString[1] != "":
+                    module = splitString[0]
+                    if module in validModuleNames:
+                        foundModuleInstances.append(n)
+
+            moduleGroups = []
+            moduleContainers = []
+
+            for moduleInstance in foundModuleInstances:
+                moduleGroups.append(moduleInstance + ":module_grp")
+                moduleContainers.append(moduleInstance + ":module_container")
+
+            # for container in moduleContainers:
+            #     cmds.lockNode(container, lock=False, lockUnpublished=False)
+
+            characterGroup = cmds.group(empty=True, name="character_grp")
+            for group in moduleGroups:
+                cmds.parent(group, characterGroup, absolute=True)
+
+            cmds.select(characterGroup, replace=True)
+            cmds.addAttr(at="bool", defaultValue=0, keyable=False, longName="moduleMaintenanceVisibility")
+            cmds.addAttr(at="bool", defaultValue=1, keyable=True, longName="animationControlVisibility")
+
+            invertModuleMaintenanceVisibility = cmds.shadingNode("reverse", n="reverse_moduleMaintenanceVisibility",
+                                                                 asUtility=True)
+            cmds.connectAttr(characterGroup + ".moduleMaintenanceVisibility",
+                             invertModuleMaintenanceVisibility + ".inputX", force=True)
+
+            moduleVisibilityMultiply = cmds.shadingNode("multiplyDivide", n="moduleVisibilityMultiply", asUtility=True)
+            cmds.connectAttr(invertModuleMaintenanceVisibility + ".outputX", moduleVisibilityMultiply + ".input1X")
+            cmds.connectAttr(characterGroup + ".animationControlVisibility", moduleVisibilityMultiply + ".input2X")
+
+            characterNodes = list(moduleContainers)
+            characterNodes.append(characterGroup)
+            characterNodes.append(invertModuleMaintenanceVisibility)
+            characterNodes.append(moduleVisibilityMultiply)
+
+            characterContainer = cmds.container(name="character_container")
+            utils.addNodeToContainer(characterContainer, characterNodes)
+
+            cmds.container(characterContainer, edit=True,
+                           publishAndBind=[characterGroup + ".animationControlVisibility", "animControlVis"])
+
+            for container in moduleContainers:
+                moduleNamespace = utils.stripLeadingNamespace(container)[0]
+                blueprintJointsGrp = moduleNamespace + ":blueprint_joints_grp"
+
+                cmds.connectAttr(characterGroup + ".moduleMaintenanceVisibility", blueprintJointsGrp + ".visibility")
+                cmds.setAttr(blueprintJointsGrp + ".overrideEnabled", 1)
+
+                publishedNames = cmds.container(container, q=True, publishName=True)
+                userSpecifiedName = moduleNamespace.partition("__")[2]
+
+                for name in publishedNames:
+                    cmds.container(characterContainer, edit=True,
+                                   publishAndBind=[container + "." + name, userSpecifiedName + "_" + name])
+
+            characterContainers = list(moduleContainers)
+            characterContainers.append(characterContainer)
+
+            cmds.select(all=True)
+            topLevelTransforms = cmds.ls(sl=True, transforms=True)
+            cmds.select(clear=True)
+
+            topLevelTransforms.remove(characterGroup)
+
+            if len(topLevelTransforms) != 0:
+                nonBlueprintGroup = cmds.group(topLevelTransforms, absolute=True, parent=characterGroup,
+                                               name="non_blueprint_grp")
+                cmds.setAttr(nonBlueprintGroup + ".overrideEnabled", 1)
+                cmds.setAttr(nonBlueprintGroup + ".overrideDisplayType", 2)  # Reference display type
+
+                cmds.select(nonBlueprintGroup, replace=True)
+                cmds.addAttr(at="bool", defaultValue=1, longName="display", k=True)
+
+                visibilityMultiply = cmds.shadingNode("multiplyDivide", n="non_blueprint_visibilityMultiply",
+                                                      asUtility=True)
+                cmds.connectAttr(invertModuleMaintenanceVisibility + ".outputX", visibilityMultiply + ".input1X",
+                                 force=True)
+                cmds.connectAttr(nonBlueprintGroup + ".display", visibilityMultiply + ".input2X", force=True)
+                cmds.connectAttr(visibilityMultiply + ".outputX", nonBlueprintGroup + ".visibility", force=True)
+
+                nonBlueprintContainer = cmds.container(addNode=nonBlueprintGroup, ihb=True, includeNetwork=True,
+                                                       includeShapes=True, name="non_blueprint_container")
+                utils.addNodeToContainer(characterContainer, nonBlueprintContainer)
+                characterContainers.append(nonBlueprintContainer)
+
+                publishedName = "displayNonBlueprintNodes"
+                cmds.container(nonBlueprintContainer, edit=True,
+                               publishAndBind=[nonBlueprintGroup + ".display", publishedName])
+                cmds.container(characterContainer, edit=True,
+                               publishAndBind=[nonBlueprintContainer + "." + publishedName, publishedName])
+
+            # for container in characterContainers:
+            #     cmds.lockNode(container, lock=True, lockUnpublished=True)
+
+            cmds.select(characterContainer)
+            cmds.file(characterFileName, exportSelected=True, type="mayaAscii")
+
+            scenePublished = cmds.spaceLocator(n="Scene_Published")[0]
+            cmds.setAttr(scenePublished + ".visibility", 0)
+            # cmds.lockNode(scenePublished, lock=True, lockUnpublished=True)
+
+            cmds.select(clear=True)
+
+            self.publishBtn.setEnabled(False)
 
 #################
 # Create Window #

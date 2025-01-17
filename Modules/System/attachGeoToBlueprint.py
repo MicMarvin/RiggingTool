@@ -9,16 +9,12 @@ class AttachGeoToBlueprint_ShelfTool:
     def attachWithParenting(self):
         self.parenting = True
         self.skinning = False
-        #self.processInitialSelection()
-
-        print(f"THE RESULT: {self.parenting} {self.skinning}")
+        self.processInitialSelection()
 
     def attachWithSkinning(self):
         self.parenting = False
         self.skinning = True
-        #self.processInitialSelection()
-
-        print(f"THE RESULT: {self.parenting} {self.skinning}")
+        self.processInitialSelection()
 
     def processInitialSelection(self):
         selection = cmds.ls(selection=True)
@@ -139,11 +135,11 @@ class AttachGeoToBlueprint_ShelfTool:
             blueprintNamespace = utils.stripLeadingNamespace(joint)[0]
             blueprintModules.add(blueprintNamespace)
 
-        for module in blueprintModules:
-            cmds.lockNode(module + ":module_container", lock=False, lockUnpublished=False)
+        # for module in blueprintModules:
+        #     cmds.lockNode(module + ":module_container", lock=False, lockUnpublished=False)
 
         for geo in geometry:
             cmds.skinCluster(blueprintJoints, geo, tsb=True, n=geo + "_skinCluster")
 
-        for module in blueprintModules:
-            cmds.lockNode(module + ":module_container", lock=True, lockUnpublished=True)
+        # for module in blueprintModules:
+        #     cmds.lockNode(module + ":module_container", lock=True, lockUnpublished=True)
