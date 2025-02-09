@@ -50,10 +50,7 @@ class Color(QtWidgets.QWidget):
 ###########
 # A custom class to extend QDialog, so we can create our own window
 class Blueprint_UI(QtWidgets.QDialog):
-    #########
-    # Misc. #
-    #########
-
+    
     ##################
     # Window display #
     ##################

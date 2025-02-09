@@ -356,3 +356,146 @@ def findJointChain(rootJoint):
             parent = child
 
     return joints
+
+
+def findInstalledCharacters():
+    cmds.namespace(setNamespace=":")
+    namespaces = cmds.namespaceInfo(listOnlyNamespaces=True)
+
+    characterNamespaces = []
+
+    for n in namespaces:
+        if n.find("Character__") == 0:
+            characterNamespaces.append(n)
+
+    return characterNamespaces
+
+
+def findInstalledBlueprintInstances(characterNamespace):
+    cmds.namespace(setNamespace=characterNamespace)
+    moduleInstances = cmds.namespaceInfo(listOnlyNamespaces=True)
+    returnModuleInstances = []
+
+    for module in moduleInstances:
+        returnModuleInstances.append(stripLeadingNamespace(module)[1])
+
+    cmds.namespace(setNamespace=":")
+
+    return returnModuleInstances
+
+
+# def findFirstFreeConnection(attribute):
+#     found = False
+#     index = 0
+
+#     while not found:
+#         if cmds.connectionInfo(attribute + "[" + str(index) + "]", isDestination=True):
+#             index += 1
+#         else:
+#             found = True
+
+#     return index
+
+
+# def matchTwistAngle(twistAttribute, ikJoints, targetJoints):
+#     forceSceneUpdate()
+
+#     currentVector = []
+#     targetVector = []
+
+#     if len(ikJoints) <= 2:
+#         currentVector = calculateTwistVectorForSingleJointChain(ikJoints[0])
+#         targetVector = calculateTwistVectorForSingleJointChain(targetJoints[0])
+#     else:
+#         currentVector = calculateTwistVector(ikJoints[0], ikJoints[1], ikJoints[len(ikJoints)-1])
+#         targetVector = calculateTwistVector(targetJoints[0], targetJoints[1], targetJoints[len(targetJoints) - 1])
+
+#     targetVector = normaliseVector(targetVector)
+#     currentVector = normaliseVector(currentVector)
+
+#     offsetAngle = calculateAngleBetweenNormalisedVectors(targetVector, currentVector)
+
+#     cmds.setAttr(twistAttribute, cmds.getAttr(twistAttribute) + offsetAngle)
+
+#     if len(ikJoints) <= 2:
+#         currentVector = calculateTwistVectorForSingleJointChain(ikJoints[0])
+#     else:
+#         currentVector = calculateTwistVector(ikJoints[0], ikJoints[1], ikJoints[len(ikJoints) - 1])
+
+#     currentVector = normaliseVector(currentVector)
+
+#     newAngle = calculateAngleBetweenNormalisedVectors(targetVector, currentVector)
+#     if newAngle > 0.1:
+#         offsetAngle *= -2
+#         cmds.setAttr(twistAttribute, cmds.getAttr(twistAttribute) + offsetAngle)
+
+
+# def calculateTwistVectorForSingleJointChain(startJoint):
+#     tempLocator = cmds.spaceLocator()[0]
+
+#     cmds.setAttr(tempLocator + ".visibility", 0)
+
+#     cmds.parent(tempLocator, startJoint, relative=True)
+#     cmds.setAttr(tempLocator + ".translateZ", 5.0)
+
+#     jointPos = cmds.xform(startJoint, q=True, worldSpace=True, translation=True)
+#     locatorPos = cmds.xform(tempLocator, q=True, worldSpace=True, translation=True)
+
+#     twistVector = [locatorPos[0] - jointPos[0], locatorPos[1] - jointPos[1], locatorPos[2] - jointPos[2]]
+
+#     cmds.delete(tempLocator)
+
+#     return twistVector
+
+
+# def calculateTwistVector(startJoint, secondJoint, endJoint):
+#     a = cmds.xform(startJoint, q=True, worldSpace=True, translation=True)
+#     endPos = cmds.xform(endJoint, q=True, worldSpace=True, translation=True)
+
+#     b = [endPos[0] - a[0], endPos[1] - a[1], endPos[2] - a[2]]
+#     b = normaliseVector(b)
+
+#     p = cmds.xform(secondJoint, q=True, worldSpace=True, translation=True)
+
+#     p_minus_a = [p[0] - a[0], p[1] - a[1], p[2] - a[2]]
+#     p_minus_a__dot__b = p_minus_a[0]*b[0] + p_minus_a[1]*b[1] + p_minus_a[2]*b[2]
+
+#     p_minus_a__dot__b__multiply_b = [p_minus_a__dot__b * b[0], p_minus_a__dot__b * b[1], p_minus_a__dot__b * b[2]]
+
+#     q = [a[0] + p_minus_a__dot__b__multiply_b[0], a[1] + p_minus_a__dot__b__multiply_b[1], a[2] + p_minus_a__dot__b__multiply_b[2]]
+
+#     twistVector = [p[0] - q[0], p[1] - q[1], p[2] - q[2]]
+
+#     return twistVector
+
+
+# def normaliseVector(vector):
+#     from math import sqrt
+#     returnVector = list(vector)
+
+#     vectorLength = sqrt(returnVector[0]*returnVector[0] + returnVector[1]*returnVector[1] + returnVector[2]*returnVector[2])
+
+#     if vectorLength != 0:
+#         returnVector[0] /= vectorLength
+#         returnVector[1] /= vectorLength
+#         returnVector[2] /= vectorLength
+#     else:
+#         returnVector[0] = 1.0
+#         returnVector[1] = 0.0
+#         returnVector[2] = 0.0
+
+#     return returnVector
+
+
+# def calculateAngleBetweenNormalisedVectors(VectA, VectB):
+#     from math import acos, degrees
+
+#     dotProduct = VectA[0]*VectB[0] + VectA[1]*VectB[1] + VectA[2]*VectB[2]
+
+#     if dotProduct <= -1.0:
+#         dotProduct = -1.0
+#     elif dotProduct >= 1.0:
+#         dotProduct = 1.0
+
+#     radians = acos(dotProduct)
+#     return degrees(radians)

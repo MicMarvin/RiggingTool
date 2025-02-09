@@ -432,7 +432,7 @@ class Blueprint():
             i += 1
 
         cmds.select(blueprintGrp, replace=True)
-        cmds.addAttr(at="bool", defaultValue=0, longName="controlModuleInstalled", k=False)
+        cmds.addAttr(at="bool", defaultValue=0, longName="controlModulesInstalled", k=False)
 
         hookGrp = cmds.group(empty=True, name=self.moduleNamespace + ":HOOK_IN")
         for obj in [blueprintGrp, creationPoseGrp]:

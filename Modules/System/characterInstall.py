@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 from PySide2 import QtWidgets, QtCore
 import maya.cmds as cmds
 from shiboken2 import wrapInstance
@@ -64,7 +65,9 @@ class InstallCharacter_UI(QtWidgets.QDialog):
             return
 
         character_name = selected_items[0].text()
-        character_filename = os.path.join(os.environ["RIGGING_TOOL_ROOT"], "Characters", f"{character_name}.ma")
+
+        character_filename = Path(os.environ["RIGGING_TOOL_ROOT"]) / "RiggingTool" / "Characters" / f"{character_name}.ma"
+        print(f"THIS IS THE PATH: {character_filename}")
         base_namespace = f"Character__{character_name}_"
 
         cmds.namespace(setNamespace=":")
