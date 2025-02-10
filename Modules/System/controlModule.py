@@ -1,5 +1,6 @@
 import System.utils as utils
-reload(utils)
+import importlib
+importlib.reload(utils)
 
 import maya.cmds as cmds
 
@@ -21,7 +22,7 @@ class ControlModule():
         self.publishedNames = []
 
     def install_custom(self, joints, moduleGrp, moduleContainer):
-        print "install_custom() method not implemented by derived module!"
+        print(f"install_custom() method not implemented by derived module!")
 
     def install_requirements(self):
         return True
@@ -30,13 +31,13 @@ class ControlModule():
         return ("-1",)
 
     def UI(self, parentLayout):
-        print "No custom user interface provided!"
+        print("No custom user interface provided!")
 
     def UI_preferences(self, parentLayout):
-        print "No custom preferences provided!"
+        print("No custom preferences provided!")
 
     def match(self, *args):
-        print "No matching functionality provided!"
+        print("No matching functionality provided!")
 
     def install(self):
         if self.install_requirements() == False:
@@ -56,12 +57,8 @@ class ControlModule():
         cmds.namespace(add=self.moduleNamespace)
         cmds.namespace(setNamespace=":")
 
-        characterContainer = self.characterNamespaceOnly + ":character_container"
         blueprintContainer = self.blueprintNamespace + ":module_container"
-        containers = [characterContainer, blueprintContainer]
-        for c in containers:
-            cmds.lockNode(c, lock=False, lockUnpublished=False)
-
+           
         self.joints = self.duplicateAndRenameCreationPose()
         moduleJointsGrp = self.joints[0]
 
@@ -223,13 +220,7 @@ class ControlModule():
         self.publishModuleContainerNamesToOuterContainers()
 
         cmds.setAttr(self.blueprintNamespace + ":blueprint_joints_grp.controlModulesInstalled", True)
-
-        characterContainer = self.characterNamespaceOnly + ":character_container"
-        blueprintContainer = self.blueprintNamespace + ":module_container"
-        containers = [characterContainer, blueprintContainer, self.moduleContainer]
-        for c in containers:
-            cmds.lockNode(c, lock=True, lockUnpublished=True)
-
+        
     def publishModuleContainerNamesToOuterContainers(self):
         if self.moduleContainer == None:
             return
@@ -251,9 +242,7 @@ class ControlModule():
         moduleContainer = self.moduleContainer
 
         containers = [characterContainer, blueprintContainer, moduleContainer]
-        for c in containers:
-            cmds.lockNode(c, lock=False, lockUnpublished=False)
-
+        
         containers.pop()
 
         blueprintJointsGrp = self.blueprintNamespace + ":blueprint_joints_grp"
@@ -313,18 +302,13 @@ class ControlModule():
         cmds.namespace(removeNamespace=self.moduleNamespace)
         cmds.namespace(setNamespace=":")
 
-        for c in containers:
-            cmds.lockNode(c, lock=True, lockUnpublished=True)
-
     def duplicateControlModule(self, withAnimation=True):
         characterContainer = self.characterNamespaceOnly + ":character_container"
         blueprintContainer = self.blueprintNamespace + ":module_container"
         moduleContainer = self.moduleContainer
 
         containers = [characterContainer, blueprintContainer, moduleContainer]
-        for c in containers:
-            cmds.lockNode(c, lock=False, lockUnpublished=False)
-
+        
         cmds.namespace(setNamespace=self.blueprintNamespace + ":" + self.moduleNamespace)
         allAnimationNodes = cmds.namespaceInfo(listOnlyDependencyNodes=True)
         allAnimationNodes = cmds.ls(allAnimationNodes, type="animCurve")
@@ -447,9 +431,7 @@ class ControlModule():
                 cmds.delete(newSpaceSwitchAnimationNodes)
 
         containers.append(newModuleContainer)
-        for c in containers:
-            cmds.lockNode(c, lock=True, lockUnpublished=True)
-
+        
     def findAllNamesPublishedToOuterContainers(self):
         if self.moduleContainer == None:
             return []

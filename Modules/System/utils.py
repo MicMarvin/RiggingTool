@@ -384,17 +384,17 @@ def findInstalledBlueprintInstances(characterNamespace):
     return returnModuleInstances
 
 
-# def findFirstFreeConnection(attribute):
-#     found = False
-#     index = 0
+def findFirstFreeConnection(attribute):
+    found = False
+    index = 0
 
-#     while not found:
-#         if cmds.connectionInfo(attribute + "[" + str(index) + "]", isDestination=True):
-#             index += 1
-#         else:
-#             found = True
+    while not found:
+        if cmds.connectionInfo(attribute + "[" + str(index) + "]", isDestination=True):
+            index += 1
+        else:
+            found = True
 
-#     return index
+    return index
 
 
 # def matchTwistAngle(twistAttribute, ikJoints, targetJoints):

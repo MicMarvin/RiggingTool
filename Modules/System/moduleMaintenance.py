@@ -22,7 +22,6 @@ class ModuleMaintenance:
     currentWindow = None
 
     def __init__(self, shelfTool_inst):
-        print(F"ModuleMaintenance Window = {ModuleMaintenance.currentWindow}")
         self.shelfTool_instance = shelfTool_inst
         self.UIElements = {}
 

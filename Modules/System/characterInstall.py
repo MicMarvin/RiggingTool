@@ -67,7 +67,6 @@ class InstallCharacter_UI(QtWidgets.QDialog):
         character_name = selected_items[0].text()
 
         character_filename = Path(os.environ["RIGGING_TOOL_ROOT"]) / "RiggingTool" / "Characters" / f"{character_name}.ma"
-        print(f"THIS IS THE PATH: {character_filename}")
         base_namespace = f"Character__{character_name}_"
 
         cmds.namespace(setNamespace=":")
