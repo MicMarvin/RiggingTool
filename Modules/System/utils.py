@@ -1,5 +1,12 @@
 import maya.cmds as cmds
 import importlib
+from PySide2 import QtWidgets
+
+def create_separator():
+    separator = QtWidgets.QFrame()
+    separator.setFrameShape(QtWidgets.QFrame.HLine)
+    separator.setFrameShadow(QtWidgets.QFrame.Sunken)
+    return separator
 
 def findAllModules(relativeDirectory):
     # Search the relative directory for all available modules

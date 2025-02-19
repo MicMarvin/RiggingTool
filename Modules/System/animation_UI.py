@@ -20,6 +20,46 @@ def maya_main_window():
     return wrapInstance(int(main_window_ptr), QtWidgets.QWidget)
 
 #---------------------------------------------------------------------
+# CollapsibleWidget class using PySide2.
+#---------------------------------------------------------------------
+class CollapsibleWidget(QtWidgets.QWidget):
+    def __init__(self, title="", settingsKey="", parent=None):
+        super(CollapsibleWidget, self).__init__(parent)
+        self.settingsKey = settingsKey  # a unique key for saving state, e.g., "AnimationUI/ModuleWeightsExpanded"
+        self.settings = QtCore.QSettings("MicMarvin", "RiggingTool")  # adjust organization and application names as needed
+
+        # Create the toggle button
+        self.toggleButton = QtWidgets.QToolButton(text=title, checkable=True)
+        self.toggleButton.setStyleSheet("QToolButton { border: none; }")
+        self.toggleButton.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
+        # Retrieve saved state (default True)
+        savedState = self.settings.value(self.settingsKey, True, type=bool)
+        self.toggleButton.setChecked(savedState)
+        self.toggleButton.setArrowType(QtCore.Qt.DownArrow if savedState else QtCore.Qt.RightArrow)
+        self.toggleButton.clicked.connect(self.on_toggle)
+
+        # The content area that will be shown or hidden.
+        self.contentArea = QtWidgets.QWidget()
+        self.contentArea.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
+        self.contentArea.setVisible(savedState)
+
+        # Layout
+        mainLayout = QtWidgets.QVBoxLayout(self)
+        mainLayout.setContentsMargins(0, 0, 0, 0)
+        mainLayout.addWidget(self.toggleButton)
+        mainLayout.addWidget(self.contentArea)
+
+    def on_toggle(self):
+        state = self.toggleButton.isChecked()
+        self.toggleButton.setArrowType(QtCore.Qt.DownArrow if state else QtCore.Qt.RightArrow)
+        self.contentArea.setVisible(state)
+        # Save the state so that next time the window is opened, it remembers the user's choice.
+        self.settings.setValue(self.settingsKey, state)
+
+    def setContentLayout(self, layout):
+        self.contentArea.setLayout(layout)
+
+#---------------------------------------------------------------------
 # Animation_UI class using PySide2.
 #---------------------------------------------------------------------
 class Animation_UI(QtWidgets.QDialog):
@@ -44,7 +84,9 @@ class Animation_UI(QtWidgets.QDialog):
         super(Animation_UI, self).__init__(parent)
         self.setObjectName("Animation_UI_window")
         self.setMinimumSize(450, 730)  # Set a minimum size to avoid UI breaking
-        
+
+        self.scriptJobs = []  # A list to store job IDs
+        self.selectedBlueprintModule = None        
         self.previousBlueprintListEntry = None
         self.previousBlueprintModule = None
         self.previousAnimationModule = None
@@ -217,19 +259,15 @@ class Animation_UI(QtWidgets.QDialog):
         self.UIElements["buttonColumnLayout"].addWidget(self.UIElements["duplicateModuleButton"])
 
         # Separator.
-        sep1 = QtWidgets.QFrame()
-        sep1.setFrameShape(QtWidgets.QFrame.HLine)
-        self.UIElements["topColumnLayout"].addWidget(sep1)
+        self.UIElements["topColumnLayout"].addWidget(utils.create_separator())
         
         # Active Module Column – we use a QVBoxLayout.
         self.UIElements["activeModuleColumn"] = QtWidgets.QVBoxLayout()
-        # self.setupActiveModuleControls()
+        self.setupActiveModuleControls()
         self.UIElements["topColumnLayout"].addLayout(self.UIElements["activeModuleColumn"])
         
         # Separator.
-        sep2 = QtWidgets.QFrame()
-        sep2.setFrameShape(QtWidgets.QFrame.HLine)
-        self.UIElements["topColumnLayout"].addWidget(sep2)
+        self.UIElements["topColumnLayout"].addWidget(utils.create_separator())
         
         # Matching Button.
         self.UIElements["matchingButton"] = QtWidgets.QPushButton("Match Controls to Result")
@@ -237,9 +275,7 @@ class Animation_UI(QtWidgets.QDialog):
         self.UIElements["topColumnLayout"].addWidget(self.UIElements["matchingButton"])
         
         # Separator.
-        sep3 = QtWidgets.QFrame()
-        sep3.setFrameShape(QtWidgets.QFrame.HLine)
-        self.UIElements["topColumnLayout"].addWidget(sep3)
+        self.UIElements["topColumnLayout"].addWidget(utils.create_separator())
         
         # Space Switching Column.
         self.UIElements["spaceSwitchingColumn"] = QtWidgets.QVBoxLayout()
@@ -247,9 +283,7 @@ class Animation_UI(QtWidgets.QDialog):
         self.UIElements["topColumnLayout"].addLayout(self.UIElements["spaceSwitchingColumn"])
         
         # Separator.
-        sep4 = QtWidgets.QFrame()
-        sep4.setFrameShape(QtWidgets.QFrame.HLine)
-        self.UIElements["topColumnLayout"].addWidget(sep4)
+        self.UIElements["topColumnLayout"].addWidget(utils.create_separator())
         
         # Module Specified Controls Scroll.
         self.UIElements["moduleSpecifiedControlsScroll"] = QtWidgets.QScrollArea()
@@ -271,29 +305,42 @@ class Animation_UI(QtWidgets.QDialog):
         self.selectionChanged()
   
     def closeEvent(self, event):
-        if hasattr(self, 'scriptJobNum'):
+        # Kill all stored script jobs
+        for job in self.scriptJobs:
             try:
-                cmds.scriptJob(kill=self.scriptJobNum)
-                print(f"...KILLED Script Job!")
+                cmds.scriptJob(kill=job)
+                print(f"KILLED Script Job {job}!")
             except Exception:
+                print(f"ERROR killing script job {job}")
                 pass
         event.accept()
 
     def initializeBlueprintModuleList(self):
+        # Set the namespace to the selected character.
         cmds.namespace(setNamespace=self.selectedCharacter)
-        blueprintNamespaces = cmds.namespaceInfo(listOnlyNamespaces=True) or []
+        blueprintNamespaces = cmds.namespaceInfo(listOnlyNamespaces=True)
         cmds.namespace(setNamespace=":")
+
         self.blueprintModules = {}
-        for namespace in blueprintNamespaces:
-            blueprintModule = utils.stripLeadingNamespace(namespace)[1]
-            userSpecifiedName = blueprintModule.partition("__")[2]
-            self.UIElements["blueprintModule_textScroll"].addItem(userSpecifiedName)
-            self.blueprintModules[userSpecifiedName] = namespace
+        if blueprintNamespaces:
+            for namespace in blueprintNamespaces:
+                # Use the original function name: stripLeadingNamespace
+                # Assuming stripLeadingNamespace(namespace) returns a tuple where index 1 is the module name.
+                blueprintModule = utils.stripLeadingNamespace(namespace)[1]
+                # Partition on "__" to get the user-specified name.
+                userSpecifiedName = blueprintModule.partition("__")[2]
+                self.UIElements["blueprintModule_textScroll"].addItem(userSpecifiedName)
+                self.blueprintModules[userSpecifiedName] = namespace
+
         if self.UIElements["blueprintModule_textScroll"].count() > 0:
             self.UIElements["blueprintModule_textScroll"].setCurrentRow(0)
             selectedBlprnModule = self.UIElements["blueprintModule_textScroll"].currentItem().text()
             self.selectedBlueprintModule = self.blueprintModules[selectedBlprnModule]
-            print(f"BLUEPRINT MODULE: {self.selectedBlueprintModule}")
+            #print(f"BLUEPRINT MODULE: {self.selectedBlueprintModule}")
+        else:
+            # No blueprint modules found.
+            self.selectedBlueprintModule = None
+            #print(f"BLUEPRINT MODULE: {self.selectedBlueprintModule}")
             
     def refreshAnimationModuleList(self, index=1):
         self.UIElements["animationModule_textScroll"].clear()
@@ -304,7 +351,7 @@ class Animation_UI(QtWidgets.QDialog):
         if selectedItems:
             selectedBlprnModule = selectedItems[0].text()
             self.selectedBlueprintModule = self.blueprintModules[selectedBlprnModule]
-        # self.setupActiveModuleControls()
+        self.setupActiveModuleControls()
         
         cmds.namespace(setNamespace=self.selectedBlueprintModule)
         controlModuleNamespaces = cmds.namespaceInfo(listOnlyNamespaces=True) or []
@@ -339,17 +386,31 @@ class Animation_UI(QtWidgets.QDialog):
     def toggleAnimControlVisibility(self, *args):
         visibility = not cmds.getAttr(self.selectedCharacter + ":character_grp.animationControlVisibility")
         cmds.setAttr(self.selectedCharacter + ":character_grp.animationControlVisibility", visibility)
+
+    def toggleNonBlueprintVisibility(self, *args):
+        visibility = not cmds.getAttr(self.selectedCharacter + ":non_blueprint_grp.display")
+        cmds.setAttr(self.selectedCharacter + ":non_blueprint_grp.display", visibility)
+
+    def toggleAnimControlVisibility(self, *args):
+        visibility = not cmds.getAttr(self.selectedCharacter + ":character_grp.animationControlVisibility")
+        cmds.setAttr(self.selectedCharacter + ":character_grp.animationControlVisibility", visibility)
+
         
     def setupScriptJob(self, *args):
-        print(f"CREATE Script Job...")
+        #print(f"CREATE Script Job...")
         # Attach the script job to a variable name we can explicitly kill by overriding the closeEvent() on the GUI
-        self.scriptJobNum = cmds.scriptJob(event=["SelectionChanged", self.selectionChanged])
+        jobID = cmds.scriptJob(event=["SelectionChanged", self.selectionChanged])
+        self.scriptJobs.append(jobID)
         
     def deleteScriptJob(self, *args):
-        if hasattr(self, 'scriptJobNum'):
-            cmds.scriptJob(kill=self.scriptJobNum)
-            print(f"DELETE Script Job: {self.scriptJobNum}")
-
+        # Kill all stored script jobs
+        for job in self.scriptJobs:
+            try:
+                cmds.scriptJob(kill=job)
+                print(f"KILLED Script Job {job}!")
+            except Exception:
+                print(f"ERROR killing script job {job}")
+                pass
             
     def selectionChanged(self):
         selection = cmds.ls(selection=True, transforms=True)
@@ -378,118 +439,245 @@ class Animation_UI(QtWidgets.QDialog):
         # self.setupSpaceSwitchingControls()
         
     def setupActiveModuleControls(self):
-        # Clear any existing widgets in activeModuleColumn.
+        if not self.selectedBlueprintModule:
+            #print("No blueprint module is available, skipping active module controls.")
+            return
+        
+        # Clear any existing widgets from the active module area.
         layout = self.UIElements["activeModuleColumn"]
         while layout.count():
             child = layout.takeAt(0)
             if child.widget():
                 child.widget().deleteLater()
-        
-        # Create a container widget for active module controls.
+
+        # --- Build the "active module" header row.
         activeModuleWidget = QtWidgets.QWidget()
         activeModuleLayout = QtWidgets.QHBoxLayout(activeModuleWidget)
-        
+        activeModuleLayout.setContentsMargins(0, 0, 0, 0)
+
         largeButtonSize = 100
         enumOptionWidth = self.width() - 2 * largeButtonSize
-        
+
+        # Determine the settings locator from the selected blueprint module.
         self.settingsLocator = self.selectedBlueprintModule + ":SETTINGS"
-        activeModuleAttribute = self.settingsLocator + ".activeModule"
-        
+
+        # Query the enum values for the activeModule attribute.
         currentEntries = cmds.attributeQuery("activeModule", n=self.settingsLocator, listEnum=True)
         enable = True
         if currentEntries and currentEntries[0] == "None":
             enable = False
-        
-        # Use QComboBox as a placeholder for the enum option menu.
+
+        # Create the QComboBox to display the enum values.
         self.UIElements["activeModule"] = QtWidgets.QComboBox()
-        self.UIElements["activeModule"].setFixedWidth(enumOptionWidth)
-        # (Populate the combo box as needed.)
+        if currentEntries:
+            enumValues = currentEntries[0].split(":")
+            for value in enumValues:
+                self.UIElements["activeModule"].addItem(value)
         self.UIElements["activeModule"].setEnabled(enable)
-        self.UIElements["activeModule"].currentTextChanged.connect(partial(self.activeModule_enumCallback, []))  # Pass empty weightAttributes for now.
-        activeModuleLayout.addWidget(self.UIElements["activeModule"])
-        
+
+        # --- Compute the list of weight attributes.
+        # These are the attributes on the settingsLocator that contain "_weight".
+        attributes = cmds.listAttr(self.settingsLocator, keyable=False) or []
+        weightAttributes = [attr for attr in attributes if "_weight" in attr]
+        # Optionally, store this list as an instance variable so callbacks can use it.
+        self.weightAttributes = weightAttributes
+
+        # Now connect the QComboBox so that when the user changes the active module,
+        # we pass our weightAttributes list into the callback.
+        # (The callback will then set the _weight values accordingly.)
+        self.UIElements["activeModule"].currentTextChanged.connect(
+            partial(self.activeModule_enumCallback, weightAttributes)
+        )
+
+        # Also add the key and graph buttons.
         self.UIElements["keyModuleWeights"] = QtWidgets.QPushButton("Key All")
         self.UIElements["keyModuleWeights"].setEnabled(enable)
-        self.UIElements["keyModuleWeights"].clicked.connect(partial(self.keyModuleWeights, []))
-        activeModuleLayout.addWidget(self.UIElements["keyModuleWeights"])
-        
+        self.UIElements["keyModuleWeights"].clicked.connect(
+            partial(self.keyModuleWeights, weightAttributes)
+        )
+
         self.UIElements["graphModuleWeights"] = QtWidgets.QPushButton("Graph Weights")
         self.UIElements["graphModuleWeights"].setEnabled(enable)
         self.UIElements["graphModuleWeights"].clicked.connect(self.graphModuleWeights)
+
+        # Add the header row to the main active module layout.
+        activeModuleLayout.addWidget(self.UIElements["activeModule"])
+        activeModuleLayout.addWidget(self.UIElements["keyModuleWeights"])
         activeModuleLayout.addWidget(self.UIElements["graphModuleWeights"])
-        
+
         layout.addWidget(activeModuleWidget)
-        
-        # Module Weights Section (using QGroupBox).
-        moduleWeightsFrame = QtWidgets.QGroupBox("Module Weights")
-        moduleWeightsLayout = QtWidgets.QVBoxLayout(moduleWeightsFrame)
-        # A placeholder slider for creationPoseWeight.
-        creationPoseSlider = QtWidgets.QSlider(QtCore.Qt.Horizontal)
-        creationPoseSlider.setEnabled(False)
+
+        # --- Build the module weights section.
+        # We use a QGridLayout so that each row has three columns:
+        # (Label, a spin box showing the value, and a slider for interactive changes).
+        grid = QtWidgets.QGridLayout()
+        fixedLabelWidth = 180  # Set the fixed width for label column
+
+        # --- Creation Pose Weight Row (first row) ---
+        # Build a row for the "Creation Pose Weight" which will be disabled (grayed out).
+        creationLabel = QtWidgets.QLabel("Creation Pose Weight")
+        creationLabel.setFixedWidth(fixedLabelWidth)
+        creationSpin = QtWidgets.QSpinBox()
+        creationSpin.setRange(0, 100)
+        creationSlider = QtWidgets.QSlider(QtCore.Qt.Horizontal)
+        creationSlider.setRange(0, 100)
         creationPoseValue = cmds.getAttr(self.settingsLocator + ".creationPoseWeight")
-        creationPoseSlider.setValue(int(creationPoseValue * 100))
-        moduleWeightsLayout.addWidget(creationPoseSlider)
-        # For each weight attribute, create a slider.
-        attributes = cmds.listAttr(self.settingsLocator, keyable=False) or []
-        weightAttributes = [attr for attr in attributes if "_weight" in attr]
+        creationInt = int(creationPoseValue * 100)
+        creationSpin.setValue(creationInt)
+        creationSlider.setValue(creationInt)
+        # Synchronize the two controls.
+        creationSlider.valueChanged.connect(lambda val: creationSpin.setValue(val))
+        creationSpin.valueChanged.connect(lambda val: creationSlider.setValue(val))
+        # Create a container widget for the entire row.
+        creationRowWidget = QtWidgets.QWidget()
+        creationRowLayout = QtWidgets.QHBoxLayout(creationRowWidget)
+        creationRowLayout.setContentsMargins(0, 0, 0, 0)
+        creationRowLayout.addWidget(creationLabel)
+        creationRowLayout.addWidget(creationSpin)
+        creationRowLayout.addWidget(creationSlider)
+        # Disable the entire row.
+        creationRowWidget.setDisabled(True)
+        grid.addWidget(creationRowWidget, 0, 0, 1, 3)
+
+        # Add a horizontal separator after the creation row.
+        separator = utils.create_separator()  # Assuming this returns a QWidget or QFrame.
+        grid.addWidget(separator, 1, 0, 1, 3)
+
+        # **Store these controls so the callback can update them later**
+        self.UIElements["creationSpin"] = creationSpin
+        self.UIElements["creationSlider"] = creationSlider
+
+        # --- Weight Attribute Rows ---
+        # For each weight attribute, add a row with a label, spin box, and slider.
+        row = 2
         for attr in weightAttributes:
+            label = QtWidgets.QLabel(attr)
+            label.setFixedWidth(fixedLabelWidth)
+            spin = QtWidgets.QSpinBox()
+            spin.setRange(0, 100)
             slider = QtWidgets.QSlider(QtCore.Qt.Horizontal)
-            slider.setMinimum(0)
-            slider.setMaximum(100)
-            value = cmds.getAttr(self.settingsLocator + "." + attr)
-            slider.setValue(int(value * 100))
-            slider.valueChanged.connect(partial(self.moduleWeights_sliderCallback, attr, weightAttributes))
-            moduleWeightsLayout.addWidget(slider)
+            slider.setRange(0, 100)
+            val = cmds.getAttr(self.settingsLocator + "." + attr)
+            intVal = int(val * 100)
+            spin.setValue(intVal)
+            slider.setValue(intVal)
+            # Synchronize the two controls
+            slider.valueChanged.connect(lambda v, s=spin: s.setValue(v))
+            spin.valueChanged.connect(lambda v, s=slider: s.setValue(v))
+            # Connect both signals to the update function.
+            slider.valueChanged.connect(lambda v, a=attr, wa=weightAttributes: self.moduleWeights_sliderCallback(a, wa, v))
+            spin.valueChanged.connect(lambda v, a=attr, wa=weightAttributes: self.moduleWeights_sliderCallback(a, wa, v))
+
+            grid.addWidget(label, row, 0)
+            grid.addWidget(spin, row, 1)
+            grid.addWidget(slider, row, 2)
+
+            # Store references for later updating
+            self.UIElements[attr + "_spin"] = spin
             self.UIElements[attr] = slider
-        
-        layout.addWidget(moduleWeightsFrame)
+            row += 1
+
+        # --- Wrap the grid in a collapsible widget
+        collapsible = CollapsibleWidget(title="Module Weights", settingsKey="AnimationUI/ModuleWeightsCollapsible")
+        collapsible.setContentLayout(grid)
+        layout.addWidget(collapsible)
+
+        self.create_moduleWeightsScriptJob(weightAttributes)
+        # Finally, update the matching button state.
         self.moduleWeights_updateMatchingButton()
-        
+
     def activeModule_enumCallback(self, weightAttributes, enumValue):
-        # Placeholder: set attribute values based on enum selection.
         for attr in weightAttributes:
+            # If the current enum value with "_weight" appended matches the attribute name, set it to 1; otherwise 0.
             value = 1 if (enumValue + "_weight" == attr) else 0
             cmds.setAttr(self.settingsLocator + "." + attr, value)
         cmds.setAttr(self.settingsLocator + ".creationPoseWeight", 0)
+        # Update the UI sliders from the current attribute values.
         self.moduleWeights_timeUpdateScriptJobCallback(weightAttributes)
         self.moduleWeights_updateMatchingButton()
-        
-    def moduleWeights_sliderCallback(self, controlledAttribute, weightAttributes, value):
-        value = float(value) / 100.0
-        currentTotalWeight = 0.0
-        for attribute in weightAttributes:
-            if attribute != controlledAttribute:
-                currentTotalWeight += cmds.getAttr(self.settingsLocator + "." + attribute)
-        if currentTotalWeight + value > 1.0:
-            value = 1.0 - currentTotalWeight
-        cmds.setAttr(self.settingsLocator + "." + controlledAttribute, value)
-        slider = self.UIElements.get(controlledAttribute)
-        if slider:
-            slider.setValue(int(value * 100))
-        newTotalWeight = currentTotalWeight + value
-        creationPoseWeight = 1.0 - newTotalWeight
-        cmds.setAttr(self.settingsLocator + ".creationPoseWeight", creationPoseWeight)
+    
+    def moduleWeights_sliderCallback(self, controlledAttribute, weightAttributes, newIntValue):
+        """
+        Called whenever the slider or spin box for a given weight attribute changes.
+        newIntValue is expected to be an integer 0-100.
+        """
+        # Convert the value from 0-100 to 0.0-1.0.
+        newValue = newIntValue / 100.0
+
+        # Sum the values for all other weight attributes.
+        currentTotal = 0.0
+        for attr in weightAttributes:
+            if attr != controlledAttribute:
+                currentTotal += cmds.getAttr(self.settingsLocator + "." + attr)
+
+        # Clamp the new value so the total does not exceed 1.0.
+        if currentTotal + newValue > 1.0:
+            newValue = 1.0 - currentTotal
+
+        # Set the attribute in Maya.
+        cmds.setAttr(self.settingsLocator + "." + controlledAttribute, newValue)
+
+        # Update the UI for the controlled attribute.
+        intVal = int(newValue * 100)
+        # Block signals to prevent recursion.
+        self.UIElements[controlledAttribute].blockSignals(True)
+        self.UIElements[controlledAttribute + "_spin"].blockSignals(True)
+        self.UIElements[controlledAttribute].setValue(intVal)
+        self.UIElements[controlledAttribute + "_spin"].setValue(intVal)
+        self.UIElements[controlledAttribute].blockSignals(False)
+        self.UIElements[controlledAttribute + "_spin"].blockSignals(False)
+
+        # Now update the creationPoseWeight.
+        newTotal = currentTotal + newValue
+        creationPose = 1.0 - newTotal
+        cmds.setAttr(self.settingsLocator + ".creationPoseWeight", creationPose)
+
+        # If you have UI controls for creationPoseWeight (say, stored as "creationSpin" and "creationSlider"):
+        if "creationSpin" in self.UIElements and "creationSlider" in self.UIElements:
+            intCreation = int(creationPose * 100)
+            self.UIElements["creationSpin"].blockSignals(True)
+            self.UIElements["creationSlider"].blockSignals(True)
+            self.UIElements["creationSpin"].setValue(intCreation)
+            self.UIElements["creationSlider"].setValue(intCreation)
+            self.UIElements["creationSpin"].blockSignals(False)
+            self.UIElements["creationSlider"].blockSignals(False)
+
+        # Finally, update any other UI (such as a matching button).
         self.moduleWeights_updateMatchingButton()
-        
-    def create_moduleWeightsScriptJob(self, parentUIElement, weightAttributes):
-        cmds.scriptJob(event=["timeChanged", partial(self.moduleWeights_timeUpdateScriptJobCallback, weightAttributes)], parent=int(self.winId()))
+
+    def create_moduleWeightsScriptJob(self, weightAttributes):
+        jobID = cmds.scriptJob(event=["timeChanged", partial(self.moduleWeights_timeUpdateScriptJobCallback, weightAttributes)])
+        self.scriptJobs.append(jobID)
         
     def moduleWeights_timeUpdateScriptJobCallback(self, weightAttributes):
         for attr in weightAttributes:
-            value = cmds.getAttr(self.settingsLocator + "." + attr)
-            slider = self.UIElements.get(attr)
-            if slider:
-                slider.setValue(int(value * 100))
+            try:
+                # Check if the attribute exists on the settingsLocator node.
+                if cmds.attributeQuery(attr, node=self.settingsLocator, exists=True):
+                    value = cmds.getAttr(self.settingsLocator + "." + attr)
+                    # Update the slider/spinbox (using whichever UI control you have)
+                    slider = self.UIElements.get(attr)
+                    if slider:
+                        slider.setValue(int(value * 100))
+                else:
+                    print(f"Attribute {attr} does not exist on {self.settingsLocator}")
+            except Exception as e:
+                print(f"Warning: Could not update attribute {attr}: {e}")
         self.moduleWeights_updateMatchingButton()
-        
+
     def moduleWeights_updateMatchingButton(self):
         selectedItems = self.UIElements["animationModule_textScroll"].selectedItems()
         if selectedItems:
             currentlySelectedModuleNamespace = selectedItems[0].text()
-            moduleWeightValue = cmds.getAttr(self.settingsLocator + "." + currentlySelectedModuleNamespace + "_weight")
-            matchButtonEnable = (moduleWeightValue == 0)
-            self.UIElements["matchingButton"].setEnabled(matchButtonEnable)
-        
+            attrName = self.settingsLocator + "." + currentlySelectedModuleNamespace + "_weight"
+            if cmds.attributeQuery(currentlySelectedModuleNamespace + "_weight", node=self.settingsLocator, exists=True):
+                moduleWeightValue = cmds.getAttr(attrName)
+                matchButtonEnable = (moduleWeightValue == 0)
+                self.UIElements["matchingButton"].setEnabled(matchButtonEnable)
+            else:
+                print(f"Attribute {currentlySelectedModuleNamespace}_weight does not exist on {self.settingsLocator}")
+                self.UIElements["matchingButton"].setEnabled(False)
+
     def keyModuleWeights(self, weightAttributes):
         for attr in weightAttributes:
             cmds.setKeyframe(self.settingsLocator, at=attr, itt="linear", ott="linear")
@@ -500,66 +688,66 @@ class Animation_UI(QtWidgets.QDialog):
         cmds.select(self.settingsLocator, replace=True)
         mel.eval("tearOffPanel \"Graph Editor\" graphEditor true")
         
-    def setupModuleSpecificControls(self):
-        selectedItems = self.UIElements["animationModule_textScroll"].selectedItems()
-        currentlySelectedModuleNamespace = None
-        if selectedItems:
-            currentlySelectedModuleNamespace = selectedItems[0].text()
-            if (currentlySelectedModuleNamespace == self.previousAnimationModule and
-                self.selectedBlueprintModule == self.previousBlueprintModule):
-                return
-        # Clear controls from moduleSpecificControlsColumn.
-        layout = self.UIElements["moduleSpecificControlsColumn"]
-        while layout.count():
-            child = layout.takeAt(0)
-            if child.widget():
-                child.widget().deleteLater()
-        self.UIElements["matchingButton"].setEnabled(False)
-        # Get module names from utils.
-        moduleNameInfo = utils.findAllModuleNames("/Modules/Animation")
-        modules, moduleNames = moduleNameInfo
-        if selectedItems:
-            currentlySelectedModule = currentlySelectedModuleNamespace.rpartition("_")[0]
-            if currentlySelectedModule in moduleNames:
-                moduleWeightValue = cmds.getAttr(self.selectedBlueprintModule + ":SETTINGS." + currentlySelectedModuleNamespace + "_weight")
-                matchButtonEnable = (moduleWeightValue == 0.0)
-                moduleIndex = moduleNames.index(currentlySelectedModule)
-                module = modules[moduleIndex]
-                # Create a placeholder label for module LOD control.
-                placeholder = QtWidgets.QLabel(f"Module LOD: {self.selectedBlueprintModule}:{currentlySelectedModuleNamespace}:module_grp.lod")
-                layout.addWidget(placeholder)
+    # def setupModuleSpecificControls(self):
+    #     selectedItems = self.UIElements["animationModule_textScroll"].selectedItems()
+    #     currentlySelectedModuleNamespace = None
+    #     if selectedItems:
+    #         currentlySelectedModuleNamespace = selectedItems[0].text()
+    #         if (currentlySelectedModuleNamespace == self.previousAnimationModule and
+    #             self.selectedBlueprintModule == self.previousBlueprintModule):
+    #             return
+    #     # Clear controls from moduleSpecificControlsColumn.
+    #     layout = self.UIElements["moduleSpecificControlsColumn"]
+    #     while layout.count():
+    #         child = layout.takeAt(0)
+    #         if child.widget():
+    #             child.widget().deleteLater()
+    #     self.UIElements["matchingButton"].setEnabled(False)
+    #     # Get module names from utils.
+    #     moduleNameInfo = utils.findAllModuleNames("/Modules/Animation")
+    #     modules, moduleNames = moduleNameInfo
+    #     if selectedItems:
+    #         currentlySelectedModule = currentlySelectedModuleNamespace.rpartition("_")[0]
+    #         if currentlySelectedModule in moduleNames:
+    #             moduleWeightValue = cmds.getAttr(self.selectedBlueprintModule + ":SETTINGS." + currentlySelectedModuleNamespace + "_weight")
+    #             matchButtonEnable = (moduleWeightValue == 0.0)
+    #             moduleIndex = moduleNames.index(currentlySelectedModule)
+    #             module = modules[moduleIndex]
+    #             # Create a placeholder label for module LOD control.
+    #             placeholder = QtWidgets.QLabel(f"Module LOD: {self.selectedBlueprintModule}:{currentlySelectedModuleNamespace}:module_grp.lod")
+    #             layout.addWidget(placeholder)
                 
-                mod = __import__("Animation." + module, {}, {}, [module])
-                importlib.reload(mod)
-                moduleClass = getattr(mod, mod.CLASS_NAME)
-                moduleInst = moduleClass(self.selectedBlueprintModule + ":" + currentlySelectedModuleNamespace)
-                # Let moduleInst add its UI controls to the given layout.
-                moduleInst.UI(layout)
+    #             mod = __import__("Animation." + module, {}, {}, [module])
+    #             importlib.reload(mod)
+    #             moduleClass = getattr(mod, mod.CLASS_NAME)
+    #             moduleInst = moduleClass(self.selectedBlueprintModule + ":" + currentlySelectedModuleNamespace)
+    #             # Let moduleInst add its UI controls to the given layout.
+    #             moduleInst.UI(layout)
                 
-                # Create a preferences frame.
-                prefGroup = QtWidgets.QGroupBox("preferences")
-                prefLayout = QtWidgets.QVBoxLayout(prefGroup)
-                layout.addWidget(prefGroup)
+    #             # Create a preferences frame.
+    #             prefGroup = QtWidgets.QGroupBox("preferences")
+    #             prefLayout = QtWidgets.QVBoxLayout(prefGroup)
+    #             layout.addWidget(prefGroup)
                 
-                # Placeholder for icon scale control.
-                iconScaleLabel = QtWidgets.QLabel("Icon Scale: " + self.selectedBlueprintModule + ":" + currentlySelectedModuleNamespace + ":module_grp.iconScale")
-                prefLayout.addWidget(iconScaleLabel)
+    #             # Placeholder for icon scale control.
+    #             iconScaleLabel = QtWidgets.QLabel("Icon Scale: " + self.selectedBlueprintModule + ":" + currentlySelectedModuleNamespace + ":module_grp.iconScale")
+    #             prefLayout.addWidget(iconScaleLabel)
                 
-                # Color slider for icon color.
-                value = cmds.getAttr(self.selectedBlueprintModule + ":" + currentlySelectedModuleNamespace + ":module_grp.overrideColor") + 1
-                self.UIElements["iconColor"] = QtWidgets.QSlider(QtCore.Qt.Horizontal)
-                self.UIElements["iconColor"].setMaximum(32)
-                self.UIElements["iconColor"].setValue(value)
-                self.UIElements["iconColor"].valueChanged.connect(partial(self.iconColour_callback, currentlySelectedModuleNamespace))
-                prefLayout.addWidget(self.UIElements["iconColor"])
+    #             # Color slider for icon color.
+    #             value = cmds.getAttr(self.selectedBlueprintModule + ":" + currentlySelectedModuleNamespace + ":module_grp.overrideColor") + 1
+    #             self.UIElements["iconColor"] = QtWidgets.QSlider(QtCore.Qt.Horizontal)
+    #             self.UIElements["iconColor"].setMaximum(32)
+    #             self.UIElements["iconColor"].setValue(value)
+    #             self.UIElements["iconColor"].valueChanged.connect(partial(self.iconColour_callback, currentlySelectedModuleNamespace))
+    #             prefLayout.addWidget(self.UIElements["iconColor"])
                 
-                moduleInst.UI_preferences(prefLayout)
-                self.UIElements["matchingButton"].setEnabled(matchButtonEnable)
-            self.previousBlueprintModule = self.selectedBlueprintModule
-            self.previousAnimationModule = currentlySelectedModuleNamespace
+    #             moduleInst.UI_preferences(prefLayout)
+    #             self.UIElements["matchingButton"].setEnabled(matchButtonEnable)
+    #         self.previousBlueprintModule = self.selectedBlueprintModule
+    #         self.previousAnimationModule = currentlySelectedModuleNamespace
         
-    def iconColour_callback(self, currentlySelectedModuleNamespace, value):
-        cmds.setAttr(self.selectedBlueprintModule + ":" + currentlySelectedModuleNamespace + ":module_grp.overrideColor", value - 1)
+    # def iconColour_callback(self, currentlySelectedModuleNamespace, value):
+    #     cmds.setAttr(self.selectedBlueprintModule + ":" + currentlySelectedModuleNamespace + ":module_grp.overrideColor", value - 1)
         
     def deleteSelectedModule(self):
         selectedItems = self.UIElements["animationModule_textScroll"].selectedItems()
@@ -615,92 +803,92 @@ class Animation_UI(QtWidgets.QDialog):
             self.refreshAnimationModuleList()
         self.setupScriptJob()
         
-    def setupSpaceSwitchingControls(self):
-        # Clear existing controls.
-        layout = self.UIElements["spaceSwitchingColumn"]
-        while layout.count():
-            child = layout.takeAt(0)
-            if child.widget():
-                child.widget().deleteLater()
+    # def setupSpaceSwitchingControls(self):
+    #     # Clear existing controls.
+    #     layout = self.UIElements["spaceSwitchingColumn"]
+    #     while layout.count():
+    #         child = layout.takeAt(0)
+    #         if child.widget():
+    #             child.widget().deleteLater()
         
-        largeButtonSize = 80
-        smallButtonSize = 35
-        enumOptionWidth = self.width() - 2*(largeButtonSize + smallButtonSize)
-        enable = False
-        selection = cmds.ls(selection=True, transforms=True)
-        spaceSwitcher = None
-        controlObj = None
-        targetObject = None
-        if selection:
-            if cmds.attributeQuery("spaceSwitching", n=selection[0], exists=True):
-                enable = True
-                controlObj = selection[0]
-                spaceSwitcher = selection[0] + "_spaceSwitcher"
-                if len(selection) > 1:
-                    targetObject = selection[1]
-        if targetObject is None:
-            targetObject = self.selectedBlueprintModule + ":HOOK_IN"
-        # Create a horizontal layout for space switching.
-        rowLayout = QtWidgets.QHBoxLayout()
-        self.UIElements["spaceSwitching_rowLayout"] = rowLayout
-        # Use QComboBox as a placeholder for attrEnumOptionMenu.
-        self.UIElements["currentSpace"] = QtWidgets.QComboBox()
-        self.UIElements["currentSpace"].setEnabled(False)
-        rowLayout.addWidget(self.UIElements["currentSpace"])
+    #     largeButtonSize = 80
+    #     smallButtonSize = 35
+    #     enumOptionWidth = self.width() - 2*(largeButtonSize + smallButtonSize)
+    #     enable = False
+    #     selection = cmds.ls(selection=True, transforms=True)
+    #     spaceSwitcher = None
+    #     controlObj = None
+    #     targetObject = None
+    #     if selection:
+    #         if cmds.attributeQuery("spaceSwitching", n=selection[0], exists=True):
+    #             enable = True
+    #             controlObj = selection[0]
+    #             spaceSwitcher = selection[0] + "_spaceSwitcher"
+    #             if len(selection) > 1:
+    #                 targetObject = selection[1]
+    #     if targetObject is None:
+    #         targetObject = self.selectedBlueprintModule + ":HOOK_IN"
+    #     # Create a horizontal layout for space switching.
+    #     rowLayout = QtWidgets.QHBoxLayout()
+    #     self.UIElements["spaceSwitching_rowLayout"] = rowLayout
+    #     # Use QComboBox as a placeholder for attrEnumOptionMenu.
+    #     self.UIElements["currentSpace"] = QtWidgets.QComboBox()
+    #     self.UIElements["currentSpace"].setEnabled(False)
+    #     rowLayout.addWidget(self.UIElements["currentSpace"])
         
-        self.UIElements["spaceSwitching_spaceSwitch"] = QtWidgets.QPushButton("Space Switch")
-        self.UIElements["spaceSwitching_spaceSwitch"].setEnabled(enable)
-        self.UIElements["spaceSwitching_spaceSwitch"].clicked.connect(partial(self.spaceSwitching_spaceSwitch, controlObj, targetObject))
-        rowLayout.addWidget(self.UIElements["spaceSwitching_spaceSwitch"])
+    #     self.UIElements["spaceSwitching_spaceSwitch"] = QtWidgets.QPushButton("Space Switch")
+    #     self.UIElements["spaceSwitching_spaceSwitch"].setEnabled(enable)
+    #     self.UIElements["spaceSwitching_spaceSwitch"].clicked.connect(partial(self.spaceSwitching_spaceSwitch, controlObj, targetObject))
+    #     rowLayout.addWidget(self.UIElements["spaceSwitching_spaceSwitch"])
         
-        self.UIElements["spaceSwitching_deleteKey"] = QtWidgets.QPushButton("Delete Key")
-        self.UIElements["spaceSwitching_deleteKey"].setEnabled(enable)
-        self.UIElements["spaceSwitching_deleteKey"].clicked.connect(partial(self.spaceSwitching_deleteKey, spaceSwitcher))
-        rowLayout.addWidget(self.UIElements["spaceSwitching_deleteKey"])
+    #     self.UIElements["spaceSwitching_deleteKey"] = QtWidgets.QPushButton("Delete Key")
+    #     self.UIElements["spaceSwitching_deleteKey"].setEnabled(enable)
+    #     self.UIElements["spaceSwitching_deleteKey"].clicked.connect(partial(self.spaceSwitching_deleteKey, spaceSwitcher))
+    #     rowLayout.addWidget(self.UIElements["spaceSwitching_deleteKey"])
         
-        self.UIElements["spaceSwitching_backKey"] = QtWidgets.QPushButton("<")
-        self.UIElements["spaceSwitching_backKey"].setEnabled(enable)
-        self.UIElements["spaceSwitching_backKey"].clicked.connect(partial(self.spaceSwitching_backKey, spaceSwitcher))
-        rowLayout.addWidget(self.UIElements["spaceSwitching_backKey"])
+    #     self.UIElements["spaceSwitching_backKey"] = QtWidgets.QPushButton("<")
+    #     self.UIElements["spaceSwitching_backKey"].setEnabled(enable)
+    #     self.UIElements["spaceSwitching_backKey"].clicked.connect(partial(self.spaceSwitching_backKey, spaceSwitcher))
+    #     rowLayout.addWidget(self.UIElements["spaceSwitching_backKey"])
         
-        self.UIElements["spaceSwitching_forwardKey"] = QtWidgets.QPushButton(">")
-        self.UIElements["spaceSwitching_forwardKey"].setEnabled(enable)
-        self.UIElements["spaceSwitching_forwardKey"].clicked.connect(partial(self.spaceSwitching_forwardKey, spaceSwitcher))
-        rowLayout.addWidget(self.UIElements["spaceSwitching_forwardKey"])
+    #     self.UIElements["spaceSwitching_forwardKey"] = QtWidgets.QPushButton(">")
+    #     self.UIElements["spaceSwitching_forwardKey"].setEnabled(enable)
+    #     self.UIElements["spaceSwitching_forwardKey"].clicked.connect(partial(self.spaceSwitching_forwardKey, spaceSwitcher))
+    #     rowLayout.addWidget(self.UIElements["spaceSwitching_forwardKey"])
         
-        layout.addLayout(rowLayout)
+    #     layout.addLayout(rowLayout)
         
-    def spaceSwitching_spaceSwitch(self, controlObj, targetObject):
-        controlObjectInstance = controlObject.ControlObject(controlObj)
-        controlObjectInstance.switchSpace_UI(targetObject)
+    # def spaceSwitching_spaceSwitch(self, controlObj, targetObject):
+    #     controlObjectInstance = controlObject.ControlObject(controlObj)
+    #     controlObjectInstance.switchSpace_UI(targetObject)
         
-    def spaceSwitching_deleteKey(self, spaceSwitcher):
-        animationNamespace = utils.stripLeadingNamespace(spaceSwitcher)[0]
-        characterContainer = self.selectedCharacter + ":character_container"
-        blueprintContainer = self.selectedBlueprintModule + ":module_container"
-        animationContainer = animationNamespace + ":module_container"
-        containers = [characterContainer, blueprintContainer, animationContainer]
-        for c in containers:
-            cmds.lockNode(c, lock=False, lockUnpublished=False)
-        cmds.cutKey(spaceSwitcher, at="currentSpace", time=(cmds.currentTime(q=True),))
-        for c in containers:
-            cmds.lockNode(c, lock=True, lockUnpublished=True)
-        print(f"THE animationNamespace EQUALS: {animationNamespace}")
-        print(f"THE blueprintContainer EQUALS: {blueprintContainer}")
-        print(f"THE animationContainer EQUALS: {animationContainer}")
-        print(f"THE spaceSwitcher EQUALS: {spaceSwitcher}")
+    # def spaceSwitching_deleteKey(self, spaceSwitcher):
+    #     animationNamespace = utils.stripLeadingNamespace(spaceSwitcher)[0]
+    #     characterContainer = self.selectedCharacter + ":character_container"
+    #     blueprintContainer = self.selectedBlueprintModule + ":module_container"
+    #     animationContainer = animationNamespace + ":module_container"
+    #     containers = [characterContainer, blueprintContainer, animationContainer]
+    #     for c in containers:
+    #         cmds.lockNode(c, lock=False, lockUnpublished=False)
+    #     cmds.cutKey(spaceSwitcher, at="currentSpace", time=(cmds.currentTime(q=True),))
+    #     for c in containers:
+    #         cmds.lockNode(c, lock=True, lockUnpublished=True)
+    #     print(f"THE animationNamespace EQUALS: {animationNamespace}")
+    #     print(f"THE blueprintContainer EQUALS: {blueprintContainer}")
+    #     print(f"THE animationContainer EQUALS: {animationContainer}")
+    #     print(f"THE spaceSwitcher EQUALS: {spaceSwitcher}")
         
-    def spaceSwitching_forwardKey(self, spaceSwitcher):
-        currentTime = cmds.currentTime(q=True)
-        time = cmds.findKeyframe(spaceSwitcher, at="currentSpace", time=(currentTime,), which="next")
-        if currentTime < time:
-            cmds.currentTime(time)
+    # def spaceSwitching_forwardKey(self, spaceSwitcher):
+    #     currentTime = cmds.currentTime(q=True)
+    #     time = cmds.findKeyframe(spaceSwitcher, at="currentSpace", time=(currentTime,), which="next")
+    #     if currentTime < time:
+    #         cmds.currentTime(time)
         
-    def spaceSwitching_backKey(self, spaceSwitcher):
-        currentTime = cmds.currentTime(q=True)
-        time = cmds.findKeyframe(spaceSwitcher, at="currentSpace", time=(currentTime,), which="previous")
-        if currentTime > time:
-            cmds.currentTime(time)
+    # def spaceSwitching_backKey(self, spaceSwitcher):
+    #     currentTime = cmds.currentTime(q=True)
+    #     time = cmds.findKeyframe(spaceSwitcher, at="currentSpace", time=(currentTime,), which="previous")
+    #     if currentTime > time:
+    #         cmds.currentTime(time)
             
 #---------------------------------------------------------------------
 # For testing in Maya, create a QApplication (if one does not exist) and show the UI.

@@ -345,9 +345,9 @@ class Blueprint_UI(QtWidgets.QDialog):
         templatesBtn_layout.setContentsMargins(25, 25, 25, 50)
         templatesBtn_layout.setSpacing(10)
         templatesBtn_layout.addWidget(self.prepareTemplateBtn)
-        templatesBtn_layout.addWidget(self.create_separator())
+        templatesBtn_layout.addWidget(utils.create_separator())
         templatesBtn_layout.addWidget(self.saveCurrentBtn)
-        templatesBtn_layout.addWidget(self.create_separator())
+        templatesBtn_layout.addWidget(utils.create_separator())
         templatesBtn_layout.addStretch()
 
         templates_layout = QtWidgets.QVBoxLayout(self)
@@ -397,11 +397,11 @@ class Blueprint_UI(QtWidgets.QDialog):
         moduleBtn_container.setLayout(moduleBtn_layout)
 
         button_layout = QtWidgets.QVBoxLayout()
-        button_layout.addWidget(self.create_separator())
+        button_layout.addWidget(utils.create_separator())
         button_layout.addWidget(self.lockBtn)
-        button_layout.addWidget(self.create_separator())
+        button_layout.addWidget(utils.create_separator())
         button_layout.addWidget(self.publishBtn)
-        button_layout.addWidget(self.create_separator())
+        button_layout.addWidget(utils.create_separator())
 
         modules_layout.addWidget(moduleBtn_container)
         modules_layout.addWidget(moduleSpecificCtrls_scroll, stretch=1)
@@ -459,14 +459,8 @@ class Blueprint_UI(QtWidgets.QDialog):
         # Add the encapsulated module to the main layout
         self.moduleInstallButton_layout.addWidget(module_widget)
         self.moduleInstallButton_layout.addStretch()
-        self.moduleInstallButton_layout.addWidget(self.create_separator())
+        self.moduleInstallButton_layout.addWidget(utils.create_separator())
         self.moduleInstallButton_layout.addStretch()
-
-    def create_separator(self):
-        separator = QtWidgets.QFrame()
-        separator.setFrameShape(QtWidgets.QFrame.HLine)
-        separator.setFrameShadow(QtWidgets.QFrame.Sunken)
-        return separator
 
     ##################
     # Signal Methods #
@@ -1038,7 +1032,7 @@ class Blueprint_UI(QtWidgets.QDialog):
         self.templateScreenGrab_btn.setFixedWidth(40)
         self.templateScreenGrab_btn.setFixedHeight(30)
 
-        separator = self.create_separator()
+        separator = utils.create_separator()
         accept_button = QtWidgets.QPushButton("Accept")
         cancel_button = QtWidgets.QPushButton("Cancel")
 
@@ -1235,7 +1229,7 @@ class Blueprint_UI(QtWidgets.QDialog):
         templates_widget.setFixedHeight(150)  # Fixed height for the entire module
 
         self.templatesInstall_layout.addWidget(templates_widget)
-        self.templatesInstall_layout.addWidget(self.create_separator())
+        self.templatesInstall_layout.addWidget(utils.create_separator())
 
     def installTemplate(self, templateAndPath, *args):
         cmds.file(templateAndPath, i=True, namespace="TEMPLATE_1")
