@@ -14,7 +14,7 @@ import System.controlObject as controlObject
 importlib.reload(controlObject)
 
 import System.controlModule as controlModule
-# importlib.reload(controlModule)
+importlib.reload(controlModule)
 
 class FK(controlModule.ControlModule):
     def __init__(self, moduleNamespace):
@@ -101,20 +101,20 @@ class FK(controlModule.ControlModule):
     #     return (fkControlInfo[0], fkControlInfo[1], translationControl)
 
 
-    # def UI(self, parentLayout):
-    #     jointsGrp = self.blueprintNamespace + ":" + self.moduleNamespace + ":joints_grp"
+    def UI(self, parentLayout):
+        jointsGrp = self.blueprintNamespace + ":" + self.moduleNamespace + ":joints_grp"
 
-    #     joints = utils.findJointChain(jointsGrp)
-    #     joints.pop(0)
+        joints = utils.findJointChain(jointsGrp)
+        joints.pop(0)
 
-    #     numJoints = len(joints)
-    #     if numJoints > 1:
-    #         numJoints -= 1
+        numJoints = len(joints)
+        if numJoints > 1:
+            numJoints -= 1
 
-    #     for i in range(numJoints):
-    #         fkControl = joints[i] + "_fkControl"
-    #         controlObjectInstance = controlObject.ControlObject(fkControl)
-    #         controlObjectInstance.UI(parentLayout)
+        for i in range(numJoints):
+            fkControl = joints[i] + "_fkControl"
+            controlObjectInstance = controlObject.ControlObject(fkControl)
+            controlObjectInstance.UI(parentLayout)
 
     # def match(self, *args):
     #     jointsGrp = self.blueprintNamespace + ":blueprint_joints_grp"

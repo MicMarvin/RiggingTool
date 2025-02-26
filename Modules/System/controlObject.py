@@ -6,6 +6,7 @@ import maya.cmds as cmds
 import os
 from pathlib import Path
 from functools import partial
+from PySide2 import QtWidgets, QtCore, QtGui
 
 class ControlObject:
     def __init__(self, controlObject=None):
@@ -272,41 +273,104 @@ class ControlObject:
     #     cmds.delete(locator)
     #     return scale
 
-    # def UI(self, parentLayout):
-    #     cmds.setParent(parentLayout)
-    #     cmds.separator()
+    def UI(self, parentLayout):
+        """
+        Create a PySide UI for this control object. This replaces the old cmds-based UI.
+        It creates:
+        - A separator and a label with the control’s nice name.
+        - A checkbox for the "display" (visibility) attribute.
+        - Input controls (QDoubleSpinBox) for the translation and rotation attributes.
+        - An input for globalScale if enabled.
+        The controls read and write directly to the control object’s attributes via cmds.setAttr/getAttr.
+        """
+        # Create a container widget for our UI controls.
+        container = QtWidgets.QWidget()
+        layout = QtWidgets.QVBoxLayout(container)
+        layout.setSpacing(5)
+        layout.setContentsMargins(5, 5, 5, 5)
 
-    #     niceName = utils.stripAllNamespaces(self.controlObject)[1]
-    #     cmds.text(label=niceName)
+        # Separator (horizontal line)
+        separator = QtWidgets.QFrame()
+        separator.setFrameShape(QtWidgets.QFrame.HLine)
+        separator.setFrameShadow(QtWidgets.QFrame.Sunken)
+        layout.addWidget(separator)
 
-    #     cmds.attrControlGrp(attribute=self.controlObject + ".display", label="Visibility: ")
+        # Label with the control object's name.
+        niceName = utils.stripAllNamespaces(self.controlObject)[1]
+        nameLabel = QtWidgets.QLabel(niceName)
+        nameLabel.setStyleSheet("font-weight: bold;")
+        layout.addWidget(nameLabel)
 
-    #     if self.translation == [True, True, True]:
-    #         cmds.attrControlGrp(attribute=self.controlObject + ".translate", label="Translate")
-    #     else:
-    #         if self.translation[0] == True:
-    #             cmds.attrControlGrp(attribute=self.controlObject + ".translateX", label="Translate X")
+        # Visibility control: a checkbox.
+        visCheckbox = QtWidgets.QCheckBox("Visibility")
+        try:
+            visVal = cmds.getAttr(self.controlObject + ".display")
+        except Exception:
+            visVal = True
+        visCheckbox.setChecked(bool(visVal))
+        # When toggled, update the attribute.
+        visCheckbox.stateChanged.connect(lambda state: cmds.setAttr(self.controlObject + ".display", bool(state)))
+        layout.addWidget(visCheckbox)
 
-    #         if self.translation[1] == True:
-    #             cmds.attrControlGrp(attribute=self.controlObject + ".translateY", label="Translate Y")
+        # --- Translation controls ---
+        transGroup = QtWidgets.QGroupBox("Translate")
+        transLayout = QtWidgets.QHBoxLayout(transGroup)
+        axes = ['X', 'Y', 'Z']
+        for axis in axes:
+            # For each axis, create a label and a QDoubleSpinBox.
+            try:
+                val = cmds.getAttr(self.controlObject + ".translate" + axis)
+            except Exception:
+                val = 0.0
+            lbl = QtWidgets.QLabel(axis + ":")
+            spin = QtWidgets.QDoubleSpinBox()
+            spin.setRange(-10000, 10000)
+            spin.setDecimals(3)
+            spin.setValue(val)
+            # When changed, update the Maya attribute.
+            spin.valueChanged.connect(lambda v, a=axis: cmds.setAttr(self.controlObject + ".translate" + a, v))
+            transLayout.addWidget(lbl)
+            transLayout.addWidget(spin)
+        layout.addWidget(transGroup)
 
-    #         if self.translation[2] == True:
-    #             cmds.attrControlGrp(attribute=self.controlObject + ".translateZ", label="Translate Z")
+        # --- Rotation controls ---
+        rotGroup = QtWidgets.QGroupBox("Rotate")
+        rotLayout = QtWidgets.QHBoxLayout(rotGroup)
+        for axis in axes:
+            try:
+                val = cmds.getAttr(self.controlObject + ".rotate" + axis)
+            except Exception:
+                val = 0.0
+            lbl = QtWidgets.QLabel(axis + ":")
+            spin = QtWidgets.QDoubleSpinBox()
+            spin.setRange(-360, 360)
+            spin.setDecimals(3)
+            spin.setValue(val)
+            spin.valueChanged.connect(lambda v, a=axis: cmds.setAttr(self.controlObject + ".rotate" + a, v))
+            rotLayout.addWidget(lbl)
+            rotLayout.addWidget(spin)
+        layout.addWidget(rotGroup)
 
-    #     if self.rotation == [True, True, True]:
-    #         cmds.attrControlGrp(attribute=self.controlObject + ".rotate", label="Rotate")
-    #     else:
-    #         if self.rotation[0] == True:
-    #             cmds.attrControlGrp(attribute=self.controlObject + ".rotateX", label="Rotate X")
+        # --- Global Scale control (if enabled) ---
+        if self.globalScale:
+            scaleGroup = QtWidgets.QGroupBox("Scale")
+            scaleLayout = QtWidgets.QHBoxLayout(scaleGroup)
+            try:
+                val = cmds.getAttr(self.controlObject + ".globalScale")
+            except Exception:
+                val = 1.0
+            lbl = QtWidgets.QLabel("Global:")
+            spin = QtWidgets.QDoubleSpinBox()
+            spin.setRange(0.001, 1000)
+            spin.setDecimals(3)
+            spin.setValue(val)
+            spin.valueChanged.connect(lambda v: cmds.setAttr(self.controlObject + ".globalScale", v))
+            scaleLayout.addWidget(lbl)
+            scaleLayout.addWidget(spin)
+            layout.addWidget(scaleGroup)
 
-    #         if self.rotation[1] == True:
-    #             cmds.attrControlGrp(attribute=self.controlObject + ".rotateY", label="Rotate Y")
-
-    #         if self.rotation[2] == True:
-    #             cmds.attrControlGrp(attribute=self.controlObject + ".rotateZ", label="Rotate Z")
-
-    #     if self.globalScale == True:
-    #         cmds.attrControlGrp(attribute=self.controlObject + ".globalScale", label="Scale")
+        # Finally, add the container widget to the provided parent layout.
+        parentLayout.addWidget(container)
 
     # def switchSpace_UI(self, targetObject):
     #     constraint = self.controlObject + "_spaceSwitcher_scaleConstraint"

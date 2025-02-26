@@ -228,9 +228,9 @@ class ModuleMaintenance:
                 self.UIElements["installBtn"].clicked.connect(partial(self.installModule, mod, moduleName))
 
     def installModule(self, mod, moduleName, *args):
-        # Temporarily supress warnings for frame rate mismatch
-        oldState = cmds.scriptEditorInfo(query=True, suppressWarnings=True)
-        cmds.scriptEditorInfo(suppressWarnings=True)
+        # # Temporarily supress warnings for frame rate mismatch
+        # oldState = cmds.scriptEditorInfo(query=True, suppressWarnings=True)
+        # cmds.scriptEditorInfo(suppressWarnings=True)
 
         self.disableSelectionScriptJob()
         moduleNamespace = self.currentBlueprintModule + ":" + mod.CLASS_NAME + "_1"
@@ -252,5 +252,5 @@ class ModuleMaintenance:
         cmds.select(self.currentBlueprintModule + ":module_container", replace=True)
         self.setupSelectionScriptJob()
         
-        # Renable warnings for script output
-        cmds.scriptEditorInfo(suppressWarnings=oldState)
+        # # Renable warnings for script output
+        # cmds.scriptEditorInfo(suppressWarnings=oldState)

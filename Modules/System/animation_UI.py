@@ -1,4 +1,5 @@
 import os
+import time
 import importlib
 from pathlib import Path
 from functools import partial
@@ -18,6 +19,240 @@ importlib.reload(controlObject)
 def maya_main_window():
     main_window_ptr = omui.MQtUtil.mainWindow()
     return wrapInstance(int(main_window_ptr), QtWidgets.QWidget)
+
+MAYA_INDEX_COLORS = [
+    QtGui.QColor(0, 0, 0),           #  1: Black
+    QtGui.QColor(64, 64, 64),        #  2: Dark Gray (0.25,0.25,0.25)
+    QtGui.QColor(153, 153, 153),     #  3: Gray (0.6,0.6,0.6)
+    QtGui.QColor(155, 0, 40),        #  4: Reddish (≈0.608,0,0.157)
+    QtGui.QColor(0, 4, 96),          #  5: Deep Blue (≈0,0.016,0.376)
+    QtGui.QColor(0, 0, 255),         #  6: Blue (0,0,1)
+    QtGui.QColor(0, 70, 25),         #  7: Dark Green (≈0,0.275,0.098)
+    QtGui.QColor(38, 0, 67),         #  8: Purple-ish (≈0.149,0,0.263)
+    QtGui.QColor(200, 0, 200),       #  9: Magenta (≈0.784,0,0.784)
+    QtGui.QColor(138, 72, 51),       # 10: Brown (≈0.541,0.282,0.200)
+    QtGui.QColor(63, 35, 31),        # 11: Dark Brown (≈0.247,0.137,0.122)
+    QtGui.QColor(153, 38, 0),        # 12: Orange-ish (≈0.6,0.149,0)
+    QtGui.QColor(255, 0, 0),         # 13: Red (1,0,0)
+    QtGui.QColor(0, 255, 0),         # 14: Green (0,1,0)
+    QtGui.QColor(0, 65, 153),        # 15: Blue-ish (≈0,0.255,0.6)
+    QtGui.QColor(255, 255, 255),     # 16: White (1,1,1)
+    QtGui.QColor(255, 255, 0),       # 17: Yellow (1,1,0)
+    QtGui.QColor(100, 220, 255),     # 18: Light Blue (≈0.392,0.863,1)
+    QtGui.QColor(67, 255, 163),      # 19: Aqua (≈0.263,1,0.639)
+    QtGui.QColor(255, 176, 176),     # 20: Pink (≈1,0.69,0.69)
+    QtGui.QColor(228, 172, 121),     # 21: Tan (≈0.894,0.675,0.475)
+    QtGui.QColor(255, 255, 99),      # 22: Light Yellow (≈1,1,0.388)
+    QtGui.QColor(0, 153, 84),        # 23: Greenish (≈0,0.6,0.329)
+    QtGui.QColor(160, 105, 48),      # 24: Brownish (≈0.63,0.414,0.189)
+    QtGui.QColor(158, 160, 48),      # 25: Olive (≈0.621,0.63,0.189)
+    QtGui.QColor(104, 160, 48),      # 26: Olive Green (≈0.41,0.63,0.189)
+    QtGui.QColor(48, 160, 93),       # 27: Teal (≈0.189,0.63,0.365)
+    QtGui.QColor(48, 160, 160),      # 28: Cyan (≈0.189,0.63,0.63)
+    QtGui.QColor(48, 103, 160),      # 29: Blue (≈0.189,0.405,0.63)
+    QtGui.QColor(111, 48, 160),      # 30: Purple (≈0.436,0.189,0.63)
+    QtGui.QColor(160, 48, 105),      # 31: Reddish Purple (≈0.63,0.189,0.414)
+    QtGui.QColor(249, 170, 38),      # 32: Yellowish Orange 
+]
+
+#---------------------------------------------------------------------
+# AttrControlWidget class using PySide2.
+#---------------------------------------------------------------------
+class AttrControlWidget(QtWidgets.QWidget):
+    def __init__(self, attrName, labelText, minVal=0, maxVal=100, initialValue=0, callback=None, scale=True, parent=None):
+        """
+        attrName: full Maya attribute name (e.g. "Character__Foo:SETTINGS.weight1")
+        labelText: text to display in the label.
+        minVal, maxVal: numeric range for the UI controls.
+        initialValue: initial integer value for the UI (e.g. 50 for 0.5 if scale=True).
+        callback: callable to receive the new integer value when changed.
+        scale: if True (default), the widget assumes the UI is 0–100 and will divide by 100 before setting the attribute.
+            If False, it will set the attribute directly.
+        """
+        super(AttrControlWidget, self).__init__(parent)
+        self.attrName = attrName
+        self.callback = callback
+        self.scale = scale
+
+        layout = QtWidgets.QHBoxLayout(self)
+        layout.setContentsMargins(2,2,2,2)
+
+        self.label = QtWidgets.QLabel(labelText)
+        self.label.setFixedWidth(180)
+
+        self.spinBox = QtWidgets.QSpinBox()
+        self.spinBox.setRange(minVal, maxVal)
+        self.spinBox.setValue(initialValue)
+
+        self.slider = QtWidgets.QSlider(QtCore.Qt.Horizontal)
+        self.slider.setRange(minVal, maxVal)
+        self.slider.setValue(initialValue)
+
+        layout.addWidget(self.label)
+        layout.addWidget(self.spinBox)
+        layout.addWidget(self.slider)
+
+        # Synchronize spinBox and slider.
+        self.spinBox.valueChanged.connect(self.slider.setValue)
+        self.slider.valueChanged.connect(self.spinBox.setValue)
+
+        # Connect slider value changes to our on_value_changed.
+        self.slider.valueChanged.connect(self.on_value_changed)
+
+    def on_value_changed(self, newValue):
+        try:
+            if self.scale:
+                # For attributes that need scaling (0-100 UI to 0.0-1.0 attribute)
+                cmds.setAttr(self.attrName, newValue / 100.0)
+            else:
+                # For attributes that are not scaled (like moduleLOD)
+                cmds.setAttr(self.attrName, newValue)
+        except Exception as e:
+            print(f"Error setting attribute {self.attrName}: {e}")
+        if self.callback is not None:
+            self.callback(newValue)
+
+#---------------------------------------------------------------------
+# FloatAttrControlWidget class using PySide2.
+#---------------------------------------------------------------------
+class FloatAttrControlWidget(QtWidgets.QWidget):
+    """
+    A widget for controlling a float Maya attribute using a QDoubleSpinBox and a QSlider.
+    Because QSlider only supports integers, we map the float range into an integer range
+    by using a conversion factor. For example, if conversion=1000 then:
+    float_value = slider_value / 1000.
+    """
+    def __init__(self, attrName, labelText, minVal, maxVal, initialValue, conversion=1000, callback=None, parent=None):
+        super(FloatAttrControlWidget, self).__init__(parent)
+        self.attrName = attrName
+        self.callback = callback
+        self.conversion = conversion  # conversion factor for mapping float->int
+        layout = QtWidgets.QHBoxLayout(self)
+        layout.setContentsMargins(2,2,2,2)
+
+        self.label = QtWidgets.QLabel(labelText)
+        self.label.setFixedWidth(180)
+
+        self.doubleSpin = QtWidgets.QDoubleSpinBox()
+        self.doubleSpin.setRange(minVal, maxVal)
+        self.doubleSpin.setDecimals(1)
+        self.doubleSpin.setSingleStep(0.1)
+        self.doubleSpin.setValue(initialValue)
+
+        # Set up the slider using the conversion factor.
+        self.slider = QtWidgets.QSlider(QtCore.Qt.Horizontal)
+        self.slider.setRange(int(minVal * conversion), int(maxVal * conversion))
+        self.slider.setValue(int(round(initialValue * conversion)))
+
+        layout.addWidget(self.label)
+        layout.addWidget(self.doubleSpin)
+        layout.addWidget(self.slider)
+
+        # Synchronize the two controls.
+        self.doubleSpin.valueChanged.connect(self.syncSlider)
+        self.slider.valueChanged.connect(self.syncSpinBox)
+
+        # When the slider changes, trigger our on_value_changed.
+        self.slider.valueChanged.connect(self.on_value_changed)
+
+    def syncSlider(self, newVal):
+        self.slider.blockSignals(True)
+        self.slider.setValue(int(round(newVal * self.conversion)))
+        self.slider.blockSignals(False)
+
+    def syncSpinBox(self, sliderVal):
+        self.doubleSpin.blockSignals(True)
+        self.doubleSpin.setValue(sliderVal / self.conversion)
+        self.doubleSpin.blockSignals(False)
+
+    def on_value_changed(self, sliderVal):
+        floatVal = sliderVal / self.conversion
+        try:
+            cmds.setAttr(self.attrName, floatVal)
+        except Exception as e:
+            print(f"Error setting {self.attrName}: {e}")
+        if self.callback is not None:
+            self.callback(floatVal)
+
+#---------------------------------------------------------------------
+# ColorControlWidget class using PySide2.
+#---------------------------------------------------------------------
+class ColorControlWidget(QtWidgets.QWidget):
+    """
+    A widget for controlling a Maya color attribute (an index from 0–31).
+    The UI displays a label, a button showing the current color, and a slider (range 1–32).
+    Clicking the color button opens a dialog with a grid of swatch buttons.
+    When the slider or a swatch is used, the attribute is set (via cmds.setAttr) and an optional callback is called.
+    """
+    def __init__(self, attrName, labelText, minVal=1, maxVal=32, initialValue=1, callback=None, parent=None):
+        super(ColorControlWidget, self).__init__(parent)
+        self.attrName = attrName
+        self.callback = callback
+        # Use our updated Maya index colors.
+        self.indexColors = MAYA_INDEX_COLORS
+
+        layout = QtWidgets.QHBoxLayout(self)
+        layout.setContentsMargins(2, 2, 2, 2)
+        self.label = QtWidgets.QLabel(labelText)
+        self.label.setFixedWidth(180)
+
+        # A button that displays the current color.
+        self.colorButton = QtWidgets.QPushButton()
+        self.colorButton.setFixedSize(40, 20)
+        self.colorButton.clicked.connect(self.openSwatchDialog)
+
+        # A slider for selecting an index (1–32).
+        self.slider = QtWidgets.QSlider(QtCore.Qt.Horizontal)
+        self.slider.setRange(minVal, maxVal)
+        self.slider.setValue(initialValue)
+        self.slider.valueChanged.connect(self.on_slider_changed)
+
+        layout.addWidget(self.label)
+        layout.addWidget(self.colorButton)
+        layout.addWidget(self.slider)
+
+        # Initialize the displayed color.
+        self.updateColorButton(initialValue)
+
+    def updateColorButton(self, value):
+        # Convert slider value (1–32) to a 0–31 index.
+        index = value - 1
+        if 0 <= index < len(self.indexColors):
+            color = self.indexColors[index]
+            # Set the button's background to the color.
+            self.colorButton.setStyleSheet("background-color: %s" % color.name())
+        else:
+            self.colorButton.setStyleSheet("")
+
+    def on_slider_changed(self, value):
+        self.updateColorButton(value)
+        try:
+            # Maya’s attribute is 0-indexed, so subtract 1.
+            cmds.setAttr(self.attrName, value - 1)
+        except Exception as e:
+            print(f"Error setting {self.attrName}: {e}")
+        if self.callback:
+            self.callback(value)
+
+    def openSwatchDialog(self):
+        # Create a dialog with a grid of swatch buttons.
+        dialog = QtWidgets.QDialog(self)
+        dialog.setWindowTitle("Select Icon Color")
+        grid = QtWidgets.QGridLayout(dialog)
+        rows = 4
+        cols = 8
+        for i, color in enumerate(self.indexColors):
+            btn = QtWidgets.QPushButton()
+            btn.setFixedSize(30, 30)
+            btn.setStyleSheet("background-color: %s" % color.name())
+            # Connect using a lambda that accepts the extra "checked" parameter.
+            btn.clicked.connect(lambda checked=False, v=i+1, d=dialog: self.setColorFromSwatch(v, d))
+            grid.addWidget(btn, i // cols, i % cols)
+        dialog.exec_()
+
+    def setColorFromSwatch(self, value, dialog):
+        self.slider.setValue(value)
+        dialog.accept()
 
 #---------------------------------------------------------------------
 # CollapsibleWidget class using PySide2.
@@ -144,7 +379,8 @@ class Animation_UI(QtWidgets.QDialog):
         self.UIElements["animationModule_textScroll"].setFixedHeight(225)
         self.UIElements["animationModule_textScroll"].setMinimumWidth(textScrollWidth)
         self.UIElements["listBoxRowLayout"].addWidget(self.UIElements["animationModule_textScroll"])
-        
+        self.UIElements["animationModule_textScroll"].itemSelectionChanged.connect(self.setupModuleSpecificControls)
+
         # Button Column Layout.
         self.UIElements["buttonColumnLayout"] = QtWidgets.QVBoxLayout()
         self.UIElements["listBoxRowLayout"].addLayout(self.UIElements["buttonColumnLayout"])
@@ -342,28 +578,34 @@ class Animation_UI(QtWidgets.QDialog):
             self.selectedBlueprintModule = None
             #print(f"BLUEPRINT MODULE: {self.selectedBlueprintModule}")
             
-    def refreshAnimationModuleList(self, index=1):
+    def refreshAnimationModuleList(self, index=0):
         self.UIElements["animationModule_textScroll"].clear()
         self.UIElements["deleteModuleButton"].setEnabled(False)
         self.UIElements["duplicateModuleButton"].setEnabled(False)
-        
+
         selectedItems = self.UIElements["blueprintModule_textScroll"].selectedItems()
         if selectedItems:
             selectedBlprnModule = selectedItems[0].text()
             self.selectedBlueprintModule = self.blueprintModules[selectedBlprnModule]
         self.setupActiveModuleControls()
-        
+
         cmds.namespace(setNamespace=self.selectedBlueprintModule)
         controlModuleNamespaces = cmds.namespaceInfo(listOnlyNamespaces=True) or []
         cmds.namespace(setNamespace=":")
         for module in controlModuleNamespaces:
             moduleName = utils.stripAllNamespaces(module)[1]
             self.UIElements["animationModule_textScroll"].addItem(moduleName)
+
+        # If there is at least one module but nothing is selected, force a default selection.
         if self.UIElements["animationModule_textScroll"].count() > 0:
-            self.UIElements["animationModule_textScroll"].setCurrentRow(index)
+            if not self.UIElements["animationModule_textScroll"].selectedItems():
+                self.UIElements["animationModule_textScroll"].setCurrentRow(index)
             self.UIElements["deleteModuleButton"].setEnabled(True)
             self.UIElements["duplicateModuleButton"].setEnabled(True)
-        # self.setupModuleSpecificControls()
+
+        # Now update the module specific controls.
+        self.setupModuleSpecificControls()
+
         if selectedItems:
             self.previousBlueprintListEntry = selectedItems[0].text()
         else:
@@ -435,7 +677,7 @@ class Animation_UI(QtWidgets.QDialog):
                                 items = self.UIElements["animationModule_textScroll"].findItems(moduleNamespaceInfo[0], QtCore.Qt.MatchExactly)
                                 if items:
                                     self.UIElements["animationModule_textScroll"].setCurrentItem(items[0])
-        # self.setupModuleSpecificControls()
+        self.setupModuleSpecificControls()
         # self.setupSpaceSwitchingControls()
         
     def setupActiveModuleControls(self):
@@ -511,70 +753,39 @@ class Animation_UI(QtWidgets.QDialog):
         # We use a QGridLayout so that each row has three columns:
         # (Label, a spin box showing the value, and a slider for interactive changes).
         grid = QtWidgets.QGridLayout()
-        fixedLabelWidth = 180  # Set the fixed width for label column
-
-        # --- Creation Pose Weight Row (first row) ---
-        # Build a row for the "Creation Pose Weight" which will be disabled (grayed out).
-        creationLabel = QtWidgets.QLabel("Creation Pose Weight")
-        creationLabel.setFixedWidth(fixedLabelWidth)
-        creationSpin = QtWidgets.QSpinBox()
-        creationSpin.setRange(0, 100)
-        creationSlider = QtWidgets.QSlider(QtCore.Qt.Horizontal)
-        creationSlider.setRange(0, 100)
-        creationPoseValue = cmds.getAttr(self.settingsLocator + ".creationPoseWeight")
-        creationInt = int(creationPoseValue * 100)
-        creationSpin.setValue(creationInt)
-        creationSlider.setValue(creationInt)
-        # Synchronize the two controls.
-        creationSlider.valueChanged.connect(lambda val: creationSpin.setValue(val))
-        creationSpin.valueChanged.connect(lambda val: creationSlider.setValue(val))
-        # Create a container widget for the entire row.
-        creationRowWidget = QtWidgets.QWidget()
-        creationRowLayout = QtWidgets.QHBoxLayout(creationRowWidget)
-        creationRowLayout.setContentsMargins(0, 0, 0, 0)
-        creationRowLayout.addWidget(creationLabel)
-        creationRowLayout.addWidget(creationSpin)
-        creationRowLayout.addWidget(creationSlider)
+        row = 0
+        
+        # Creation Pose Weight row (read-only)
+        creationWidget = AttrControlWidget(self.settingsLocator + ".creationPoseWeight",
+                                           "Creation Pose Weight", minVal=0, maxVal=100,
+                                           initialValue=int(cmds.getAttr(self.settingsLocator + ".creationPoseWeight")*100),
+                                           callback=None)
+        
         # Disable the entire row.
-        creationRowWidget.setDisabled(True)
-        grid.addWidget(creationRowWidget, 0, 0, 1, 3)
+        creationWidget.setDisabled(True)
+
+        # Save references so they can be updated later
+        self.UIElements["creationSpin"] = creationWidget.spinBox
+        self.UIElements["creationSlider"] = creationWidget.slider
+        
+        grid.addWidget(creationWidget, row, 0, 1, 1)
+        row += 1
 
         # Add a horizontal separator after the creation row.
         separator = utils.create_separator()  # Assuming this returns a QWidget or QFrame.
-        grid.addWidget(separator, 1, 0, 1, 3)
-
-        # **Store these controls so the callback can update them later**
-        self.UIElements["creationSpin"] = creationSpin
-        self.UIElements["creationSlider"] = creationSlider
+        grid.addWidget(separator, row, 0, 1, 3)
+        row += 1
 
         # --- Weight Attribute Rows ---
         # For each weight attribute, add a row with a label, spin box, and slider.
-        row = 2
         for attr in weightAttributes:
-            label = QtWidgets.QLabel(attr)
-            label.setFixedWidth(fixedLabelWidth)
-            spin = QtWidgets.QSpinBox()
-            spin.setRange(0, 100)
-            slider = QtWidgets.QSlider(QtCore.Qt.Horizontal)
-            slider.setRange(0, 100)
-            val = cmds.getAttr(self.settingsLocator + "." + attr)
-            intVal = int(val * 100)
-            spin.setValue(intVal)
-            slider.setValue(intVal)
-            # Synchronize the two controls
-            slider.valueChanged.connect(lambda v, s=spin: s.setValue(v))
-            spin.valueChanged.connect(lambda v, s=slider: s.setValue(v))
-            # Connect both signals to the update function.
-            slider.valueChanged.connect(lambda v, a=attr, wa=weightAttributes: self.moduleWeights_sliderCallback(a, wa, v))
-            spin.valueChanged.connect(lambda v, a=attr, wa=weightAttributes: self.moduleWeights_sliderCallback(a, wa, v))
-
-            grid.addWidget(label, row, 0)
-            grid.addWidget(spin, row, 1)
-            grid.addWidget(slider, row, 2)
-
-            # Store references for later updating
-            self.UIElements[attr + "_spin"] = spin
-            self.UIElements[attr] = slider
+            fullAttr = self.settingsLocator + "." + attr
+            initial = int(cmds.getAttr(fullAttr)*100)
+            widget = AttrControlWidget(fullAttr, attr, minVal=0, maxVal=100, initialValue=initial,
+                                    callback=lambda val, a=attr, wa=weightAttributes: self.moduleWeights_sliderCallback(a, wa, val))
+            grid.addWidget(widget, row, 0, 1, 1)
+            # Save the widget for later use (so that we can update its slider and spinbox)
+            self.UIElements[attr] = widget
             row += 1
 
         # --- Wrap the grid in a collapsible widget
@@ -597,14 +808,10 @@ class Animation_UI(QtWidgets.QDialog):
         self.moduleWeights_updateMatchingButton()
     
     def moduleWeights_sliderCallback(self, controlledAttribute, weightAttributes, newIntValue):
-        """
-        Called whenever the slider or spin box for a given weight attribute changes.
-        newIntValue is expected to be an integer 0-100.
-        """
-        # Convert the value from 0-100 to 0.0-1.0.
+        # Convert the new integer value (0-100) to a float 0.0-1.0.
         newValue = newIntValue / 100.0
 
-        # Sum the values for all other weight attributes.
+        # Sum the values of all other weight attributes.
         currentTotal = 0.0
         for attr in weightAttributes:
             if attr != controlledAttribute:
@@ -614,27 +821,27 @@ class Animation_UI(QtWidgets.QDialog):
         if currentTotal + newValue > 1.0:
             newValue = 1.0 - currentTotal
 
-        # Set the attribute in Maya.
+        # Update the Maya attribute.
         cmds.setAttr(self.settingsLocator + "." + controlledAttribute, newValue)
 
-        # Update the UI for the controlled attribute.
-        intVal = int(newValue * 100)
-        # Block signals to prevent recursion.
-        self.UIElements[controlledAttribute].blockSignals(True)
-        self.UIElements[controlledAttribute + "_spin"].blockSignals(True)
-        self.UIElements[controlledAttribute].setValue(intVal)
-        self.UIElements[controlledAttribute + "_spin"].setValue(intVal)
-        self.UIElements[controlledAttribute].blockSignals(False)
-        self.UIElements[controlledAttribute + "_spin"].blockSignals(False)
+        # Update the UI control for the changed attribute.
+        intVal = int(round(newValue * 100))
+        widget = self.UIElements[controlledAttribute]  # This is an instance of AttrControlWidget.
+        widget.slider.blockSignals(True)
+        widget.spinBox.blockSignals(True)
+        widget.slider.setValue(intVal)
+        widget.spinBox.setValue(intVal)
+        widget.slider.blockSignals(False)
+        widget.spinBox.blockSignals(False)
 
-        # Now update the creationPoseWeight.
+        # Update the Creation Pose Weight.
         newTotal = currentTotal + newValue
         creationPose = 1.0 - newTotal
         cmds.setAttr(self.settingsLocator + ".creationPoseWeight", creationPose)
 
-        # If you have UI controls for creationPoseWeight (say, stored as "creationSpin" and "creationSlider"):
+        # Update the UI controls for Creation Pose Weight if they exist.
         if "creationSpin" in self.UIElements and "creationSlider" in self.UIElements:
-            intCreation = int(creationPose * 100)
+            intCreation = int(round(creationPose * 100))
             self.UIElements["creationSpin"].blockSignals(True)
             self.UIElements["creationSlider"].blockSignals(True)
             self.UIElements["creationSpin"].setValue(intCreation)
@@ -642,7 +849,6 @@ class Animation_UI(QtWidgets.QDialog):
             self.UIElements["creationSpin"].blockSignals(False)
             self.UIElements["creationSlider"].blockSignals(False)
 
-        # Finally, update any other UI (such as a matching button).
         self.moduleWeights_updateMatchingButton()
 
     def create_moduleWeightsScriptJob(self, weightAttributes):
@@ -656,9 +862,10 @@ class Animation_UI(QtWidgets.QDialog):
                 if cmds.attributeQuery(attr, node=self.settingsLocator, exists=True):
                     value = cmds.getAttr(self.settingsLocator + "." + attr)
                     # Update the slider/spinbox (using whichever UI control you have)
-                    slider = self.UIElements.get(attr)
-                    if slider:
-                        slider.setValue(int(value * 100))
+                    widget = self.UIElements.get(attr)
+                    if widget:
+                        widget.slider.setValue(int(round(value * 100)))
+
                 else:
                     print(f"Attribute {attr} does not exist on {self.settingsLocator}")
             except Exception as e:
@@ -688,66 +895,87 @@ class Animation_UI(QtWidgets.QDialog):
         cmds.select(self.settingsLocator, replace=True)
         mel.eval("tearOffPanel \"Graph Editor\" graphEditor true")
         
-    # def setupModuleSpecificControls(self):
-    #     selectedItems = self.UIElements["animationModule_textScroll"].selectedItems()
-    #     currentlySelectedModuleNamespace = None
-    #     if selectedItems:
-    #         currentlySelectedModuleNamespace = selectedItems[0].text()
-    #         if (currentlySelectedModuleNamespace == self.previousAnimationModule and
-    #             self.selectedBlueprintModule == self.previousBlueprintModule):
-    #             return
-    #     # Clear controls from moduleSpecificControlsColumn.
-    #     layout = self.UIElements["moduleSpecificControlsColumn"]
-    #     while layout.count():
-    #         child = layout.takeAt(0)
-    #         if child.widget():
-    #             child.widget().deleteLater()
-    #     self.UIElements["matchingButton"].setEnabled(False)
-    #     # Get module names from utils.
-    #     moduleNameInfo = utils.findAllModuleNames("/Modules/Animation")
-    #     modules, moduleNames = moduleNameInfo
-    #     if selectedItems:
-    #         currentlySelectedModule = currentlySelectedModuleNamespace.rpartition("_")[0]
-    #         if currentlySelectedModule in moduleNames:
-    #             moduleWeightValue = cmds.getAttr(self.selectedBlueprintModule + ":SETTINGS." + currentlySelectedModuleNamespace + "_weight")
-    #             matchButtonEnable = (moduleWeightValue == 0.0)
-    #             moduleIndex = moduleNames.index(currentlySelectedModule)
-    #             module = modules[moduleIndex]
-    #             # Create a placeholder label for module LOD control.
-    #             placeholder = QtWidgets.QLabel(f"Module LOD: {self.selectedBlueprintModule}:{currentlySelectedModuleNamespace}:module_grp.lod")
-    #             layout.addWidget(placeholder)
-                
-    #             mod = __import__("Animation." + module, {}, {}, [module])
-    #             importlib.reload(mod)
-    #             moduleClass = getattr(mod, mod.CLASS_NAME)
-    #             moduleInst = moduleClass(self.selectedBlueprintModule + ":" + currentlySelectedModuleNamespace)
-    #             # Let moduleInst add its UI controls to the given layout.
-    #             moduleInst.UI(layout)
-                
-    #             # Create a preferences frame.
-    #             prefGroup = QtWidgets.QGroupBox("preferences")
-    #             prefLayout = QtWidgets.QVBoxLayout(prefGroup)
-    #             layout.addWidget(prefGroup)
-                
-    #             # Placeholder for icon scale control.
-    #             iconScaleLabel = QtWidgets.QLabel("Icon Scale: " + self.selectedBlueprintModule + ":" + currentlySelectedModuleNamespace + ":module_grp.iconScale")
-    #             prefLayout.addWidget(iconScaleLabel)
-                
-    #             # Color slider for icon color.
-    #             value = cmds.getAttr(self.selectedBlueprintModule + ":" + currentlySelectedModuleNamespace + ":module_grp.overrideColor") + 1
-    #             self.UIElements["iconColor"] = QtWidgets.QSlider(QtCore.Qt.Horizontal)
-    #             self.UIElements["iconColor"].setMaximum(32)
-    #             self.UIElements["iconColor"].setValue(value)
-    #             self.UIElements["iconColor"].valueChanged.connect(partial(self.iconColour_callback, currentlySelectedModuleNamespace))
-    #             prefLayout.addWidget(self.UIElements["iconColor"])
-                
-    #             moduleInst.UI_preferences(prefLayout)
-    #             self.UIElements["matchingButton"].setEnabled(matchButtonEnable)
-    #         self.previousBlueprintModule = self.selectedBlueprintModule
-    #         self.previousAnimationModule = currentlySelectedModuleNamespace
-        
-    # def iconColour_callback(self, currentlySelectedModuleNamespace, value):
-    #     cmds.setAttr(self.selectedBlueprintModule + ":" + currentlySelectedModuleNamespace + ":module_grp.overrideColor", value - 1)
+    def setupModuleSpecificControls(self):
+        # Debounce: if this method was run in the last 0.2 seconds, return.
+        now = time.time()
+        if hasattr(self, '_lastModuleSpecUpdate') and (now - self._lastModuleSpecUpdate < 0.2):
+            return
+        self._lastModuleSpecUpdate = now
+
+        selectedItems = self.UIElements["animationModule_textScroll"].selectedItems()
+        currentlySelectedModuleNamespace = None
+        if selectedItems:
+            currentlySelectedModuleNamespace = selectedItems[0].text()
+            if (currentlySelectedModuleNamespace == self.previousAnimationModule and
+                self.selectedBlueprintModule == self.previousBlueprintModule):
+                return
+
+        # Clear controls from moduleSpecificControlsColumn.
+        layout = self.UIElements["moduleSpecificControlsColumn"]
+        while layout.count():
+            child = layout.takeAt(0)
+            if child.widget():
+                child.widget().deleteLater()
+        self.UIElements["matchingButton"].setEnabled(False)
+
+        # Get module names from utils.
+        moduleNameInfo = utils.findAllModuleNames("/Modules/Animation")
+        modules = moduleNameInfo[0]
+        moduleNames = moduleNameInfo[1]
+        if selectedItems:
+            currentlySelectedModule = currentlySelectedModuleNamespace.rpartition("_")[0]
+            if currentlySelectedModule in moduleNames:
+                moduleWeightValue = cmds.getAttr(self.selectedBlueprintModule + ":SETTINGS." + currentlySelectedModuleNamespace + "_weight")
+                matchButtonEnable = (moduleWeightValue == 0.0)
+                moduleIndex = moduleNames.index(currentlySelectedModule)
+                module = modules[moduleIndex]
+
+                # Create widget for module LOD control.
+                fullAttr = self.selectedBlueprintModule + ":" + currentlySelectedModuleNamespace + ":module_grp.lod"
+                value = cmds.getAttr(fullAttr)
+                moduleLOD = AttrControlWidget(fullAttr, "Module LOD:", minVal=0, maxVal=3, initialValue=value, callback=None, scale=False)
+                layout.addWidget(moduleLOD)
+                print(f"STARTING ATTRIBUTE: {fullAttr} STARTING VALUE: {value}")
+
+                mod = __import__("Animation." + module, {}, {}, [module])
+                importlib.reload(mod)
+                moduleClass = getattr(mod, mod.CLASS_NAME)
+                moduleInst = moduleClass(self.selectedBlueprintModule + ":" + currentlySelectedModuleNamespace)
+                # Let moduleInst add its UI controls to the given layout.
+                moduleInst.UI(layout)
+
+                # Create a preferences section as a collapsible widget.
+                preferencesWidget = CollapsibleWidget(title="Preferences", settingsKey="AnimationUI/Preferences")
+                prefLayout = QtWidgets.QVBoxLayout()
+                preferencesWidget.setContentLayout(prefLayout)
+                layout.addWidget(preferencesWidget)
+
+                # Create an icon scale control using our FloatAttrControlWidget.
+                fullAttrIconScale = self.selectedBlueprintModule + ":" + currentlySelectedModuleNamespace + ":module_grp.iconScale"
+                currentScale = cmds.getAttr(fullAttrIconScale)
+                iconScaleControl = FloatAttrControlWidget(fullAttrIconScale, "Icon Scale:", minVal=0.1, maxVal=5.0,
+                                                          initialValue=currentScale, conversion=1000,
+                                                          callback=lambda newVal: cmds.setAttr(fullAttrIconScale, newVal))
+                prefLayout.addWidget(iconScaleControl)
+
+                # Create an icon color control using our ColorControlWidget.
+                colorAttr = self.selectedBlueprintModule + ":" + currentlySelectedModuleNamespace + ":module_grp.overrideColor"
+                currentColor = cmds.getAttr(colorAttr)
+                colorInitial = currentColor  # UI displays this value
+                colorControl = ColorControlWidget(colorAttr, "Icon Color:",
+                                                   minVal=1, maxVal=31,
+                                                   initialValue=colorInitial,
+                                                   callback=lambda newVal: cmds.setAttr(colorAttr, newVal))
+                prefLayout.addWidget(colorControl)
+
+                moduleInst.UI_preferences(prefLayout)
+                self.UIElements["matchingButton"].setEnabled(matchButtonEnable)
+
+        self.previousBlueprintModule = self.selectedBlueprintModule
+        self.previousAnimationModule = currentlySelectedModuleNamespace
+  
+    def iconColour_callback(self, currentlySelectedModuleNamespace, value):
+        cmds.setAttr(self.selectedBlueprintModule + ":" + currentlySelectedModuleNamespace + ":module_grp.overrideColor", value)
         
     def deleteSelectedModule(self):
         selectedItems = self.UIElements["animationModule_textScroll"].selectedItems()
