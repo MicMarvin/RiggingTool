@@ -1128,3 +1128,5 @@ if __name__ == "__main__":
         app = QtWidgets.QApplication([])
     ui = Animation_UI()
     ui.show()
+
+    
