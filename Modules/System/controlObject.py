@@ -8,6 +8,7 @@ from pathlib import Path
 from functools import partial
 from PySide2 import QtWidgets, QtCore, QtGui
 
+
 class ControlObject:
     def __init__(self, controlObject=None):
         if controlObject != None:
@@ -275,102 +276,146 @@ class ControlObject:
 
     def UI(self, parentLayout):
         """
-        Create a PySide UI for this control object. This replaces the old cmds-based UI.
-        It creates:
-        - A separator and a label with the control’s nice name.
-        - A checkbox for the "display" (visibility) attribute.
-        - Input controls (QDoubleSpinBox) for the translation and rotation attributes.
-        - An input for globalScale if enabled.
-        The controls read and write directly to the control object’s attributes via cmds.setAttr/getAttr.
+        Build a PySide UI for this control object.
+        The UI is built inside a CollapsibleWidget whose header contains a bold label (the control’s name)
+        and a visibility checkbox. The content area contains three groups for Translate, Rotate, and (if applicable) Scale.
+        In each group the X, Y, and Z controls (label + spin box) are arranged horizontally with a spacer between each.
         """
-        # Create a container widget for our UI controls.
-        container = QtWidgets.QWidget()
-        layout = QtWidgets.QVBoxLayout(container)
-        layout.setSpacing(5)
-        layout.setContentsMargins(5, 5, 5, 5)
+        import System.animation_UI
+        importlib.reload(System.animation_UI)
+        from System.animation_UI import CollapsibleWidget, ClickToScrollDoubleSpinBox, FloatAttrControlWidget
 
-        # Separator (horizontal line)
-        separator = QtWidgets.QFrame()
-        separator.setFrameShape(QtWidgets.QFrame.HLine)
-        separator.setFrameShadow(QtWidgets.QFrame.Sunken)
-        layout.addWidget(separator)
-
-        # Label with the control object's name.
+        # Create a custom header widget
+        headerWidget = QtWidgets.QWidget()
+        headerLayout = QtWidgets.QHBoxLayout(headerWidget)
+        headerLayout.setContentsMargins(5, 5, 5, 5)
         niceName = utils.stripAllNamespaces(self.controlObject)[1]
         nameLabel = QtWidgets.QLabel(niceName)
         nameLabel.setStyleSheet("font-weight: bold;")
-        layout.addWidget(nameLabel)
-
-        # Visibility control: a checkbox.
+        headerLayout.addWidget(nameLabel)
+        headerLayout.addStretch(1)
+        # Create a visibility checkbox.
         visCheckbox = QtWidgets.QCheckBox("Visibility")
         try:
             visVal = cmds.getAttr(self.controlObject + ".display")
         except Exception:
             visVal = True
         visCheckbox.setChecked(bool(visVal))
-        # When toggled, update the attribute.
         visCheckbox.stateChanged.connect(lambda state: cmds.setAttr(self.controlObject + ".display", bool(state)))
-        layout.addWidget(visCheckbox)
+        headerLayout.addWidget(visCheckbox)
 
-        # --- Translation controls ---
+        # Create the collapsible widget using our custom header.
+        # (Assuming CollapsibleWidget is imported from our animation_UI module.)
+        collapsible = CollapsibleWidget(headerWidget=headerWidget, settingsKey="ControlObject/" + niceName)
+        contentLayout = QtWidgets.QVBoxLayout()
+        collapsible.setContentLayout(contentLayout)
+
+        # --- Translate Controls Group ---
         transGroup = QtWidgets.QGroupBox("Translate")
         transLayout = QtWidgets.QHBoxLayout(transGroup)
-        axes = ['X', 'Y', 'Z']
-        for axis in axes:
-            # For each axis, create a label and a QDoubleSpinBox.
+        transLayout.setSpacing(10)
+        self._transControls = {}
+        for axis in ['X', 'Y', 'Z']:
+            # Create a horizontal layout for each axis.
+            axisLayout = QtWidgets.QHBoxLayout()
+            lbl = QtWidgets.QLabel(axis + ":")
+            spin = ClickToScrollDoubleSpinBox()
+            spin.setRange(-100, 100)
+            spin.setDecimals(3)
             try:
                 val = cmds.getAttr(self.controlObject + ".translate" + axis)
             except Exception:
                 val = 0.0
-            lbl = QtWidgets.QLabel(axis + ":")
-            spin = QtWidgets.QDoubleSpinBox()
-            spin.setRange(-10000, 10000)
-            spin.setDecimals(3)
             spin.setValue(val)
             # When changed, update the Maya attribute.
             spin.valueChanged.connect(lambda v, a=axis: cmds.setAttr(self.controlObject + ".translate" + a, v))
-            transLayout.addWidget(lbl)
-            transLayout.addWidget(spin)
-        layout.addWidget(transGroup)
+            axisLayout.addWidget(lbl)
+            axisLayout.addWidget(spin)
+            axisLayout.addStretch(1)
+            transLayout.addLayout(axisLayout)
+            self._transControls[axis] = spin
+        contentLayout.addWidget(transGroup)
 
-        # --- Rotation controls ---
+        # --- Rotate Controls Group ---
         rotGroup = QtWidgets.QGroupBox("Rotate")
         rotLayout = QtWidgets.QHBoxLayout(rotGroup)
-        for axis in axes:
+        rotLayout.setSpacing(10)
+        self._rotControls = {}
+        for axis in ['X', 'Y', 'Z']:
+            axisLayout = QtWidgets.QHBoxLayout()
+            lbl = QtWidgets.QLabel(axis + ":")
+            spin = ClickToScrollDoubleSpinBox()
+            spin.setRange(-360, 360)
+            spin.setDecimals(3)
             try:
                 val = cmds.getAttr(self.controlObject + ".rotate" + axis)
             except Exception:
                 val = 0.0
-            lbl = QtWidgets.QLabel(axis + ":")
-            spin = QtWidgets.QDoubleSpinBox()
-            spin.setRange(-360, 360)
-            spin.setDecimals(3)
             spin.setValue(val)
             spin.valueChanged.connect(lambda v, a=axis: cmds.setAttr(self.controlObject + ".rotate" + a, v))
-            rotLayout.addWidget(lbl)
-            rotLayout.addWidget(spin)
-        layout.addWidget(rotGroup)
+            axisLayout.addWidget(lbl)
+            axisLayout.addWidget(spin)
+            axisLayout.addStretch(1)
+            rotLayout.addLayout(axisLayout)
+            self._rotControls[axis] = spin
+        contentLayout.addWidget(rotGroup)
 
-        # --- Global Scale control (if enabled) ---
+        # --- Global Scale Control (if enabled) ---
         if self.globalScale:
-            scaleGroup = QtWidgets.QGroupBox("Scale")
-            scaleLayout = QtWidgets.QHBoxLayout(scaleGroup)
+            fullAttr = self.controlObject + ".globalScale"
             try:
-                val = cmds.getAttr(self.controlObject + ".globalScale")
+                val = cmds.getAttr(fullAttr)
             except Exception:
                 val = 1.0
-            lbl = QtWidgets.QLabel("Global:")
-            spin = QtWidgets.QDoubleSpinBox()
-            spin.setRange(0.001, 1000)
-            spin.setDecimals(3)
-            spin.setValue(val)
-            spin.valueChanged.connect(lambda v: cmds.setAttr(self.controlObject + ".globalScale", v))
-            scaleLayout.addWidget(lbl)
-            scaleLayout.addWidget(spin)
-            layout.addWidget(scaleGroup)
+            # Create the float control widget with the desired range and conversion factor.
+            scaleControl = FloatAttrControlWidget(fullAttr, "Global Scale:", 0.1, 10, val, conversion=1000, callback=lambda v: cmds.setAttr(fullAttr, v))
+            contentLayout.addWidget(scaleControl)
+            self._scaleControl = scaleControl
 
-        # Finally, add the container widget to the provided parent layout.
-        parentLayout.addWidget(container)
+        parentLayout.addWidget(collapsible)
+        
+        # separator
+        parentLayout.addWidget(utils.create_separator())
+
+        # Create a QTimer to refresh values periodically so that external changes are reflected.
+        self.refreshTimer = QtCore.QTimer(collapsible)
+        self.refreshTimer.timeout.connect(self._refreshValues)
+        self.refreshTimer.start(100)
+
+    def _refreshValues(self):
+        # If the control object no longer exists, just return.
+        if not cmds.objExists(self.controlObject):
+            return
+
+        # Refresh translation values.
+        for axis, spin in self._transControls.items():
+            attr = self.controlObject + ".translate" + axis
+            if cmds.objExists(attr) and not spin.hasFocus():
+                try:
+                    val = cmds.getAttr(attr)
+                    spin.setValue(val)
+                except Exception as e:
+                    print("Error refreshing translate" + axis + ":", e)
+
+        # Refresh rotation values.
+        for axis, spin in self._rotControls.items():
+            attr = self.controlObject + ".rotate" + axis
+            if cmds.objExists(attr) and not spin.hasFocus():
+                try:
+                    val = cmds.getAttr(attr)
+                    spin.setValue(val)
+                except Exception as e:
+                    print("Error refreshing rotate" + axis + ":", e)
+
+        # Refresh global scale (if enabled).
+        if self.globalScale and hasattr(self, "_scaleControl") and not self._scaleControl.hasFocus():
+            attr = self.controlObject + ".globalScale"
+            if cmds.objExists(attr):
+                try:
+                    val = cmds.getAttr(attr)
+                    self._scaleControl.setValue(val)
+                except Exception as e:
+                    print("Error refreshing global scale:", e)
 
     # def switchSpace_UI(self, targetObject):
     #     constraint = self.controlObject + "_spaceSwitcher_scaleConstraint"

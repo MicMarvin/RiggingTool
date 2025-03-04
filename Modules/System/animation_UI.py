@@ -20,6 +20,13 @@ def maya_main_window():
     main_window_ptr = omui.MQtUtil.mainWindow()
     return wrapInstance(int(main_window_ptr), QtWidgets.QWidget)
 
+def clearLayout(layout):
+    while layout.count():
+        item = layout.takeAt(0)
+        widget = item.widget()
+        if widget is not None:
+            widget.setParent(None)
+
 MAYA_INDEX_COLORS = [
     QtGui.QColor(0, 0, 0),           #  1: Black
     QtGui.QColor(64, 64, 64),        #  2: Dark Gray (0.25,0.25,0.25)
@@ -54,6 +61,13 @@ MAYA_INDEX_COLORS = [
     QtGui.QColor(160, 48, 105),      # 31: Reddish Purple (≈0.63,0.189,0.414)
     QtGui.QColor(249, 170, 38),      # 32: Yellowish Orange 
 ]
+
+#---------------------------------------------------------------------
+# ClickToScrollDoubleSpinBox class fix for scroll wheel.
+#---------------------------------------------------------------------
+class ClickToScrollDoubleSpinBox(QtWidgets.QDoubleSpinBox):
+    def wheelEvent(self, event):
+        event.ignore()
 
 #---------------------------------------------------------------------
 # AttrControlWidget class using PySide2.
@@ -133,7 +147,7 @@ class FloatAttrControlWidget(QtWidgets.QWidget):
         self.label = QtWidgets.QLabel(labelText)
         self.label.setFixedWidth(180)
 
-        self.doubleSpin = QtWidgets.QDoubleSpinBox()
+        self.doubleSpin = ClickToScrollDoubleSpinBox()
         self.doubleSpin.setRange(minVal, maxVal)
         self.doubleSpin.setDecimals(1)
         self.doubleSpin.setSingleStep(0.1)
@@ -258,41 +272,55 @@ class ColorControlWidget(QtWidgets.QWidget):
 # CollapsibleWidget class using PySide2.
 #---------------------------------------------------------------------
 class CollapsibleWidget(QtWidgets.QWidget):
-    def __init__(self, title="", settingsKey="", parent=None):
+    def __init__(self, title="", settingsKey="", headerWidget=None, parent=None):
         super(CollapsibleWidget, self).__init__(parent)
-        self.settingsKey = settingsKey  # a unique key for saving state, e.g., "AnimationUI/ModuleWeightsExpanded"
-        self.settings = QtCore.QSettings("MicMarvin", "RiggingTool")  # adjust organization and application names as needed
+        self.settingsKey = settingsKey
+        self.settings = QtCore.QSettings("MicMarvin", "RiggingTool")
 
-        # Create the toggle button
-        self.toggleButton = QtWidgets.QToolButton(text=title, checkable=True)
+        # Create a separate toggle button for the arrow (icon-only)
+        self.toggleButton = QtWidgets.QToolButton()
+        self.toggleButton.setCheckable(True)
         self.toggleButton.setStyleSheet("QToolButton { border: none; }")
-        self.toggleButton.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
-        # Retrieve saved state (default True)
-        savedState = self.settings.value(self.settingsKey, True, type=bool)
-        self.toggleButton.setChecked(savedState)
-        self.toggleButton.setArrowType(QtCore.Qt.DownArrow if savedState else QtCore.Qt.RightArrow)
+        self.toggleButton.setToolButtonStyle(QtCore.Qt.ToolButtonIconOnly)
+        # Retrieve the saved state (default True)
+        state = self.settings.value(self.settingsKey, True, type=bool)
+        self.toggleButton.setChecked(state)
+        self.toggleButton.setArrowType(QtCore.Qt.DownArrow if state else QtCore.Qt.RightArrow)
         self.toggleButton.clicked.connect(self.on_toggle)
 
-        # The content area that will be shown or hidden.
+        # Use the provided headerWidget if available; otherwise create a bold label using title.
+        if headerWidget is not None:
+            self.headerWidget = headerWidget
+        else:
+            self.headerWidget = QtWidgets.QLabel(title)
+            self.headerWidget.setStyleSheet("font-weight: bold;")
+
+        # Build a header layout that contains the arrow toggle and the header widget.
+        headerLayout = QtWidgets.QHBoxLayout()
+        headerLayout.setContentsMargins(0, 0, 0, 0)
+        headerLayout.addWidget(self.toggleButton)
+        headerLayout.addWidget(self.headerWidget)
+
+        # The content area will contain the collapsible content.
         self.contentArea = QtWidgets.QWidget()
         self.contentArea.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
-        self.contentArea.setVisible(savedState)
+        self.contentArea.setVisible(state)
 
-        # Layout
+        # Main layout
         mainLayout = QtWidgets.QVBoxLayout(self)
         mainLayout.setContentsMargins(0, 0, 0, 0)
-        mainLayout.addWidget(self.toggleButton)
+        mainLayout.addLayout(headerLayout)
         mainLayout.addWidget(self.contentArea)
 
     def on_toggle(self):
         state = self.toggleButton.isChecked()
         self.toggleButton.setArrowType(QtCore.Qt.DownArrow if state else QtCore.Qt.RightArrow)
         self.contentArea.setVisible(state)
-        # Save the state so that next time the window is opened, it remembers the user's choice.
         self.settings.setValue(self.settingsKey, state)
 
     def setContentLayout(self, layout):
         self.contentArea.setLayout(layout)
+
 
 #---------------------------------------------------------------------
 # Animation_UI class using PySide2.
@@ -525,10 +553,23 @@ class Animation_UI(QtWidgets.QDialog):
         self.UIElements["moduleSpecifiedControlsScroll"] = QtWidgets.QScrollArea()
         self.UIElements["moduleSpecifiedControlsScroll"].setMinimumWidth(420)
         self.UIElements["moduleSpecifiedControlsScroll"].setWidgetResizable(True)
+       
         moduleSpecWidget = QtWidgets.QWidget()
+        self.UIElements["moduleSpecWidget"] = moduleSpecWidget  # store the widget!
         self.UIElements["moduleSpecificControlsColumn"] = QtWidgets.QVBoxLayout(moduleSpecWidget)
         self.UIElements["moduleSpecifiedControlsScroll"].setWidget(moduleSpecWidget)
+
+        # Create container widgets for Module LOD and Preferences:
+        self.UIElements["moduleSpecificLODWidget"] = QtWidgets.QWidget()
+        self.UIElements["moduleSpecificLOD"] = QtWidgets.QVBoxLayout(self.UIElements["moduleSpecificLODWidget"])
+        self.UIElements["moduleSpecificPreferencesWidget"] = QtWidgets.QWidget()
+        self.UIElements["moduleSpecificPreferences"] = QtWidgets.QVBoxLayout(self.UIElements["moduleSpecificPreferencesWidget"])
+
+        # Then add them (in order) to the top column layout:
+        self.UIElements["topColumnLayout"].addWidget(self.UIElements["moduleSpecificLODWidget"])
         self.UIElements["topColumnLayout"].addWidget(self.UIElements["moduleSpecifiedControlsScroll"])
+        self.UIElements["topColumnLayout"].addWidget(self.UIElements["moduleSpecificPreferencesWidget"])
+
         
         # Initialize blueprint module list and refresh animation module list.
         self.initializeBlueprintModuleList()
@@ -894,7 +935,7 @@ class Animation_UI(QtWidgets.QDialog):
         import maya.mel as mel
         cmds.select(self.settingsLocator, replace=True)
         mel.eval("tearOffPanel \"Graph Editor\" graphEditor true")
-        
+
     def setupModuleSpecificControls(self):
         # Debounce: if this method was run in the last 0.2 seconds, return.
         now = time.time()
@@ -910,14 +951,16 @@ class Animation_UI(QtWidgets.QDialog):
                 self.selectedBlueprintModule == self.previousBlueprintModule):
                 return
 
+        # Clear the contents of the three container layouts.
+        clearLayout(self.UIElements["moduleSpecificControlsColumn"])
+        clearLayout(self.UIElements["moduleSpecificLOD"])
+        clearLayout(self.UIElements["moduleSpecificPreferences"])
+
         # Clear controls from moduleSpecificControlsColumn.
         layout = self.UIElements["moduleSpecificControlsColumn"]
-        while layout.count():
-            child = layout.takeAt(0)
-            if child.widget():
-                child.widget().deleteLater()
-        self.UIElements["matchingButton"].setEnabled(False)
-
+        moduleSpecificLODLayout = self.UIElements["moduleSpecificLOD"]
+        moduleSpecificPreferencesLayout = self.UIElements["moduleSpecificPreferences"]
+        
         # Get module names from utils.
         moduleNameInfo = utils.findAllModuleNames("/Modules/Animation")
         modules = moduleNameInfo[0]
@@ -934,9 +977,8 @@ class Animation_UI(QtWidgets.QDialog):
                 fullAttr = self.selectedBlueprintModule + ":" + currentlySelectedModuleNamespace + ":module_grp.lod"
                 value = cmds.getAttr(fullAttr)
                 moduleLOD = AttrControlWidget(fullAttr, "Module LOD:", minVal=0, maxVal=3, initialValue=value, callback=None, scale=False)
-                layout.addWidget(moduleLOD)
-                print(f"STARTING ATTRIBUTE: {fullAttr} STARTING VALUE: {value}")
-
+                moduleSpecificLODLayout.addWidget(moduleLOD)
+                
                 mod = __import__("Animation." + module, {}, {}, [module])
                 importlib.reload(mod)
                 moduleClass = getattr(mod, mod.CLASS_NAME)
@@ -948,7 +990,7 @@ class Animation_UI(QtWidgets.QDialog):
                 preferencesWidget = CollapsibleWidget(title="Preferences", settingsKey="AnimationUI/Preferences")
                 prefLayout = QtWidgets.QVBoxLayout()
                 preferencesWidget.setContentLayout(prefLayout)
-                layout.addWidget(preferencesWidget)
+                moduleSpecificPreferencesLayout.addWidget(preferencesWidget)
 
                 # Create an icon scale control using our FloatAttrControlWidget.
                 fullAttrIconScale = self.selectedBlueprintModule + ":" + currentlySelectedModuleNamespace + ":module_grp.iconScale"
