@@ -1,0 +1,239 @@
+global proc shelf_RiggingTool () {
+    global string $gBuffStr;
+    global string $gBuffStr0;
+    global string $gBuffStr1;
+
+
+    shelfButton
+        -enableCommandRepeat 1
+        -flexibleWidthType 3
+        -flexibleWidthValue 32
+        -enable 1
+        -width 35
+        -height 34
+        -manage 1
+        -visible 1
+        -preventOverride 0
+        -annotation "Blueprint UI" 
+        -enableBackground 0
+        -backgroundColor 0 0 0 
+        -highlightColor 0.321569 0.521569 0.65098 
+        -align "center" 
+        -label "Blueprint" 
+        -labelOffset 0
+        -rotation 0
+        -flipX 0
+        -flipY 0
+        -useAlpha 1
+        -overlayLabelColor 0.8 0.8 0.8 
+        -overlayLabelBackColor 0 0 0 0.5 
+        -image "W:/Dev/Maya_Tools/RiggingTool/Icons/shelf_blueprint.svg" 
+        -image1 "W:/Dev/Maya_Tools/RiggingTool/Icons/shelf_blueprint.svg" 
+        -style "iconOnly" 
+        -marginWidth 1
+        -marginHeight 1
+        -command "import os\ntry:\n    os.environ[\"RIGGING_TOOL_ROOT\"]\nexcept KeyError:\n    print(\"RIGGING_TOOL_ROOT environment variable not correctly configured.\")\nelse:\n    import importlib\n    import RiggingTool.Modules.System.blueprint_UI as blueprint_UI\n    #importlib.reload(blueprint_UI) #Only needed for testing\n    blueprint_UI.Blueprint_UI.display()" 
+        -sourceType "python" 
+        -commandRepeatable 1
+        -flat 1
+    ;
+    shelfButton
+        -enableCommandRepeat 1
+        -flexibleWidthType 3
+        -flexibleWidthValue 32
+        -enable 1
+        -width 35
+        -height 34
+        -manage 1
+        -visible 1
+        -preventOverride 0
+        -annotation "Attach Geo to Blueprint (Parent)" 
+        -enableBackground 0
+        -backgroundColor 0 0 0 
+        -highlightColor 0.321569 0.521569 0.65098 
+        -align "center" 
+        -label "Attach Geo to Blueprint (Parent)" 
+        -labelOffset 0
+        -rotation 0
+        -flipX 0
+        -flipY 0
+        -useAlpha 1
+        -overlayLabelColor 0.8 0.8 0.8 
+        -overlayLabelBackColor 0 0 0 0.5 
+        -image "W:/Dev/Maya_Tools/RiggingTool/Icons/shelf_Attach_Parent.svg" 
+        -image1 "W:/Dev/Maya_Tools/RiggingTool/Icons/shelf_Attach_Parent.svg" 
+        -style "iconOnly" 
+        -marginWidth 1
+        -marginHeight 1
+        -command "import os\n\ntry:\n\triggingToolRoot = os.environ[\"RIGGING_TOOL_ROOT\"]\nexcept:\n\tprint(\"RIGGING_TOOL_ROOT environment variable not correctly configured.\")\nelse:\n\timport RiggingTool.Modules.System.attachGeoToBlueprint as attachGeoToBlueprint\n\timport importlib\n\t#importlib.reload(attachGeoToBlueprint) #Only needed for testing\n\tinst = attachGeoToBlueprint.AttachGeoToBlueprint_ShelfTool()\n\tinst.attachWithParenting()\n    " 
+        -sourceType "python" 
+        -commandRepeatable 1
+        -flat 1
+    ;
+    shelfButton
+        -enableCommandRepeat 1
+        -flexibleWidthType 3
+        -flexibleWidthValue 32
+        -enable 1
+        -width 35
+        -height 34
+        -manage 1
+        -visible 1
+        -preventOverride 0
+        -annotation "Attach Geo to Blueprint (Skin)" 
+        -enableBackground 0
+        -backgroundColor 0 0 0 
+        -highlightColor 0.321569 0.521569 0.65098 
+        -align "center" 
+        -label "Attach Geo to Blueprint (Skin)" 
+        -labelOffset 0
+        -rotation 0
+        -flipX 0
+        -flipY 0
+        -useAlpha 1
+        -overlayLabelColor 0.8 0.8 0.8 
+        -overlayLabelBackColor 0 0 0 0.5 
+        -image "W:/Dev/Maya_Tools/RiggingTool/Icons/shelf_Attach_Skin.svg" 
+        -image1 "W:/Dev/Maya_Tools/RiggingTool/Icons/shelf_Attach_Skin.svg" 
+        -style "iconOnly" 
+        -marginWidth 1
+        -marginHeight 1
+        -command "import os\n\ntry:\n\triggingToolRoot = os.environ[\"RIGGING_TOOL_ROOT\"]\nexcept:\n\tprint(\"RIGGING_TOOL_ROOT environment variable not correctly configured.\")\nelse:\n\timport RiggingTool.Modules.System.attachGeoToBlueprint as attachGeoToBlueprint\n\timport importlib\n\t#importlib.reload(attachGeoToBlueprint) #Only needed for testing\n\tinst = attachGeoToBlueprint.AttachGeoToBlueprint_ShelfTool()\n\tinst.attachWithSkinning()\n    " 
+        -sourceType "python" 
+        -commandRepeatable 1
+        -flat 1
+    ;
+    shelfButton
+        -enableCommandRepeat 1
+        -flexibleWidthType 3
+        -flexibleWidthValue 32
+        -enable 1
+        -width 28
+        -height 34
+        -manage 1
+        -visible 1
+        -preventOverride 0
+        -annotation "Character" 
+        -enableBackground 0
+        -backgroundColor 0 0 0 
+        -highlightColor 0.321569 0.521569 0.65098 
+        -align "center" 
+        -label "Character" 
+        -labelOffset 0
+        -rotation 0
+        -flipX 0
+        -flipY 0
+        -useAlpha 1
+        -overlayLabelColor 0.8 0.8 0.8 
+        -overlayLabelBackColor 0 0 0 0.5 
+        -image "W:/Dev/Maya_Tools/RiggingTool/Icons/shelf_character.svg" 
+        -image1 "W:/Dev/Maya_Tools/RiggingTool/Icons/shelf_character.svg" 
+        -style "iconOnly" 
+        -marginWidth 1
+        -marginHeight 1
+        -command "import os\ntry:\n    os.environ[\"RIGGING_TOOL_ROOT\"]\nexcept KeyError:\n    print(\"RIGGING_TOOL_ROOT environment variable not correctly configured.\")\nelse:\n    import importlib\n    import RiggingTool.Modules.System.characterInstall as characterInstall\n    #importlib.reload(characterInstall) #Only needed for testing\n    characterInstall.InstallCharacter_UI.display()  # shows the dialog" 
+        -sourceType "python" 
+        -commandRepeatable 1
+        -flat 1
+    ;
+    shelfButton
+        -enableCommandRepeat 1
+        -flexibleWidthType 3
+        -flexibleWidthValue 32
+        -enable 1
+        -width 31
+        -height 34
+        -manage 1
+        -visible 1
+        -preventOverride 0
+        -annotation "Delete" 
+        -enableBackground 0
+        -backgroundColor 0 0 0 
+        -highlightColor 0.321569 0.521569 0.65098 
+        -align "center" 
+        -label "Delete" 
+        -labelOffset 0
+        -rotation 0
+        -flipX 0
+        -flipY 0
+        -useAlpha 1
+        -overlayLabelColor 0.8 0.8 0.8 
+        -overlayLabelBackColor 0 0 0 0.5 
+        -image "W:/Dev/Maya_Tools/RiggingTool/Icons/shelf_delete.svg" 
+        -image1 "W:/Dev/Maya_Tools/RiggingTool/Icons/shelf_delete.svg" 
+        -style "iconOnly" 
+        -marginWidth 1
+        -marginHeight 1
+        -command "import os\n\ntry:\n\triggingToolRoot = os.environ[\"RIGGING_TOOL_ROOT\"]\nexcept:\n\tprint(\"RIGGING_TOOL_ROOT environment variable not correctly configured.\")\nelse:\n\timport RiggingTool.Modules.System.deleteCharacter as deleteCharacter\n\timport importlib\n\t#importlib.reload(deleteCharacter) #Only needed for testing\n\tinst = deleteCharacter.DeleteCharacter_ShelfTool()\n    " 
+        -sourceType "python" 
+        -commandRepeatable 1
+        -flat 1
+    ;
+    shelfButton
+        -enableCommandRepeat 1
+        -flexibleWidthType 3
+        -flexibleWidthValue 32
+        -enable 1
+        -width 35
+        -height 34
+        -manage 1
+        -visible 1
+        -preventOverride 0
+        -annotation "Module Maintenance" 
+        -enableBackground 0
+        -backgroundColor 0 0 0 
+        -highlightColor 0.321569 0.521569 0.65098 
+        -align "center" 
+        -label "Module Maintenance" 
+        -labelOffset 0
+        -rotation 0
+        -flipX 0
+        -flipY 0
+        -useAlpha 1
+        -overlayLabelColor 0.8 0.8 0.8 
+        -overlayLabelBackColor 0 0 0 0.5 
+        -image "W:/Dev/Maya_Tools/RiggingTool/Icons/shelf_maintenance.svg" 
+        -image1 "W:/Dev/Maya_Tools/RiggingTool/Icons/shelf_maintenance.svg" 
+        -style "iconOnly" 
+        -marginWidth 1
+        -marginHeight 1
+        -command "import os\n\ntry:\n\triggingToolRoot = os.environ[\"RIGGING_TOOL_ROOT\"]\nexcept:\n\tprint(\"RIGGING_TOOL_ROOT environment variable not correctly configured.\")\nelse:\n\timport RiggingTool.Modules.System.moduleMaintenance_shelfTool as moduleMaintenance_shelfTool\n\timport importlib\n\t#importlib.reload(moduleMaintenance_shelfTool) #Only needed for testing\n\tinst = moduleMaintenance_shelfTool.ModuleMaintenance_shelfTool()\n    " 
+        -sourceType "python" 
+        -commandRepeatable 1
+        -flat 1
+    ;
+    shelfButton
+        -enableCommandRepeat 1
+        -flexibleWidthType 3
+        -flexibleWidthValue 32
+        -enable 1
+        -width 35
+        -height 34
+        -manage 1
+        -visible 1
+        -preventOverride 0
+        -annotation "Animators UI" 
+        -enableBackground 0
+        -backgroundColor 0 0 0 
+        -highlightColor 0.321569 0.521569 0.65098 
+        -align "center" 
+        -label "Animation UI" 
+        -labelOffset 0
+        -rotation 0
+        -flipX 0
+        -flipY 0
+        -useAlpha 1
+        -overlayLabelColor 0.8 0.8 0.8 
+        -overlayLabelBackColor 0 0 0 0.5 
+        -image "W:/Dev/Maya_Tools/RiggingTool/Icons/shelf_animation.svg" 
+        -image1 "W:/Dev/Maya_Tools/RiggingTool/Icons/shelf_animation.svg" 
+        -style "iconOnly" 
+        -marginWidth 1
+        -marginHeight 1
+        -command "import os\n\ntry:\n    os.environ[\"RIGGING_TOOL_ROOT\"]\nexcept KeyError:\n    print(\"RIGGING_TOOL_ROOT environment variable not correctly configured.\")\nelse:\n    import importlib\n    import RiggingTool.Modules.System.animation_UI as animation_UI\n    #importlib.reload(animation_UI) #Only needed for testing\n\n    # Create and show (returns None if it failed validation)\n    animation_UI.Animation_UI.show_ui()" 
+        -sourceType "python" 
+        -commandRepeatable 1
+        -flat 1
+    ;
+
+} 
