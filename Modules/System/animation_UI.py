@@ -328,21 +328,41 @@ class CollapsibleWidget(QtWidgets.QWidget):
 #---------------------------------------------------------------------
 class Animation_UI(QtWidgets.QDialog):
 
-    instance = None
+    instances = {}  # maps character namespace -> Animation_UI instance
     
+    @staticmethod
+    def findSelectedCharacter():
+        selection = cmds.ls(selection=True, transforms=True)
+        character = None
+        if selection:
+            selected = selection[0]
+            selectedNamespaceInfo = utils.stripLeadingNamespace(selected)
+            if selectedNamespaceInfo and selectedNamespaceInfo[0].startswith("Character__"):
+                character = selectedNamespaceInfo[0]
+        return character
+
     @classmethod
     def show_ui(cls):
-        """
-        Create and show the Animation_UI window if it was properly initialized.
-        """
-        instance = cls()
-        if not instance.valid:
-            # If the UI wasn't properly initialized, delete the instance and do not show it.
-            instance.deleteLater()
+        """Open/raise a single window for the currently selected character."""
+        character = cls.findSelectedCharacter()
+        if character is None:
+            QtWidgets.QMessageBox.warning(maya_main_window(), "No Character!", "Please select a character.")
             return None
-        instance.show()
-        cls.instance = instance  # Optionally, store the instance.
-        return instance
+
+        existing = cls.instances.get(character)
+        if existing and existing.isVisible():
+            existing.raise_()
+            existing.activateWindow()
+            return existing
+
+        inst = cls()
+        if not getattr(inst, "valid", True):
+            inst.deleteLater()
+            return None
+
+        cls.instances[character] = inst
+        inst.show()
+        return inst
     
     def __init__(self, parent=maya_main_window()):
         super(Animation_UI, self).__init__(parent)
@@ -591,6 +611,12 @@ class Animation_UI(QtWidgets.QDialog):
             except Exception:
                 print(f"ERROR killing script job {job}")
                 pass
+        
+        character = getattr(self, "selectedCharacter", None)
+        if type(self).instances.get(character) is self:
+            del type(self).instances[character]
+        super(Animation_UI, self).closeEvent(event)
+        
         event.accept()
 
     def initializeBlueprintModuleList(self):
@@ -652,16 +678,6 @@ class Animation_UI(QtWidgets.QDialog):
             self.previousBlueprintListEntry = selectedItems[0].text()
         else:
             self.previousBlueprintListEntry = None
-        
-    def findSelectedCharacter(self):
-        selection = cmds.ls(selection=True, transforms=True)
-        character = None
-        if selection:
-            selected = selection[0]
-            selectedNamespaceInfo = utils.stripLeadingNamespace(selected)
-            if selectedNamespaceInfo and selectedNamespaceInfo[0].startswith("Character__"):
-                character = selectedNamespaceInfo[0]
-        return character
         
     def toggleNonBlueprintVisibility(self, *args):
         visibility = not cmds.getAttr(self.selectedCharacter + ":non_blueprint_grp.display")
