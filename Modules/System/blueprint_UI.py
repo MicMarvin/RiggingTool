@@ -10,6 +10,7 @@ import maya.utils as mayautils
 import importlib
 import os
 import sys
+import shutil
 
 # Need these libraries to tie our window to Maya's "main window"
 from shiboken2 import wrapInstance
@@ -156,6 +157,54 @@ class Blueprint_UI(QtWidgets.QDialog):
             self.callbackId = None
         else:
             print("No callbackId found to delete.")
+
+    def create_separator(self):
+        """Provide module dialogs a separator widget via the parent UI."""
+        return utils.create_separator()
+
+    def _cleanup_tmp_folder(self, tmp_folder):
+        if not os.path.isdir(tmp_folder):
+            return
+        try:
+            shutil.rmtree(tmp_folder)
+            print(f"Deleted temp folder: {tmp_folder}")
+        except Exception as e:
+            print(f"Failed to delete temp folder {tmp_folder}: {e}")
+
+    def _resolve_icon_path(self, icon_path):
+        """Return an absolute icon path from stored text (supports relative or legacy absolute)."""
+        if not icon_path:
+            return icon_path
+        icon_path = icon_path.strip()
+        program_root = os.path.join(os.environ["RIGGING_TOOL_ROOT"], "RiggingTool")
+
+        if not os.path.isabs(icon_path):
+            return os.path.normpath(os.path.join(program_root, icon_path))
+
+        if os.path.exists(icon_path):
+            return os.path.normpath(icon_path)
+
+        # Legacy absolute path that no longer exists: fall back to current Templates folder + basename
+        fallback = os.path.join(program_root, "Templates", os.path.basename(icon_path))
+        return os.path.normpath(fallback)
+
+    def _to_relative_icon_path(self, icon_path):
+        """Store icon paths relative to the RiggingTool root when possible."""
+        if not icon_path:
+            return icon_path
+        icon_path = os.path.normpath(icon_path.strip())
+        program_root = os.path.join(os.environ["RIGGING_TOOL_ROOT"], "RiggingTool")
+
+        try:
+            relative = os.path.relpath(icon_path, program_root)
+            # If relpath climbs out (e.g., startswith '..'), keep original
+            if not relative.startswith(".."):
+                return relative.replace("\\", "/")
+        except ValueError:
+            # relpath can fail on different drives on Windows
+            pass
+
+        return icon_path.replace("\\", "/")
 
     def showEvent(self, event):
         super().showEvent(event)
@@ -420,7 +469,7 @@ class Blueprint_UI(QtWidgets.QDialog):
         main_layout.addLayout(button_layout)
 
     def createModuleInstallButton(self, module):
-        mod = __import__("Blueprint." + module, {}, {}, [module])
+        mod = __import__("RiggingTool.Modules.Blueprint." + module, {}, {}, [module])
         #
 
         title = mod.TITLE
@@ -1112,7 +1161,8 @@ class Blueprint_UI(QtWidgets.QDialog):
             cmds.ogsRender(camera=camera_name, currentFrame=True, width=200, height=200)
             print(f"Rendered image saved (initially) at: {os.path.join(output_folder, image_name)}")
 
-            self.templateIcon.setText(os.path.join(output_folder, image_name))
+            rendered_icon = os.path.join(output_folder, image_name)
+            self.templateIcon.setText(self._to_relative_icon_path(rendered_icon))
 
         except Exception as e:
             QtWidgets.QMessageBox.critical(None, "Render Error", f"An error occurred during rendering:\n{e}")
@@ -1131,17 +1181,7 @@ class Blueprint_UI(QtWidgets.QDialog):
         programRoot = os.environ["RIGGING_TOOL_ROOT"] + "/RiggingTool"
         tmp_folder = programRoot + "/Templates/tmp"
 
-        try:
-            # Remove temporary image folder and its contents
-            if os.path.isdir(tmp_folder):
-                for file in os.listdir(tmp_folder):
-                    file_path = os.path.join(tmp_folder, file)
-                    os.remove(file_path)
-
-                os.rmdir(tmp_folder)
-                print(f"Deleted folder and its contents: {tmp_folder}")
-        except OSError as e:
-            print(f"Failed to delete temporary folder: {tmp_folder}\nError: {e}")
+        self._cleanup_tmp_folder(tmp_folder)
 
         self.saveTemplate_UI_window.close()
 
@@ -1151,7 +1191,9 @@ class Blueprint_UI(QtWidgets.QDialog):
         templateFileName = os.path.join(programRoot, "Templates", f"{templateName}.ma")
         title = self.templateTitle.text()
         description = self.templateDescription.text()
-        icon = self.templateIcon.text()
+        icon_input = self.templateIcon.text()
+        icon_abs = self._resolve_icon_path(icon_input)
+        icon_to_store = self._to_relative_icon_path(icon_abs)
 
         if os.path.exists(templateFileName):
             QtWidgets.QMessageBox.warning(self.saveTemplate_UI_window, "Save Current as Template", "Template already exists with that name. Aborting save.", QtWidgets.QMessageBox.Ok)
@@ -1172,19 +1214,19 @@ class Blueprint_UI(QtWidgets.QDialog):
             cmds.select(clear=True)
 
             # Move the rendered image from the 'tmp' folder if it exists
-            tmp_folder = os.path.join(os.path.dirname(icon), "tmp")
+            tmp_folder = os.path.join(os.path.dirname(icon_abs), "tmp")
             if os.path.isdir(tmp_folder):
                 files = os.listdir(tmp_folder)
                 if files:
                     src = os.path.join(tmp_folder, files[0])
-                    os.rename(src, icon)
-                    print(f"Moved and renamed: {src} -> {icon}")
-                os.rmdir(tmp_folder)
+                    os.rename(src, icon_abs)
+                    print(f"Moved and renamed: {src} -> {icon_abs}")
+                self._cleanup_tmp_folder(tmp_folder)
 
             # Save description file
             templateDescriptionFileName = os.path.join(programRoot, "Templates", f"{templateName}.txt")
             with open(templateDescriptionFileName, "w") as f:
-                f.write(f"{title}\n{description}\n{icon}\n")
+                f.write(f"{title}\n{description}\n{icon_to_store}\n")
 
             self.createTemplateInstallButton(templateFileName)
         except Exception as e:
@@ -1199,6 +1241,7 @@ class Blueprint_UI(QtWidgets.QDialog):
         title = f.readline()[0:-1]
         description = f.readline()[0:-1]
         icon = f.readline()[0:-1]
+        icon = self._resolve_icon_path(icon)
 
         f.close()
 
