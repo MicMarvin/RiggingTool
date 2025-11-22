@@ -190,15 +190,24 @@ class ModuleMaintenance:
         dialog.show()
    
     def isModuleInstalled(self, moduleName):
+        """Return True if an animation module with this base name is already installed under the current blueprint."""
         cmds.namespace(setNamespace=self.currentBlueprintModule)
-        installedModules = cmds.namespaceInfo(listOnlyNamespaces=True)
+        installedModules = cmds.namespaceInfo(listOnlyNamespaces=True) or []
         cmds.namespace(setNamespace=":")
-        if installedModules is not None:
-            for module in installedModules:
-                installedModuleNameWithSuffix = utils.stripAllNamespaces(module)[1]
-                installedModuleName = installedModuleNameWithSuffix.rpartition("__")[0]
-                if installedModuleName == moduleName:
-                    return True
+
+        for ns in installedModules:
+            # Strip any blueprint/character prefix: grab the leaf namespace only
+            leaf = utils.stripAllNamespaces(ns)[1]
+
+            # Typical install names look like "<moduleName>_<index>"
+            if leaf.startswith(moduleName + "_"):
+                return True
+
+            # Also handle legacy names that might include "__" separators
+            base = leaf.partition("__")[0]
+            if base == moduleName:
+                return True
+
         return False
 
     def UI_controlModuleSelected(self, *args):
