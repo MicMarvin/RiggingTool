@@ -303,135 +303,129 @@ class ControlModule():
         cmds.namespace(setNamespace=":")
 
     def duplicateControlModule(self, withAnimation=True):
-        characterContainer = self.characterNamespaceOnly + ":character_container"
-        blueprintContainer = self.blueprintNamespace + ":module_container"
-        moduleContainer = self.moduleContainer
+        """Duplicate this control module; optionally copy its animCurves to the duplicate."""
+        # Base paths/names
+        old_ns = self.moduleNamespace
+        bp_ns = self.blueprintNamespace
+        old_ns_prefix = f":{old_ns}:"
+        module_container = self.moduleContainer
+        blueprint_container = f"{bp_ns}:module_container"
 
-        containers = [characterContainer, blueprintContainer, moduleContainer]
+        # Collect all animCurves that drive this module (inside or outside namespace)
+        module_nodes = cmds.container(module_container, q=True, nodeList=True) or []
+
+        anim_curves = set(
+            cmds.listConnections(module_nodes, s=True, d=False, type="animCurve") or []
+        )
         
-        cmds.namespace(setNamespace=self.blueprintNamespace + ":" + self.moduleNamespace)
-        allAnimationNodes = cmds.namespaceInfo(listOnlyDependencyNodes=True)
-        allAnimationNodes = cmds.ls(allAnimationNodes, type="animCurve")
+        # Snapshot connections for all curves
+        curve_in = {}
+        curve_out = {}
+        for curve in anim_curves:
+            curve_in[curve] = cmds.listConnections(curve, plugs=True, connections=True,
+                                                   source=True, destination=False) or []
+            curve_out[curve] = cmds.listConnections(curve, plugs=True, connections=True,
+                                                    source=False, destination=True) or []
 
-        containedAnimationNodes = cmds.container(moduleContainer, q=True, nodeList=True)
-        containedAnimationNodes = cmds.ls(containedAnimationNodes, type="animCurve")
-
-        animationNodes = []
-        spaceSwitchAnimationNodes = []
-
-        for node in allAnimationNodes:
-            if not node in containedAnimationNodes:
-                animationNodes.append(node)
-            else:
-                if node.rpartition("_")[2] == "currentSpace":
-                    spaceSwitchAnimationNodes.append(node)
-
-        cmds.namespace(setNamespace=":")
-
-        utils.addNodeToContainer(moduleContainer, animationNodes)
-
+        # Duplicate the module container without input connections (avoids sharing animCurves)
         cmds.namespace(addNamespace="TEMP")
         cmds.namespace(setNamespace="TEMP")
+        cmds.duplicate(module_container, inputConnections=False)
+        cmds.namespace(setNamespace=f":{bp_ns}")
+        module_namespaces = cmds.namespaceInfo(listOnlyNamespaces=True)
 
-        cmds.duplicate(moduleContainer, inputConnections=True)
+        base = old_ns.rpartition("_")[0] + "_"
+        base_full = f"{bp_ns}:{base}"
+        new_suffix = utils.findHighestTrailingNumber(module_namespaces, base_full) + 1
+        new_ns = f"{base}{new_suffix}"
 
-        cmds.namespace(setNamespace=":" + self.blueprintNamespace)
-        moduleNamespaces = cmds.namespaceInfo(listOnlyNamespaces=True)
-
-        baseModuleNamespace = self.moduleNamespace.rpartition("_")[0] + "_"
-        baseNamespace = self.blueprintNamespace + ":" + baseModuleNamespace
-
-        highestSuffix = utils.findHighestTrailingNumber(moduleNamespaces, baseNamespace)
-        highestSuffix += 1
-
-        newModuleNamespace = baseModuleNamespace + str(highestSuffix)
-
-        cmds.namespace(addNamespace=newModuleNamespace)
+        cmds.namespace(addNamespace=new_ns)
         cmds.namespace(setNamespace=":")
-
-        cmds.namespace(moveNamespace=["TEMP", self.blueprintNamespace + ":" + newModuleNamespace])
+        cmds.namespace(moveNamespace=["TEMP", f"{bp_ns}:{new_ns}"])
         cmds.namespace(removeNamespace="TEMP")
 
-        oldModuleNamespace = self.moduleNamespace
-        self.moduleNamespace = newModuleNamespace
+        # Update internal state to new duplicate
+        self.moduleNamespace = new_ns
+        new_ns_prefix = f":{new_ns}:"
+        new_module_container = f"{bp_ns}:{new_ns}:module_container"
+        utils.addNodeToContainer(blueprint_container, new_module_container)
 
-        newModuleContainer = self.blueprintNamespace + ":" + self.moduleNamespace + ":module_container"
-        utils.addNodeToContainer(blueprintContainer, newModuleContainer)
+        # Republish names with the new namespace
+        pubs = cmds.container(new_module_container, q=True, publishName=True) or []
+        driven = [(n, cmds.connectionInfo(new_module_container + "." + n, getExactSource=True)) for n in pubs]
+        for name, src in driven:
+            cmds.container(new_module_container, edit=True, unbindAndUnpublish=src)
+            new_name = name.replace(old_ns, new_ns)
+            cmds.container(new_module_container, edit=True, publishAndBind=[src, new_name])
 
-        publishedNameList = []
-
-        publishedNames = cmds.container(newModuleContainer, q=True, publishName=True)
-        for name in publishedNames:
-            drivenAttribute = cmds.connectionInfo(newModuleContainer + "." + name, getExactSource=True)
-            publishedNameList.append((name, drivenAttribute))
-
-        for name in publishedNameList:
-            cmds.container(newModuleContainer, edit=True, unbindAndUnpublish=name[1])
-
-            nameInfo = name[0].partition(oldModuleNamespace)
-            newName = nameInfo[0] + self.moduleNamespace + nameInfo[2]
-
-            cmds.container(newModuleContainer, edit=True, publishAndBind=[name[1], newName])
-
-        self.moduleContainer = moduleContainer
-        oldPublishedNames = self.findAllNamesPublishedToOuterContainers()
-        newPublishedNames = []
-
-        for name in oldPublishedNames:
-            nameInfo = name.partition(oldModuleNamespace)
-            newPublishedNames.append((nameInfo[0] + self.moduleNamespace + nameInfo[2]))
-
-        self.publishedNames = list(newPublishedNames)
-        self.moduleContainer = newModuleContainer
+        # Refresh publishedNames cache and republish outward
+        self.moduleContainer = module_container
+        new_pub_names = []
+        for name in self.findAllNamesPublishedToOuterContainers():
+            new_pub_names.append(name.replace(old_ns, new_ns))
+        self.publishedNames = new_pub_names
+        self.moduleContainer = new_module_container
         self.publishModuleContainerNamesToOuterContainers()
 
-        deleteNodes = []
+        # Rebuild utilities
+        to_delete = []
+        joints_grp = f"{bp_ns}:{new_ns}:joints_grp"
+        self.joints = utils.findJointChain(joints_grp)
+        for j in self.joints:
+            for suffix in ("_multiplyRotationsWeight", "_multiplyTranslationWeight", "_multiplyScaleWeight"):
+                node = j + suffix
+                if cmds.objExists(node):
+                    to_delete.append(node)
+        if to_delete:
+            cmds.delete(to_delete, inputConnectionsAndNodes=False)
+        utils.addNodeToContainer(new_module_container, self.setupBlueprintWeightBasedBlending())
 
-        moduleJointsGrp = self.blueprintNamespace + ":" + self.moduleNamespace + ":joints_grp"
-        self.joints = utils.findJointChain(moduleJointsGrp)
-
-        for joint in self.joints:
-            if cmds.objExists(joint + "_multiplyRotationsWeight"):
-                deleteNodes.append(joint + "_multiplyRotationsWeight")
-
-            if cmds.objExists(joint + "_multiplyTranslationWeight"):
-                deleteNodes.append(joint + "_multiplyTranslationWeight")
-
-            if cmds.objExists(joint + "_multiplyScaleWeight"):
-                deleteNodes.append(joint + "_multiplyScaleWeight")
-
-        cmds.delete(deleteNodes, inputConnectionsAndNodes=False)
-
-        utilityNodes = self.setupBlueprintWeightBasedBlending()
-        utils.addNodeToContainer(newModuleContainer, utilityNodes)
-
-        cmds.container(moduleContainer, edit=True, removeNode=animationNodes)
-        cmds.container(blueprintContainer, edit=True, removeNode=animationNodes)
-        cmds.container(characterContainer, edit=True, removeNode=animationNodes)
-
-        newAnimationNodes = []
-        for node in animationNodes:
-            nodeName = utils.stripAllNamespaces(node)[1]
-            newAnimationNodes.append(self.blueprintNamespace + ":" + self.moduleNamespace + ":" + nodeName)
-
-        newSpaceSwitchAnimationNodes = []
-        for node in spaceSwitchAnimationNodes:
-            nodeName = utils.stripAllNamespaces(node)[1]
-            newSpaceSwitchAnimationNodes.append(self.blueprintNamespace + ":" + self.moduleNamespace + ":" + nodeName)
+        # Remove any animCurves that may have come along
+        stray = cmds.ls(f"{bp_ns}:{new_ns}:*", type="animCurve") or []
+        if stray:
+            cmds.delete(stray)
 
         if withAnimation:
-            cmds.container(newModuleContainer, edit=True, removeNode=newAnimationNodes)
-            cmds.container(blueprintContainer, edit=True, removeNode=newAnimationNodes)
-            cmds.container(characterContainer, edit=True, removeNode=newAnimationNodes)
+            duplicated = []
+            for curve in anim_curves:
+                leaf = (utils.stripAllNamespaces(curve) or ["", curve])[1]
+                new_curve_name = curve.replace(old_ns_prefix, new_ns_prefix) if old_ns_prefix in curve \
+                                 else f"{bp_ns}:{new_ns}:{leaf}"
+                new_curve = cmds.duplicate(curve, name=new_curve_name)[0]
+                duplicated.append(new_curve)
+
+                # Incoming (time -> curve.input)
+                for i in range(0, len(curve_in[curve]), 2):
+                    src = curve_in[curve][i]
+                    dst = curve_in[curve][i + 1]
+                    new_dst = dst.replace(curve, new_curve) if curve in dst else dst.replace(old_ns_prefix, new_ns_prefix)
+                    try:
+                        cmds.connectAttr(src, new_dst, force=True)
+                    except Exception as e:
+                        print(f"Warning: failed to connect {src} -> {new_dst}: {e}")
+
+                # Outgoing (curve.output -> targets)
+                for i in range(0, len(curve_out[curve]), 2):
+                    src = curve_out[curve][i]
+                    dst = curve_out[curve][i + 1]
+                    new_src = src.replace(curve, new_curve)
+                    new_dst = dst.replace(old_ns_prefix, new_ns_prefix)
+                    if new_dst == dst and old_ns_prefix not in dst:
+                        target_leaf = (utils.stripAllNamespaces(dst) or ["", dst.split('.')[-2].split(':')[-1]])[1]
+                        new_dst = f"{bp_ns}:{new_ns}:{target_leaf}"
+                    try:
+                        cmds.connectAttr(new_src, new_dst, force=True)
+                    except Exception as e:
+                        print(f"Warning: failed to connect {new_src} -> {new_dst}: {e}")
+
+            if not duplicated:
+                print("DuplicateControlModule: No animCurves found to duplicate.")
         else:
-            if len(newAnimationNodes) > 0:
-                cmds.delete(newAnimationNodes)
-
-            if len(newSpaceSwitchAnimationNodes) > 0:
-                cmds.delete(newSpaceSwitchAnimationNodes)
-
-        containers.append(newModuleContainer)
-        
+            # Strip any animCurves under the new namespace
+            stray = cmds.ls(f"{bp_ns}:{new_ns}:*", type="animCurve") or []
+            if stray:
+                cmds.delete(stray)
+       
     def findAllNamesPublishedToOuterContainers(self):
         if self.moduleContainer == None:
             return []
