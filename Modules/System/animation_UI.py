@@ -735,7 +735,7 @@ class Animation_UI(QtWidgets.QDialog):
                                 items = self.UIElements["animationModule_textScroll"].findItems(moduleNamespaceInfo[0], QtCore.Qt.MatchExactly)
                                 if items:
                                     self.UIElements["animationModule_textScroll"].setCurrentItem(items[0])
-        self.setupModuleSpecificControls()
+        QtCore.QTimer.singleShot(0, self.setupModuleSpecificControls)
         # self.setupSpaceSwitchingControls()
         
     def setupActiveModuleControls(self):
@@ -954,11 +954,11 @@ class Animation_UI(QtWidgets.QDialog):
         mel.eval("tearOffPanel \"Graph Editor\" graphEditor true")
 
     def setupModuleSpecificControls(self):
-        # Debounce: if this method was run in the last 0.2 seconds, return.
-        now = time.time()
-        if hasattr(self, '_lastModuleSpecUpdate') and (now - self._lastModuleSpecUpdate < 0.2):
-            return
-        self._lastModuleSpecUpdate = now
+        # # Debounce: if this method was run in the last 0.2 seconds, return.
+        # now = time.time()
+        # if hasattr(self, '_lastModuleSpecUpdate') and (now - self._lastModuleSpecUpdate < 0.2):
+        #     return
+        # self._lastModuleSpecUpdate = now
 
         selectedItems = self.UIElements["animationModule_textScroll"].selectedItems()
         currentlySelectedModuleNamespace = None
