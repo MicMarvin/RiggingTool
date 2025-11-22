@@ -557,6 +557,7 @@ class Animation_UI(QtWidgets.QDialog):
         # Matching Button.
         self.UIElements["matchingButton"] = QtWidgets.QPushButton("Match Controls to Result")
         self.UIElements["matchingButton"].setEnabled(False)
+        self.UIElements["matchingButton"].clicked.connect(self.matchSelectedModule)
         self.UIElements["topColumnLayout"].addWidget(self.UIElements["matchingButton"])
         
         # Separator.
@@ -954,12 +955,6 @@ class Animation_UI(QtWidgets.QDialog):
         mel.eval("tearOffPanel \"Graph Editor\" graphEditor true")
 
     def setupModuleSpecificControls(self):
-        # # Debounce: if this method was run in the last 0.2 seconds, return.
-        # now = time.time()
-        # if hasattr(self, '_lastModuleSpecUpdate') and (now - self._lastModuleSpecUpdate < 0.2):
-        #     return
-        # self._lastModuleSpecUpdate = now
-
         selectedItems = self.UIElements["animationModule_textScroll"].selectedItems()
         currentlySelectedModuleNamespace = None
         if selectedItems:
@@ -1055,6 +1050,24 @@ class Animation_UI(QtWidgets.QDialog):
             moduleInst.uninstall()
             self.refreshAnimationModuleList()
         
+    def matchSelectedModule(self):
+        selectedItems = self.UIElements["animationModule_textScroll"].selectedItems()
+        if not selectedItems:
+            return
+        selectedModule = selectedItems[0].text()
+        selectedModuleNamespace = f"{self.selectedBlueprintModule}:{selectedModule}"
+
+        modules, moduleNames = utils.findAllModuleNames("/Modules/Animation")
+        selectedModuleName = selectedModule.rpartition("_")[0]
+        if selectedModuleName in moduleNames:
+            moduleIndex = moduleNames.index(selectedModuleName)
+            module = modules[moduleIndex]
+            mod = __import__("Animation." + module, {}, {}, [module])
+            importlib.reload(mod)
+            moduleClass = getattr(mod, mod.CLASS_NAME)
+            moduleInst = moduleClass(selectedModuleNamespace)
+            moduleInst.match()
+
     def duplicateSelectedModule(self):
         self.deleteScriptJob()
         result = QtWidgets.QMessageBox.question(self, "Duplicate Control Module", 

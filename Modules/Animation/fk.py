@@ -116,30 +116,30 @@ class FK(controlModule.ControlModule):
             controlObjectInstance = controlObject.ControlObject(fkControl)
             controlObjectInstance.UI(parentLayout)
 
-    # def match(self, *args):
-    #     jointsGrp = self.blueprintNamespace + ":blueprint_joints_grp"
-    #     joints = utils.findJointChain(jointsGrp)
-    #     joints.pop(0)
+    def match(self, *args):
+        jointsGrp = self.blueprintNamespace + ":blueprint_joints_grp"
+        joints = utils.findJointChain(jointsGrp)
+        joints.pop(0)
 
-    #     jointsGrp = self.blueprintNamespace + ":" + self.moduleNamespace + ":joints_grp"
-    #     moduleJoints = utils.findJointChain(jointsGrp)
-    #     moduleJoints.pop(0)
+        jointsGrp = self.blueprintNamespace + ":" + self.moduleNamespace + ":joints_grp"
+        moduleJoints = utils.findJointChain(jointsGrp)
+        moduleJoints.pop(0)
 
-    #     if len(moduleJoints) > 1:
-    #         moduleJoints.pop()
+        if len(moduleJoints) > 1:
+            moduleJoints.pop()
 
-    #     index = 0
-    #     fkControls = []
-    #     for joint in moduleJoints:
-    #         fkControl = joint + "_fkControl"
-    #         fkControls.append(fkControl)
+        index = 0
+        fkControls = []
+        for joint in moduleJoints:
+            fkControl = joint + "_fkControl"
+            fkControls.append(fkControl)
 
-    #         if not cmds.getAttr(fkControl + ".translateX", l=True):
-    #             cmds.xform(fkControl, worldSpace=True, absolute=True, translation=cmds.xform(joints[index], q=True, worldSpace=True, translation=True))
+            if not cmds.getAttr(fkControl + ".translateX", l=True):
+                cmds.xform(fkControl, worldSpace=True, absolute=True, translation=cmds.xform(joints[index], q=True, worldSpace=True, translation=True))
 
 
-    #         cmds.xform(fkControl, worldSpace=True, absolute=True, rotation=cmds.xform(joints[index], q=True, worldSpace=True, rotation=True))
-    #         index += 1
+            cmds.xform(fkControl, worldSpace=True, absolute=True, rotation=cmds.xform(joints[index], q=True, worldSpace=True, rotation=True))
+            index += 1
 
-    #     return (joints, fkControls)
+        return (joints, fkControls)
 
