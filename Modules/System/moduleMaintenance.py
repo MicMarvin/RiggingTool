@@ -68,7 +68,6 @@ class ModuleMaintenance:
                 else:
                     print(f"Node not found: {blueprintJointsGrp}")
 
-
         if len(objects) > 0:
             lastSelected = objects[-1]
             lastSelected_stripNamespaces = utils.stripAllNamespaces(lastSelected)
@@ -88,9 +87,12 @@ class ModuleMaintenance:
         installedCharacters = utils.findInstalledCharacters()
         for characterNamespace in installedCharacters:
             characterName = characterNamespace.partition("__")[2]
-            windowName = characterName + "_window"
-            if cmds.window(windowName, exists=True):
-                cmds.deleteUI(windowName)
+
+            # Close any PySide Animation UI window for this character
+            for widget in QtWidgets.QApplication.topLevelWidgets():
+                title = widget.windowTitle()
+                if title and title.rpartition(":")[2].strip() == characterName:
+                    widget.close()
 
         scriptJobNum = cmds.scriptJob(event=["SelectionChanged", self.objectSelected], runOnce=True, killWithScene=True)
         self.shelfTool_instance.setScriptJobNum(scriptJobNum)
