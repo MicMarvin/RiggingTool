@@ -137,7 +137,7 @@ class FloatAttrControlWidget(QtWidgets.QWidget):
     by using a conversion factor. For example, if conversion=1000 then:
     float_value = slider_value / 1000.
     """
-    def __init__(self, attrName, labelText, minVal, maxVal, initialValue, conversion=1000, callback=None, parent=None):
+    def __init__(self, attrName, labelText, minVal, maxVal, initialValue, conversion=1000, callback=None, decimals=1, singleStep=None, parent=None):
         super(FloatAttrControlWidget, self).__init__(parent)
         self.attrName = attrName
         self.callback = callback
@@ -150,8 +150,11 @@ class FloatAttrControlWidget(QtWidgets.QWidget):
 
         self.doubleSpin = ClickToScrollDoubleSpinBox()
         self.doubleSpin.setRange(minVal, maxVal)
-        self.doubleSpin.setDecimals(1)
-        self.doubleSpin.setSingleStep(0.1)
+        self.doubleSpin.setDecimals(decimals)
+        # Pick a sensible default singleStep based on requested decimals if none provided.
+        if singleStep is None:
+            singleStep = 1.0 / (10 ** decimals)
+        self.doubleSpin.setSingleStep(singleStep)
         self.doubleSpin.setValue(initialValue)
 
         # Set up the slider using the conversion factor.
@@ -171,9 +174,8 @@ class FloatAttrControlWidget(QtWidgets.QWidget):
         self.slider.valueChanged.connect(self.on_value_changed)
 
     def syncSlider(self, newVal):
-        self.slider.blockSignals(True)
+        # Allow slider signal to fire so on_value_changed updates the Maya attr when spinbox is edited.
         self.slider.setValue(int(round(newVal * self.conversion)))
-        self.slider.blockSignals(False)
 
     def syncSpinBox(self, sliderVal):
         self.doubleSpin.blockSignals(True)

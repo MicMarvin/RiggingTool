@@ -57,10 +57,25 @@ class ControlObject:
 
         cmds.container(animationModuleNamespace + ":module_container", edit=True, addNode=self.controlObject, ihb=True, includeNetwork=True)
 
+        # Lock/hide channels that were flagged off so the UI can discover the intended controls.
+        def _set_channel(attrSuffix, enabled):
+            attr = self.controlObject + attrSuffix
+            try:
+                cmds.setAttr(attr, lock=not enabled, keyable=enabled, channelBox=enabled)
+            except Exception:
+                pass
+
+        for axis, enabled in zip(["X", "Y", "Z"], self.translation):
+            _set_channel(".translate" + axis, enabled)
+        for axis, enabled in zip(["X", "Y", "Z"], self.rotation):
+            _set_channel(".rotate" + axis, enabled)
+
         if globalScale:
             cmds.connectAttr(self.controlObject + ".scaleY", self.controlObject + ".scaleX")
             cmds.connectAttr(self.controlObject + ".scaleY", self.controlObject + ".scaleZ")
             cmds.aliasAttr("globalScale", self.controlObject + ".scaleY")
+        else:
+            _set_channel(".scaleY", False)
 
         attributes = []
 
@@ -274,12 +289,13 @@ class ControlObject:
     #     cmds.delete(locator)
     #     return scale
 
-    def UI(self, parentLayout):
+    def UI(self, parentLayout, extraContentBuilder=None):
         """
         Build a PySide UI for this control object.
-        The UI is built inside a CollapsibleWidget whose header contains a bold label (the control’s name)
+        The UI is built inside a CollapsibleWidget whose header contains a bold label (the control's name)
         and a visibility checkbox. The content area contains three groups for Translate, Rotate, and (if applicable) Scale.
         In each group the X, Y, and Z controls (label + spin box) are arranged horizontally with a spacer between each.
+        If extraContentBuilder is provided, it will be called with the content layout so callers can append custom controls inside the collapsible.
         """
         import System.animation_UI
         importlib.reload(System.animation_UI)
@@ -310,55 +326,62 @@ class ControlObject:
         contentLayout = QtWidgets.QVBoxLayout()
         collapsible.setContentLayout(contentLayout)
 
-        # --- Translate Controls Group ---
-        transGroup = QtWidgets.QGroupBox("Translate")
-        transLayout = QtWidgets.QHBoxLayout(transGroup)
-        transLayout.setSpacing(10)
+        # --- Translate Controls Group (only if any axis is enabled) ---
         self._transControls = {}
-        for axis in ['X', 'Y', 'Z']:
-            # Create a horizontal layout for each axis.
-            axisLayout = QtWidgets.QHBoxLayout()
-            lbl = QtWidgets.QLabel(axis + ":")
-            spin = ClickToScrollDoubleSpinBox()
-            spin.setRange(-100, 100)
-            spin.setDecimals(3)
-            try:
-                val = cmds.getAttr(self.controlObject + ".translate" + axis)
-            except Exception:
-                val = 0.0
-            spin.setValue(val)
-            # When changed, update the Maya attribute.
-            spin.valueChanged.connect(lambda v, a=axis: cmds.setAttr(self.controlObject + ".translate" + a, v))
-            axisLayout.addWidget(lbl)
-            axisLayout.addWidget(spin)
-            axisLayout.addStretch(1)
-            transLayout.addLayout(axisLayout)
-            self._transControls[axis] = spin
-        contentLayout.addWidget(transGroup)
+        translateAxes = [("X", self.translation[0]), ("Y", self.translation[1]), ("Z", self.translation[2])]
+        if any(flag for _, flag in translateAxes):
+            transGroup = QtWidgets.QGroupBox("Translate")
+            transLayout = QtWidgets.QHBoxLayout(transGroup)
+            transLayout.setSpacing(10)
+            for axis, enabled in translateAxes:
+                if not enabled:
+                    continue
+                axisLayout = QtWidgets.QHBoxLayout()
+                lbl = QtWidgets.QLabel(axis + ":")
+                spin = ClickToScrollDoubleSpinBox()
+                spin.setRange(-100, 100)
+                spin.setDecimals(3)
+                try:
+                    val = cmds.getAttr(self.controlObject + ".translate" + axis)
+                except Exception:
+                    val = 0.0
+                spin.setValue(val)
+                # When changed, update the Maya attribute.
+                spin.valueChanged.connect(lambda v, a=axis: cmds.setAttr(self.controlObject + ".translate" + a, v))
+                axisLayout.addWidget(lbl)
+                axisLayout.addWidget(spin)
+                axisLayout.addStretch(1)
+                transLayout.addLayout(axisLayout)
+                self._transControls[axis] = spin
+            contentLayout.addWidget(transGroup)
 
-        # --- Rotate Controls Group ---
-        rotGroup = QtWidgets.QGroupBox("Rotate")
-        rotLayout = QtWidgets.QHBoxLayout(rotGroup)
-        rotLayout.setSpacing(10)
+        # --- Rotate Controls Group (only if any axis is enabled) ---
         self._rotControls = {}
-        for axis in ['X', 'Y', 'Z']:
-            axisLayout = QtWidgets.QHBoxLayout()
-            lbl = QtWidgets.QLabel(axis + ":")
-            spin = ClickToScrollDoubleSpinBox()
-            spin.setRange(-360, 360)
-            spin.setDecimals(3)
-            try:
-                val = cmds.getAttr(self.controlObject + ".rotate" + axis)
-            except Exception:
-                val = 0.0
-            spin.setValue(val)
-            spin.valueChanged.connect(lambda v, a=axis: cmds.setAttr(self.controlObject + ".rotate" + a, v))
-            axisLayout.addWidget(lbl)
-            axisLayout.addWidget(spin)
-            axisLayout.addStretch(1)
-            rotLayout.addLayout(axisLayout)
-            self._rotControls[axis] = spin
-        contentLayout.addWidget(rotGroup)
+        rotateAxes = [("X", self.rotation[0]), ("Y", self.rotation[1]), ("Z", self.rotation[2])]
+        if any(flag for _, flag in rotateAxes):
+            rotGroup = QtWidgets.QGroupBox("Rotate")
+            rotLayout = QtWidgets.QHBoxLayout(rotGroup)
+            rotLayout.setSpacing(10)
+            for axis, enabled in rotateAxes:
+                if not enabled:
+                    continue
+                axisLayout = QtWidgets.QHBoxLayout()
+                lbl = QtWidgets.QLabel(axis + ":")
+                spin = ClickToScrollDoubleSpinBox()
+                spin.setRange(-360, 360)
+                spin.setDecimals(3)
+                try:
+                    val = cmds.getAttr(self.controlObject + ".rotate" + axis)
+                except Exception:
+                    val = 0.0
+                spin.setValue(val)
+                spin.valueChanged.connect(lambda v, a=axis: cmds.setAttr(self.controlObject + ".rotate" + a, v))
+                axisLayout.addWidget(lbl)
+                axisLayout.addWidget(spin)
+                axisLayout.addStretch(1)
+                rotLayout.addLayout(axisLayout)
+                self._rotControls[axis] = spin
+            contentLayout.addWidget(rotGroup)
 
         # --- Global Scale Control (if enabled) ---
         if self.globalScale:
@@ -371,6 +394,13 @@ class ControlObject:
             scaleControl = FloatAttrControlWidget(fullAttr, "Global Scale:", 0.1, 10, val, conversion=1000, callback=lambda v: cmds.setAttr(fullAttr, v))
             contentLayout.addWidget(scaleControl)
             self._scaleControl = scaleControl
+
+        # Allow callers to add additional content inside this collapsible.
+        if extraContentBuilder is not None:
+            try:
+                extraContentBuilder(contentLayout)
+            except Exception as e:
+                print(f"Error building extra content for control {self.controlObject}: {e}")
 
         parentLayout.addWidget(collapsible)
         
