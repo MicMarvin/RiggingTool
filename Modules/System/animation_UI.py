@@ -567,7 +567,43 @@ class Animation_UI(QtWidgets.QDialog):
         
         # Space Switching Column.
         self.UIElements["spaceSwitchingColumn"] = QtWidgets.QVBoxLayout()
-        # self.setupSpaceSwitchingControls()
+        # Initialize persistent space switching row (widgets are refreshed later).
+        self.spaceSwitchingState = {"controlObj": None, "spaceSwitcher": None, "targetObject": None}
+        spaceRow = QtWidgets.QHBoxLayout()
+        self.UIElements["spaceSwitching_rowLayout"] = spaceRow
+
+        self.UIElements["currentSpaceLabel"] = QtWidgets.QLabel("Current Space:")
+        spaceRow.addWidget(self.UIElements["currentSpaceLabel"])
+
+        self.UIElements["currentSpace"] = QtWidgets.QComboBox()
+        self.UIElements["currentSpace"].setMinimumWidth(160)
+        self.UIElements["currentSpace"].setEnabled(False)
+        spaceRow.addWidget(self.UIElements["currentSpace"])
+
+        self.UIElements["spaceSwitching_spaceSwitch"] = QtWidgets.QPushButton("Space Switch")
+        self.UIElements["spaceSwitching_spaceSwitch"].setEnabled(False)
+        self.UIElements["spaceSwitching_spaceSwitch"].clicked.connect(self.spaceSwitching_spaceSwitch)
+        spaceRow.addWidget(self.UIElements["spaceSwitching_spaceSwitch"])
+
+        self.UIElements["spaceSwitching_deleteKey"] = QtWidgets.QPushButton("Delete Key")
+        self.UIElements["spaceSwitching_deleteKey"].setEnabled(False)
+        self.UIElements["spaceSwitching_deleteKey"].clicked.connect(self.spaceSwitching_deleteKey)
+        spaceRow.addWidget(self.UIElements["spaceSwitching_deleteKey"])
+
+        self.UIElements["spaceSwitching_backKey"] = QtWidgets.QPushButton("<")
+        self.UIElements["spaceSwitching_backKey"].setEnabled(False)
+        self.UIElements["spaceSwitching_backKey"].clicked.connect(self.spaceSwitching_backKey)
+        self.UIElements["spaceSwitching_backKey"].setFixedWidth(24)
+        spaceRow.addWidget(self.UIElements["spaceSwitching_backKey"])
+
+        self.UIElements["spaceSwitching_forwardKey"] = QtWidgets.QPushButton(">")
+        self.UIElements["spaceSwitching_forwardKey"].setEnabled(False)
+        self.UIElements["spaceSwitching_forwardKey"].clicked.connect(self.spaceSwitching_forwardKey)
+        self.UIElements["spaceSwitching_forwardKey"].setFixedWidth(24)
+        spaceRow.addWidget(self.UIElements["spaceSwitching_forwardKey"])
+
+        self.UIElements["spaceSwitchingColumn"].addLayout(spaceRow)
+        self.setupSpaceSwitchingControls()
         self.UIElements["topColumnLayout"].addLayout(self.UIElements["spaceSwitchingColumn"])
         
         # Separator.
@@ -739,7 +775,7 @@ class Animation_UI(QtWidgets.QDialog):
                                 if items:
                                     self.UIElements["animationModule_textScroll"].setCurrentItem(items[0])
         QtCore.QTimer.singleShot(0, self.setupModuleSpecificControls)
-        # self.setupSpaceSwitchingControls()
+        self.setupSpaceSwitchingControls()
         
     def setupActiveModuleControls(self):
         if not self.selectedBlueprintModule:
@@ -1105,66 +1141,62 @@ class Animation_UI(QtWidgets.QDialog):
             self.refreshAnimationModuleList()
         self.setupScriptJob()
         
-    # def setupSpaceSwitchingControls(self):
-    #     # Clear existing controls.
-    #     layout = self.UIElements["spaceSwitchingColumn"]
-    #     while layout.count():
-    #         child = layout.takeAt(0)
-    #         if child.widget():
-    #             child.widget().deleteLater()
+    def setupSpaceSwitchingControls(self):
+        enable = False
+        selection = cmds.ls(selection=True, transforms=True)
+        state = {"controlObj": None, "spaceSwitcher": None, "targetObject": None}
+        currentSpaceItems = []
+        currentSpaceIndex = 0
+        if selection:
+            selected = selection[0]
+            if cmds.attributeQuery("spaceSwitching", n=selected, exists=True):
+                enable = True
+                state["controlObj"] = selected
+                state["spaceSwitcher"] = selected + "_spaceSwitcher"
+                if cmds.attributeQuery("currentSpace", n=state["spaceSwitcher"], exists=True):
+                    enumStr = cmds.attributeQuery("currentSpace", n=state["spaceSwitcher"], listEnum=True)[0]
+                    currentSpaceItems = enumStr.split(":") if enumStr else []
+                    try:
+                        currentSpaceIndex = cmds.getAttr(state["spaceSwitcher"] + ".currentSpace")
+                    except Exception:
+                        currentSpaceIndex = 0
+                if len(selection) > 1:
+                    state["targetObject"] = selection[1]
+        if state["targetObject"] is None and self.selectedBlueprintModule:
+            state["targetObject"] = self.selectedBlueprintModule + ":HOOK_IN"
+
+        # Persist state for callbacks.
+        self.spaceSwitchingState = state
+
+        # Update the persistent UI row.
+        combo = self.UIElements["currentSpace"]
+        combo.blockSignals(True)
+        combo.clear()
+        combo.addItems(currentSpaceItems)
+        if currentSpaceItems and currentSpaceIndex < len(currentSpaceItems):
+            combo.setCurrentIndex(currentSpaceIndex)
+        combo.blockSignals(False)
+        combo.setEnabled(enable)
+        if "currentSpaceLabel" in self.UIElements:
+            self.UIElements["currentSpaceLabel"].setEnabled(enable)
+
+        for key in ["spaceSwitching_spaceSwitch", "spaceSwitching_deleteKey", "spaceSwitching_backKey", "spaceSwitching_forwardKey"]:
+            self.UIElements[key].setEnabled(enable)
         
-    #     largeButtonSize = 80
-    #     smallButtonSize = 35
-    #     enumOptionWidth = self.width() - 2*(largeButtonSize + smallButtonSize)
-    #     enable = False
-    #     selection = cmds.ls(selection=True, transforms=True)
-    #     spaceSwitcher = None
-    #     controlObj = None
-    #     targetObject = None
-    #     if selection:
-    #         if cmds.attributeQuery("spaceSwitching", n=selection[0], exists=True):
-    #             enable = True
-    #             controlObj = selection[0]
-    #             spaceSwitcher = selection[0] + "_spaceSwitcher"
-    #             if len(selection) > 1:
-    #                 targetObject = selection[1]
-    #     if targetObject is None:
-    #         targetObject = self.selectedBlueprintModule + ":HOOK_IN"
-    #     # Create a horizontal layout for space switching.
-    #     rowLayout = QtWidgets.QHBoxLayout()
-    #     self.UIElements["spaceSwitching_rowLayout"] = rowLayout
-    #     # Use QComboBox as a placeholder for attrEnumOptionMenu.
-    #     self.UIElements["currentSpace"] = QtWidgets.QComboBox()
-    #     self.UIElements["currentSpace"].setEnabled(False)
-    #     rowLayout.addWidget(self.UIElements["currentSpace"])
+    def spaceSwitching_spaceSwitch(self):
+        print(f"Space switch key clicked.")
+        # state = getattr(self, "spaceSwitchingState", {})
+        # controlObj = state.get("controlObj")
+        # targetObject = state.get("targetObject")
+        # if not controlObj or not targetObject:
+        #     return
+        # controlObjectInstance = controlObject.ControlObject(controlObj)
+        # controlObjectInstance.switchSpace_UI(targetObject)
         
-    #     self.UIElements["spaceSwitching_spaceSwitch"] = QtWidgets.QPushButton("Space Switch")
-    #     self.UIElements["spaceSwitching_spaceSwitch"].setEnabled(enable)
-    #     self.UIElements["spaceSwitching_spaceSwitch"].clicked.connect(partial(self.spaceSwitching_spaceSwitch, controlObj, targetObject))
-    #     rowLayout.addWidget(self.UIElements["spaceSwitching_spaceSwitch"])
-        
-    #     self.UIElements["spaceSwitching_deleteKey"] = QtWidgets.QPushButton("Delete Key")
-    #     self.UIElements["spaceSwitching_deleteKey"].setEnabled(enable)
-    #     self.UIElements["spaceSwitching_deleteKey"].clicked.connect(partial(self.spaceSwitching_deleteKey, spaceSwitcher))
-    #     rowLayout.addWidget(self.UIElements["spaceSwitching_deleteKey"])
-        
-    #     self.UIElements["spaceSwitching_backKey"] = QtWidgets.QPushButton("<")
-    #     self.UIElements["spaceSwitching_backKey"].setEnabled(enable)
-    #     self.UIElements["spaceSwitching_backKey"].clicked.connect(partial(self.spaceSwitching_backKey, spaceSwitcher))
-    #     rowLayout.addWidget(self.UIElements["spaceSwitching_backKey"])
-        
-    #     self.UIElements["spaceSwitching_forwardKey"] = QtWidgets.QPushButton(">")
-    #     self.UIElements["spaceSwitching_forwardKey"].setEnabled(enable)
-    #     self.UIElements["spaceSwitching_forwardKey"].clicked.connect(partial(self.spaceSwitching_forwardKey, spaceSwitcher))
-    #     rowLayout.addWidget(self.UIElements["spaceSwitching_forwardKey"])
-        
-    #     layout.addLayout(rowLayout)
-        
-    # def spaceSwitching_spaceSwitch(self, controlObj, targetObject):
-    #     controlObjectInstance = controlObject.ControlObject(controlObj)
-    #     controlObjectInstance.switchSpace_UI(targetObject)
-        
-    # def spaceSwitching_deleteKey(self, spaceSwitcher):
+    def spaceSwitching_deleteKey(self):
+        state = getattr(self, "spaceSwitchingState", {})
+        spaceSwitcher = state.get("spaceSwitcher")
+        print(f"Delete Key clicked. (spaceSwitcher={spaceSwitcher})")
     #     animationNamespace = utils.stripLeadingNamespace(spaceSwitcher)[0]
     #     characterContainer = self.selectedCharacter + ":character_container"
     #     blueprintContainer = self.selectedBlueprintModule + ":module_container"
@@ -1180,13 +1212,19 @@ class Animation_UI(QtWidgets.QDialog):
     #     print(f"THE animationContainer EQUALS: {animationContainer}")
     #     print(f"THE spaceSwitcher EQUALS: {spaceSwitcher}")
         
-    # def spaceSwitching_forwardKey(self, spaceSwitcher):
+    def spaceSwitching_forwardKey(self):
+        state = getattr(self, "spaceSwitchingState", {})
+        spaceSwitcher = state.get("spaceSwitcher")
+        print(f"Forward Key clicked (spaceSwitcher={spaceSwitcher})")
     #     currentTime = cmds.currentTime(q=True)
     #     time = cmds.findKeyframe(spaceSwitcher, at="currentSpace", time=(currentTime,), which="next")
     #     if currentTime < time:
     #         cmds.currentTime(time)
         
-    # def spaceSwitching_backKey(self, spaceSwitcher):
+    def spaceSwitching_backKey(self):
+        state = getattr(self, "spaceSwitchingState", {})
+        spaceSwitcher = state.get("spaceSwitcher")
+        print(f"Back Key clicked. (spaceSwitcher={spaceSwitcher})")
     #     currentTime = cmds.currentTime(q=True)
     #     time = cmds.findKeyframe(spaceSwitcher, at="currentSpace", time=(currentTime,), which="previous")
     #     if currentTime > time:
