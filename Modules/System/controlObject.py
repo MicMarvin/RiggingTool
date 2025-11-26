@@ -105,21 +105,21 @@ class ControlObject:
         expression = cmds.expression(n=self.controlObject + "_visibility_expression", string=visibilityExpression)
         utils.addNodeToContainer(animationModuleNamespace + ":module_container", expression)
 
-        # axisInverse = cmds.spaceLocator(name=self.controlObject + "_axisInverse")[0]
-        # cmds.parent(axisInverse, self.controlObject, relative=True)
-        # cmds.setAttr(axisInverse + ".visibility", 0)
-        # utils.addNodeToContainer(animationModuleNamespace + ":module_container", axisInverse, ihb=True)
+        axisInverse = cmds.spaceLocator(name=self.controlObject + "_axisInverse")[0]
+        cmds.parent(axisInverse, self.controlObject, relative=True)
+        cmds.setAttr(axisInverse + ".visibility", 0)
+        utils.addNodeToContainer(animationModuleNamespace + ":module_container", axisInverse, ihb=True)
 
-        # spaceSwitchTarget = cmds.spaceLocator(name=self.controlObject + "_spaceSwitchTarget")[0]
-        # cmds.parent(spaceSwitchTarget, axisInverse, relative=True)
-        # cmds.setAttr(spaceSwitchTarget + ".visibility", 0)
-        # utils.addNodeToContainer(animationModuleNamespace + ":module_container", spaceSwitchTarget, ihb=True)
+        spaceSwitchTarget = cmds.spaceLocator(name=self.controlObject + "_spaceSwitchTarget")[0]
+        cmds.parent(spaceSwitchTarget, axisInverse, relative=True)
+        cmds.setAttr(spaceSwitchTarget + ".visibility", 0)
+        utils.addNodeToContainer(animationModuleNamespace + ":module_container", spaceSwitchTarget, ihb=True)
 
-        # if self.rotation == [False, False, False]:
-        #     self.setupMirroring(blueprintModuleNamespace, animationModuleNamespace, axisInverse)
+        if self.rotation == [False, False, False]:
+            self.setupMirroring(blueprintModuleNamespace, animationModuleNamespace, axisInverse)
 
-        # if spaceSwitching:
-        #     self.setupSpaceSwitching(blueprintModuleNamespace, animationModuleNamespace, animationModuleInstance)
+        if spaceSwitching:
+            self.setupSpaceSwitching(blueprintModuleNamespace, animationModuleNamespace, animationModuleInstance)
 
         return (self.controlObject, self.rootParent)
 
@@ -140,154 +140,154 @@ class ControlObject:
         cmds.parent(clusterHandle, self.controlObject, absolute=True)
         cmds.setAttr(clusterHandle + ".visibility", 0)
 
-    # def setupMirroring(self, blueprintModuleNamespace, animationModuleNamespace, axisInverse):
-    #     moduleGrp = blueprintModuleNamespace + ":module_grp"
+    def setupMirroring(self, blueprintModuleNamespace, animationModuleNamespace, axisInverse):
+        moduleGrp = blueprintModuleNamespace + ":module_grp"
 
-    #     if cmds.attributeQuery("mirrorInfo", n=moduleGrp, exists=True):
-    #         enumValue = cmds.getAttr(moduleGrp + ".mirrorInfo")
+        if cmds.attributeQuery("mirrorInfo", n=moduleGrp, exists=True):
+            enumValue = cmds.getAttr(moduleGrp + ".mirrorInfo")
 
-    #         if enumValue == 0: # "None"
-    #             return
+            if enumValue == 0: # "None"
+                return
 
-    #         mirrorAxis = ""
+            mirrorAxis = ""
 
-    #         if enumValue == 1:
-    #             mirrorAxis = "X"
-    #         elif enumValue == 2:
-    #             mirrorAxis = "Y"
-    #         elif enumValue == 3:
-    #             mirrorAxis = "Z"
+            if enumValue == 1:
+                mirrorAxis = "X"
+            elif enumValue == 2:
+                mirrorAxis = "Y"
+            elif enumValue == 3:
+                mirrorAxis = "Z"
 
-    #         mirrorGrp = cmds.group(empty=True, name=self.controlObject + "_mirror_grp")
-    #         self.rootParent = mirrorGrp
+            mirrorGrp = cmds.group(empty=True, name=self.controlObject + "_mirror_grp")
+            self.rootParent = mirrorGrp
 
-    #         cmds.parent(self.controlObject, mirrorGrp, absolute=True)
+            cmds.parent(self.controlObject, mirrorGrp, absolute=True)
 
-    #         cmds.setAttr(mirrorGrp + ".scale" + mirrorAxis, -1)
-    #         cmds.setAttr(axisInverse + ".scale" + mirrorAxis, -1)
+            cmds.setAttr(mirrorGrp + ".scale" + mirrorAxis, -1)
+            cmds.setAttr(axisInverse + ".scale" + mirrorAxis, -1)
 
-    #         utils.addNodeToContainer(animationModuleNamespace + ":module_container", mirrorGrp)
+            utils.addNodeToContainer(animationModuleNamespace + ":module_container", mirrorGrp)
 
-    # def setupSpaceSwitching(self, blueprintModuleNamespace, animationModuleNamespace, animationModuleInstance):
-    #     cmds.select(self.controlObject, replace=True)
-    #     cmds.addAttr(at="bool", defaultValue=True, keyable=False, longName="spaceSwitching")
-    #     cmds.addAttr(at="bool", defaultValue=False, keyable=False, longName="switchOrientationOnly")
+    def setupSpaceSwitching(self, blueprintModuleNamespace, animationModuleNamespace, animationModuleInstance):
+        cmds.select(self.controlObject, replace=True)
+        cmds.addAttr(at="bool", defaultValue=True, keyable=False, longName="spaceSwitching")
+        cmds.addAttr(at="bool", defaultValue=False, keyable=False, longName="switchOrientationOnly")
 
-    #     spaceSwitcher = cmds.group(empty=True, name=self.controlObject + "_spaceSwitcher")
+        spaceSwitcher = cmds.group(empty=True, name=self.controlObject + "_spaceSwitcher")
 
-    #     if self.translation != [True, True, True]:
-    #         cmds.setAttr(self.controlObject + ".switchOrientationOnly", True)
+        if self.translation != [True, True, True]:
+            cmds.setAttr(self.controlObject + ".switchOrientationOnly", True)
 
-    #     cmds.parent(self.rootParent, spaceSwitcher, absolute=True)
-    #     self.rootParent = spaceSwitcher
+        cmds.parent(self.rootParent, spaceSwitcher, absolute=True)
+        self.rootParent = spaceSwitcher
 
-    #     utils.addNodeToContainer(animationModuleNamespace + ":module_container", spaceSwitcher)
+        utils.addNodeToContainer(animationModuleNamespace + ":module_container", spaceSwitcher)
 
-    #     self.switchSpace(blueprintModuleNamespace + ":HOOK_IN", "Module Hook")
+        self.switchSpace(blueprintModuleNamespace + ":HOOK_IN", "Module Hook")
 
-    #     controlObjectName = utils.stripAllNamespaces(self.controlObject)[1]
-    #     animationModuleInstance.publishNameToModuleContainer(spaceSwitcher + ".currentSpace", controlObjectName + "_currentSpace", publishToOuterContainers=True)
+        controlObjectName = utils.stripAllNamespaces(self.controlObject)[1]
+        animationModuleInstance.publishNameToModuleContainer(spaceSwitcher + ".currentSpace", controlObjectName + "_currentSpace", publishToOuterContainers=True)
 
-    # def switchSpace(self, targetObject, spaceName, index=-1, maintainOffset=False, setKeyframes=False):
-    #     if cmds.objExists(targetObject + "_spaceSwitchTarget"):
-    #         targetObject = targetObject + "_spaceSwitchTarget"
+    def switchSpace(self, targetObject, spaceName, index=-1, maintainOffset=False, setKeyframes=False):
+        if cmds.objExists(targetObject + "_spaceSwitchTarget"):
+            targetObject = targetObject + "_spaceSwitchTarget"
 
-    #     setKeyframes = setKeyframes and maintainOffset
+        setKeyframes = setKeyframes and maintainOffset
 
-    #     currentPosition = cmds.xform(self.controlObject, q=True, worldSpace=True, translation=True)
-    #     currentOrientation = cmds.xform(self.controlObject, q=True, worldSpace=True, rotation=True)
-    #     currentScale = self.getCurrentScale()
+        currentPosition = cmds.xform(self.controlObject, q=True, worldSpace=True, translation=True)
+        currentOrientation = cmds.xform(self.controlObject, q=True, worldSpace=True, rotation=True)
+        currentScale = self.getCurrentScale()
 
-    #     spaceSwitcher = self.controlObject + "_spaceSwitcher"
-    #     animModuleNamespace = utils.stripAllNamespaces(self.controlObject)[0]
+        spaceSwitcher = self.controlObject + "_spaceSwitcher"
+        animModuleNamespace = utils.stripAllNamespaces(self.controlObject)[0]
 
-    #     if index == -1:
-    #         cmds.select(spaceSwitcher)
-    #         enumIndex = 0
+        if index == -1:
+            cmds.select(spaceSwitcher)
+            enumIndex = 0
 
-    #         if cmds.attributeQuery("currentSpace", n=spaceSwitcher, exists=True):
-    #             currentEntries = cmds.attributeQuery("currentSpace", n=spaceSwitcher, listEnum=True)[0]
-    #             newEntry = currentEntries + ":" + spaceName
-    #             cmds.addAttr(spaceSwitcher + ".currentSpace", edit=True, enumName=newEntry)
+            if cmds.attributeQuery("currentSpace", n=spaceSwitcher, exists=True):
+                currentEntries = cmds.attributeQuery("currentSpace", n=spaceSwitcher, listEnum=True)[0]
+                newEntry = currentEntries + ":" + spaceName
+                cmds.addAttr(spaceSwitcher + ".currentSpace", edit=True, enumName=newEntry)
 
-    #             enumIndex = len(currentEntries.split(":"))
+                enumIndex = len(currentEntries.split(":"))
 
-    #         else:
-    #             cmds.addAttr(at="enum", enumName=spaceName, keyable=True, longName="currentSpace")
+            else:
+                cmds.addAttr(at="enum", enumName=spaceName, keyable=True, longName="currentSpace")
 
-    #         if self.globalScale:
-    #             scaleConstraint = cmds.scaleConstraint(targetObject, spaceSwitcher, n=spaceSwitcher + "_scaleConstraint", maintainOffset=False)[0]
+            if self.globalScale:
+                scaleConstraint = cmds.scaleConstraint(targetObject, spaceSwitcher, n=spaceSwitcher + "_scaleConstraint", maintainOffset=False)[0]
 
-    #         skipTranslate = "none"
-    #         if cmds.getAttr(self.controlObject + ".switchOrientationOnly"):
-    #             skipTranslate = ["x", "y", "z"]
+            skipTranslate = "none"
+            if cmds.getAttr(self.controlObject + ".switchOrientationOnly"):
+                skipTranslate = ["x", "y", "z"]
 
-    #         parentConstraint = cmds.parentConstraint(targetObject, spaceSwitcher, n=spaceSwitcher + "_parentConstraint", maintainOffset=False, skipTranslate=skipTranslate)[0]
-    #         parentWeightList = cmds.parentConstraint(parentConstraint, q=True, weightAliasList=True)
-    #         parentWeight = parentConstraint + "." + parentWeightList[len(parentWeightList)-1]
+            parentConstraint = cmds.parentConstraint(targetObject, spaceSwitcher, n=spaceSwitcher + "_parentConstraint", maintainOffset=False, skipTranslate=skipTranslate)[0]
+            parentWeightList = cmds.parentConstraint(parentConstraint, q=True, weightAliasList=True)
+            parentWeight = parentConstraint + "." + parentWeightList[len(parentWeightList)-1]
 
-    #         attrs = [(parentWeight, "parent")]
-    #         containedNodes = [parentConstraint]
+            attrs = [(parentWeight, "parent")]
+            containedNodes = [parentConstraint]
 
-    #         if self.globalScale:
-    #             scaleWeightList = cmds.scaleConstraint(scaleConstraint, q=True, weightAliasList=True)
-    #             scaleWeight = scaleConstraint + "." + scaleWeightList[len(scaleWeightList)-1]
+            if self.globalScale:
+                scaleWeightList = cmds.scaleConstraint(scaleConstraint, q=True, weightAliasList=True)
+                scaleWeight = scaleConstraint + "." + scaleWeightList[len(scaleWeightList)-1]
 
-    #             attrs.append((scaleWeight, "scale"))
-    #             containedNodes.append(scaleConstraint)
+                attrs.append((scaleWeight, "scale"))
+                containedNodes.append(scaleConstraint)
 
-    #         for attr in attrs:
-    #             expressionString = attr[0] + " = (" + spaceSwitcher + ".currentSpace == " + str(enumIndex) + ");\n"
-    #             expressionName = spaceSwitcher + "_" + attr[1] + "WeightExpression_" + str(enumIndex)
-    #             containedNodes.append(cmds.expression(name=expressionName, string=expressionString))
+            for attr in attrs:
+                expressionString = attr[0] + " = (" + spaceSwitcher + ".currentSpace == " + str(enumIndex) + ");\n"
+                expressionName = spaceSwitcher + "_" + attr[1] + "WeightExpression_" + str(enumIndex)
+                containedNodes.append(cmds.expression(name=expressionName, string=expressionString))
 
-    #         utils.addNodeToContainer(animModuleNamespace + ":module_container", containedNodes)
+            utils.addNodeToContainer(animModuleNamespace + ":module_container", containedNodes)
 
-    #         index = enumIndex
+            index = enumIndex
 
-    #     transformAttributes = ([self.translation[0], "translateX"], [self.translation[1], "translateY"], [self.translation[2], "translateZ"], [self.rotation[0], "rotateX"], [self.rotation[1], "rotateY"], [self.rotation[2], "rotateZ"], [self.globalScale, "globalScale"])
-    #     currentTime = cmds.currentTime(q=True)
-    #     if setKeyframes:
-    #         for attribute in transformAttributes:
-    #             if attribute[0]:
-    #                 if not cmds.selectKey(self.controlObject, attribute=attribute[1], time=(currentTime-1,)) > 0:
-    #                     value = cmds.getAttr(self.controlObject + "." + attribute[1], time=currentTime-1)
-    #                     cmds.setKeyframe(self.controlObject, attribute=attribute[1], time=currentTime-1, value=value, outTangentType="step")
+        transformAttributes = ([self.translation[0], "translateX"], [self.translation[1], "translateY"], [self.translation[2], "translateZ"], [self.rotation[0], "rotateX"], [self.rotation[1], "rotateY"], [self.rotation[2], "rotateZ"], [self.globalScale, "globalScale"])
+        currentTime = cmds.currentTime(q=True)
+        if setKeyframes:
+            for attribute in transformAttributes:
+                if attribute[0]:
+                    if not cmds.selectKey(self.controlObject, attribute=attribute[1], time=(currentTime-1,)) > 0:
+                        value = cmds.getAttr(self.controlObject + "." + attribute[1], time=currentTime-1)
+                        cmds.setKeyframe(self.controlObject, attribute=attribute[1], time=currentTime-1, value=value, outTangentType="step")
 
-    #     cmds.setAttr(spaceSwitcher + ".currentSpace", index)
-    #     cmds.setKeyframe(spaceSwitcher, at="currentSpace", ott="step")
+        cmds.setAttr(spaceSwitcher + ".currentSpace", index)
+        cmds.setKeyframe(spaceSwitcher, at="currentSpace", ott="step")
 
-    #     # Adding this try/except loop for compatibility with older versions of Maya - MIC
-    #     try:
-    #         animCurveName = utils.stripAllNamespaces(spaceSwitcher)[1]  # Adding this to get proper name because Maya no longer automatically names anim curves with namespace - MIC
-    #         utils.addNodeToContainer(animModuleNamespace + ":module_container", animCurveName + "_currentSpace")
-    #     except TypeError:
-    #         utils.addNodeToContainer(animModuleNamespace + ":module_container", spaceSwitcher + "_currentSpace")
+        # Adding this try/except loop for compatibility with older versions of Maya - MIC
+        try:
+            animCurveName = utils.stripAllNamespaces(spaceSwitcher)[1]  # Adding this to get proper name because Maya no longer automatically names anim curves with namespace - MIC
+            utils.addNodeToContainer(animModuleNamespace + ":module_container", animCurveName + "_currentSpace")
+        except TypeError:
+            utils.addNodeToContainer(animModuleNamespace + ":module_container", spaceSwitcher + "_currentSpace")
 
-    #     if maintainOffset:
-    #         if self.globalScale == True:
-    #             newScale = self.getCurrentScale()
-    #             scaleRatio = newScale/currentScale
-    #             newScaleAttributeValue = cmds.getAttr(self.controlObject + ".scaleY") / scaleRatio
-    #             cmds.setAttr(self.controlObject + ".scaleY", newScaleAttributeValue)
+        if maintainOffset:
+            if self.globalScale == True:
+                newScale = self.getCurrentScale()
+                scaleRatio = newScale/currentScale
+                newScaleAttributeValue = cmds.getAttr(self.controlObject + ".scaleY") / scaleRatio
+                cmds.setAttr(self.controlObject + ".scaleY", newScaleAttributeValue)
 
-    #         if self.rotation == [True, True, True]:
-    #             cmds.xform(self.controlObject, worldSpace=True, absolute=True, rotation=currentOrientation)
+            if self.rotation == [True, True, True]:
+                cmds.xform(self.controlObject, worldSpace=True, absolute=True, rotation=currentOrientation)
 
-    #         if self.translation == [True, True, True]:
-    #             cmds.xform(self.controlObject, worldSpace=True, absolute=True, translation=currentPosition)
+            if self.translation == [True, True, True]:
+                cmds.xform(self.controlObject, worldSpace=True, absolute=True, translation=currentPosition)
 
-    #     if setKeyframes:
-    #         for attribute in transformAttributes:
-    #             if attribute[0]:
-    #                 cmds.setKeyframe(self.controlObject, attribute=attribute[1])
+        if setKeyframes:
+            for attribute in transformAttributes:
+                if attribute[0]:
+                    cmds.setKeyframe(self.controlObject, attribute=attribute[1])
 
-    # def getCurrentScale(self):
-    #     locator = cmds.spaceLocator()[0]
-    #     cmds.scaleConstraint(self.controlObject, locator)
-    #     scale = cmds.getAttr(locator + ".scaleY")
-    #     cmds.delete(locator)
-    #     return scale
+    def getCurrentScale(self):
+        locator = cmds.spaceLocator()[0]
+        cmds.scaleConstraint(self.controlObject, locator)
+        scale = cmds.getAttr(locator + ".scaleY")
+        cmds.delete(locator)
+        return scale
 
     def UI(self, parentLayout, extraContentBuilder=None):
         """
