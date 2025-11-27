@@ -1184,51 +1184,35 @@ class Animation_UI(QtWidgets.QDialog):
             self.UIElements[key].setEnabled(enable)
         
     def spaceSwitching_spaceSwitch(self):
-        print(f"Space switch key clicked.")
-        # state = getattr(self, "spaceSwitchingState", {})
-        # controlObj = state.get("controlObj")
-        # targetObject = state.get("targetObject")
-        # if not controlObj or not targetObject:
-        #     return
-        # controlObjectInstance = controlObject.ControlObject(controlObj)
-        # controlObjectInstance.switchSpace_UI(targetObject)
+        state = getattr(self, "spaceSwitchingState", {})
+        controlObj = state.get("controlObj")
+        targetObject = state.get("targetObject")
+        if not controlObj or not targetObject:
+            return
+        controlObjectInstance = controlObject.ControlObject(controlObj)
+        controlObjectInstance.switchSpace_UI(targetObject)
         
     def spaceSwitching_deleteKey(self):
         state = getattr(self, "spaceSwitchingState", {})
         spaceSwitcher = state.get("spaceSwitcher")
-        print(f"Delete Key clicked. (spaceSwitcher={spaceSwitcher})")
-    #     animationNamespace = utils.stripLeadingNamespace(spaceSwitcher)[0]
-    #     characterContainer = self.selectedCharacter + ":character_container"
-    #     blueprintContainer = self.selectedBlueprintModule + ":module_container"
-    #     animationContainer = animationNamespace + ":module_container"
-    #     containers = [characterContainer, blueprintContainer, animationContainer]
-    #     for c in containers:
-    #         cmds.lockNode(c, lock=False, lockUnpublished=False)
-    #     cmds.cutKey(spaceSwitcher, at="currentSpace", time=(cmds.currentTime(q=True),))
-    #     for c in containers:
-    #         cmds.lockNode(c, lock=True, lockUnpublished=True)
-    #     print(f"THE animationNamespace EQUALS: {animationNamespace}")
-    #     print(f"THE blueprintContainer EQUALS: {blueprintContainer}")
-    #     print(f"THE animationContainer EQUALS: {animationContainer}")
-    #     print(f"THE spaceSwitcher EQUALS: {spaceSwitcher}")
+        cmds.cutKey(spaceSwitcher, at="currentSpace", time=(cmds.currentTime(q=True),))     
+        print(f"THE spaceSwitcher EQUALS: {spaceSwitcher}")
         
     def spaceSwitching_forwardKey(self):
         state = getattr(self, "spaceSwitchingState", {})
         spaceSwitcher = state.get("spaceSwitcher")
-        print(f"Forward Key clicked (spaceSwitcher={spaceSwitcher})")
-    #     currentTime = cmds.currentTime(q=True)
-    #     time = cmds.findKeyframe(spaceSwitcher, at="currentSpace", time=(currentTime,), which="next")
-    #     if currentTime < time:
-    #         cmds.currentTime(time)
+        currentTime = cmds.currentTime(q=True)
+        time = cmds.findKeyframe(spaceSwitcher, at="currentSpace", time=(currentTime,), which="next")
+        if currentTime < time:
+            cmds.currentTime(time)
         
     def spaceSwitching_backKey(self):
         state = getattr(self, "spaceSwitchingState", {})
         spaceSwitcher = state.get("spaceSwitcher")
-        print(f"Back Key clicked. (spaceSwitcher={spaceSwitcher})")
-    #     currentTime = cmds.currentTime(q=True)
-    #     time = cmds.findKeyframe(spaceSwitcher, at="currentSpace", time=(currentTime,), which="previous")
-    #     if currentTime > time:
-    #         cmds.currentTime(time)
+        currentTime = cmds.currentTime(q=True)
+        time = cmds.findKeyframe(spaceSwitcher, at="currentSpace", time=(currentTime,), which="previous")
+        if currentTime > time:
+            cmds.currentTime(time)
             
 #---------------------------------------------------------------------
 # For testing in Maya, create a QApplication (if one does not exist) and show the UI.

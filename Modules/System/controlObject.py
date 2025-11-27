@@ -447,95 +447,89 @@ class ControlObject:
                 except Exception as e:
                     print("Error refreshing global scale:", e)
 
-    # def switchSpace_UI(self, targetObject):
-    #     constraint = self.controlObject + "_spaceSwitcher_scaleConstraint"
-    #     if not cmds.objExists(constraint):
-    #         constraint = self.controlObject + "_spaceSwitcher_parentConstraint"
-    #         if not cmds.objExists(constraint):
-    #             print("ERROR: Control object appears to have no space switching capabilities")
-    #             return
+    def switchSpace_UI(self, targetObject):
+        constraint = self.controlObject + "_spaceSwitcher_scaleConstraint"
+        if not cmds.objExists(constraint):
+            constraint = self.controlObject + "_spaceSwitcher_parentConstraint"
+            if not cmds.objExists(constraint):
+                print("ERROR: Control object appears to have no space switching capabilities")
+                return
 
-    #     spaceNameText = "[a-z] [A-Z] [0-9] or _ only"
-    #     spaceNameEnable = True
+        spaceNameText = "[a-z] [A-Z] [0-9] or _ only"
+        spaceNameEnable = True
 
-    #     enumIndex = -1
-    #     index = 0
-    #     done = False
+        enumIndex = -1
+        index = 0
+        done = False
 
-    #     while not done:
-    #         attribute = constraint + ".target[" + str(index) + "].targetScale"
-    #         if cmds.connectionInfo(attribute, isDestination=True):
-    #             connection = cmds.listConnections(attribute)[0]
+        while not done:
+            attribute = constraint + ".target[" + str(index) + "].targetScale"
+            if cmds.connectionInfo(attribute, isDestination=True):
+                connection = cmds.listConnections(attribute)[0]
 
-    #             if connection == targetObject + "_spaceSwitchTarget" or connection == targetObject:
-    #                 enumIndex = index
+                if connection == targetObject + "_spaceSwitchTarget" or connection == targetObject:
+                    enumIndex = index
 
-    #                 enumEntries = cmds.attributeQuery("currentSpace", n=self.controlObject + "_spaceSwitcher", listEnum=True)[0]
-    #                 enumEntriesList = enumEntries.split(":")
+                    enumEntries = cmds.attributeQuery("currentSpace", n=self.controlObject + "_spaceSwitcher", listEnum=True)[0]
+                    enumEntriesList = enumEntries.split(":")
 
-    #                 spaceNameText = enumEntriesList[index]
-    #                 spaceNameEnable = False
+                    spaceNameText = enumEntriesList[index]
+                    spaceNameEnable = False
 
-    #                 done =True
+                    done = True
 
-    #         else:
-    #             done = True
+            else:
+                done = True
 
-    #         index += 1
+            index += 1
 
-    #     self.windowName = "switchSpace_UI_window"
+        # Build a PySide dialog for space switching.
+        dialog = QtWidgets.QDialog(parent=None)
+        dialog.setWindowTitle("Switch Space")
+        dialog.setModal(True)
+        dialog.setFixedSize(320, 180)
 
-    #     self.UIElements = {}
+        layout = QtWidgets.QVBoxLayout(dialog)
+        formLayout = QtWidgets.QFormLayout()
 
-    #     if cmds.window(self.windowName, exists=True):
-    #         cmds.deleteUI(self.windowName)
+        spaceNameEdit = QtWidgets.QLineEdit()
+        spaceNameEdit.setText(spaceNameText)
+        spaceNameEdit.setEnabled(spaceNameEnable)
+        formLayout.addRow("Space Name:", spaceNameEdit)
 
-    #     self.windowWidth = 300
-    #     self.windowHeight = 200
-    #     self.UIElements["window"] = cmds.window(self.windowName, width=self.windowWidth, height=self.windowHeight, title="Switch Space", sizeable=False)
+        maintainOffsetCheck = QtWidgets.QCheckBox("Maintain Offset?")
+        maintainOffsetCheck.setChecked(True)
+        formLayout.addRow(maintainOffsetCheck)
 
-    #     self.UIElements["topColumnLayout"] = cmds.columnLayout(adj=True, rs=3)
+        setKeyframesCheck = QtWidgets.QCheckBox("Set Keyframes on Control?")
+        setKeyframesCheck.setChecked(True)
+        formLayout.addRow(setKeyframesCheck)
 
-    #     self.UIElements["spaceName_rowColumn"] = cmds.rowColumnLayout(nc=2, columnAttach=(1, "right", 0), columnWidth=[(1,80), (2, self.windowWidth-90)])
-    #     cmds.text(label="Space Name :")
-    #     self.UIElements["spaceName"] = cmds.textField(enable=spaceNameEnable, text=spaceNameText)
+        layout.addLayout(formLayout)
 
-    #     cmds.setParent(self.UIElements["topColumnLayout"])
+        buttonLayout = QtWidgets.QHBoxLayout()
+        acceptBtn = QtWidgets.QPushButton("Accept")
+        cancelBtn = QtWidgets.QPushButton("Cancel")
+        buttonLayout.addStretch(1)
+        buttonLayout.addWidget(acceptBtn)
+        buttonLayout.addWidget(cancelBtn)
+        layout.addLayout(buttonLayout)
 
-    #     cmds.separator()
-    #     self.UIElements["maintainOffset_checkBox"] = cmds.checkBox(label="Maintain Offset?", value=True)
-    #     self.UIElements["setKeyframes_checkBox"] = cmds.checkBox(label="Set Keyframes on Control?", value=True)
-    #     cmds.separator()
+        acceptBtn.clicked.connect(lambda: self.acceptWindow(dialog, spaceNameEdit, maintainOffsetCheck, setKeyframesCheck, targetObject, enumIndex))
+        cancelBtn.clicked.connect(lambda: self.cancelWindow(dialog))
 
-    #     columnWidth = (self.windowWidth/2) - 5
-    #     self.UIElements["button_row"] = cmds.rowLayout(nc=2, columnWidth=[(1, columnWidth), (2, columnWidth)], cat=[(1, "both", 10), (2, "both", 10)], columnAlign=[(1, "center"), (2, "center")])
-    #     cmds.button(label="Accept", c=partial(self.acceptWindow, targetObject, enumIndex))
-    #     cmds.button(label="Cancel", c=self.cancelWindow)
+        dialog.show()
 
-    #     cmds.showWindow(self.UIElements["window"])
+    def acceptWindow(self, dialog, spaceNameEdit, maintainOffsetCheck, setKeyframesCheck, targetObject, enumIndex):
+        spaceName = spaceNameEdit.text()
+        maintainOffset = maintainOffsetCheck.isChecked()
+        setKeyframes = setKeyframesCheck.isChecked()
 
-    # def acceptWindow(self, targetObject, enumIndex, *args):
-    #     spaceName = cmds.textField(self.UIElements["spaceName"], q=True, text=True)
-    #     maintainOffset = cmds.checkBox(self.UIElements["maintainOffset_checkBox"], q=True, value=True)
-    #     setKeyframes = cmds.checkBox(self.UIElements["setKeyframes_checkBox"], q=True, value=True)
+        dialog.accept()
 
-    #     cmds.deleteUI(self.UIElements["window"])
+        self.switchSpace(targetObject, spaceName, index=enumIndex, maintainOffset=maintainOffset, setKeyframes=setKeyframes)
 
-    #     animModuleNamespace = utils.stripAllNamespaces(self.controlObject)[0]
-    #     blueprintModuleNamespace = utils.stripAllNamespaces(animModuleNamespace)[0]
-    #     characterNamespace = utils.stripAllNamespaces(blueprintModuleNamespace)[0]
+        cmds.select(self.controlObject, replace=True)
 
-    #     containers = (characterNamespace + ":character_container", blueprintModuleNamespace + ":module_container", animModuleNamespace + ":module_container")
-
-    #     for c in containers:
-    #         cmds.lockNode(c, lock=False, lockUnpublished=False)
-
-    #     self.switchSpace(targetObject, spaceName, index=enumIndex, maintainOffset=maintainOffset, setKeyframes=setKeyframes)
-
-    #     for c in containers:
-    #         cmds.lockNode(c, lock=True, lockUnpublished=True)
-
-    #     cmds.select(self.controlObject, replace=True)
-
-    # def cancelWindow(self, *args):
-    #     cmds.deleteUI(self.UIElements["window"])
+    def cancelWindow(self, dialog):
+        dialog.reject()
