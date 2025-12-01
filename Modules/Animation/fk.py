@@ -35,17 +35,11 @@ class FK(controlModule.ControlModule):
                 self.createFKControl(joints[i], controlsGrp, moduleContainer)
 
     def createFKControl(self, joint, parent, moduleContainer):
-        jointName = utils.stripAllNamespaces(joint)[1]
         containedNodes = []
-        name = jointName + "_fkControl"
 
-        controlObjectInstance = controlObject.ControlObject()
-
-        fkControlInfo = controlObjectInstance.create(name, "sphere.ma", self, lod=1, translation=False, rotation=True, globalScale=False, spaceSwitching=False)
+        fkControlInfo = self.initFKControl(joint, spaceSwitchable=False)
         fkControl = fkControlInfo[0]
-        #translationControl = fkControlInfo[2]
-
-        cmds.connectAttr(joint + ".rotateOrder", fkControl + ".rotateOrder")
+        translationControl = fkControlInfo[2]
 
         orientGrp = cmds.group(n=fkControl + "_orientGrp", empty=True, parent=parent)
         containedNodes.append(orientGrp)
@@ -55,50 +49,49 @@ class FK(controlModule.ControlModule):
 
         jointParent = cmds.listRelatives(joint, parent=True)[0]
 
-        #orientGrp_parentConstraint = cmds.parentConstraint(jointParent, orientGrp, maintainOffset=True, skipTranslate=["x", "y", "z"], n=orientGrp + "_parentConstraint")[0]
-        orientGrp_parentConstraint = cmds.parentConstraint(jointParent, orientGrp, maintainOffset=True, n=orientGrp + "_parentConstraint")[0]
+        orientGrp_parentConstraint = cmds.parentConstraint(jointParent, orientGrp, maintainOffset=True, skipTranslate=["x", "y", "z"], n=orientGrp + "_parentConstraint")[0]
 
-        # pointConstraint_parent = joint
-        # if translationControl:
-        #     pointConstraint_parent = jointParent
+        pointConstraint_parent = joint
+        if translationControl:
+            pointConstraint_parent = jointParent
 
-        # orientGrp_pointConstraint = cmds.pointConstraint(pointConstraint_parent, orientGrp, maintainOffset=False, n=orientGrp + "_pointConstraint")[0]
+        orientGrp_pointConstraint = cmds.pointConstraint(pointConstraint_parent, orientGrp, maintainOffset=False, n=orientGrp + "_pointConstraint")[0]
 
         orientGrp_scaleConstraint = cmds.scaleConstraint(jointParent, orientGrp, maintainOffset=True, n=orientGrp + "_scaleConstraint")[0]
 
-        containedNodes.extend([orientGrp_parentConstraint, orientGrp_scaleConstraint])
+        containedNodes.extend([orientGrp_parentConstraint, orientGrp_pointConstraint, orientGrp_scaleConstraint])
 
         cmds.parent(fkControl, orientGrp, relative=True)
 
         orientConstraint = cmds.orientConstraint(fkControl, joint, maintainOffset=False, n=joint + "_orientConstraint")[0]
         containedNodes.append(orientConstraint)
 
-        # if translationControl:
-        #     cmds.xform(fkControl, worldSpace=True, absolute=True, translation=cmds.xform(joint, q=True, worldSpace=True, translation=True))
-        #     pointConstraint = cmds.pointConstraint(fkControl, joint, maintainOffset=False, n=joint + "_pointConstraint")[0]
-        #     containedNodes.append(pointConstraint)
+        if translationControl:
+            cmds.xform(fkControl, worldSpace=True, absolute=True, translation=cmds.xform(joint, q=True, worldSpace=True, translation=True))
+            pointConstraint = cmds.pointConstraint(fkControl, joint, maintainOffset=False, n=joint + "_pointConstraint")[0]
+            containedNodes.append(pointConstraint)
 
         utils.addNodeToContainer(moduleContainer, containedNodes)
 
         return fkControl
 
-    # def initFKControl(self, joint, spaceSwitchable=False):
-    #     translationControl = False
-    #     jointName = utils.stripAllNamespaces(joint)[1]
-    #     blueprintJoint = self.blueprintNamespace + ":blueprint_" + jointName
-    #     if cmds.objExists(blueprintJoint + "_addTranslate"):
-    #         translationControl = True
+    def initFKControl(self, joint, spaceSwitchable=False):
+        translationControl = False
+        jointName = utils.stripAllNamespaces(joint)[1]
+        blueprintJoint = self.blueprintNamespace + ":blueprint_" + jointName
+        if cmds.objExists(blueprintJoint + "_addTranslate"):
+            translationControl = True
 
-    #     name = jointName + "_fkControl"
+        name = jointName + "_fkControl"
 
-    #     controlObjectInstance = controlObject.ControlObject()
+        controlObjectInstance = controlObject.ControlObject()
 
-    #     fkControlInfo = controlObjectInstance.create(name, "sphere.ma", self, lod=1, translation=translationControl, rotation=True, globalScale=False, spaceSwitching=spaceSwitchable)
-    #     fkControl = fkControlInfo[0]
+        fkControlInfo = controlObjectInstance.create(name, "sphere.ma", self, lod=1, translation=translationControl, rotation=True, globalScale=False, spaceSwitching=spaceSwitchable)
+        fkControl = fkControlInfo[0]
 
-    #     cmds.connectAttr(joint + ".rotateOrder", fkControl + ".rotateOrder")
+        cmds.connectAttr(joint + ".rotateOrder", fkControl + ".rotateOrder")
 
-    #     return (fkControlInfo[0], fkControlInfo[1], translationControl)
+        return (fkControlInfo[0], fkControlInfo[1], translationControl)
 
 
     def UI(self, parentLayout):
