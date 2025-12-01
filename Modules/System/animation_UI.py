@@ -638,6 +638,9 @@ class Animation_UI(QtWidgets.QDialog):
         # Setup the script job (we still use cmds.scriptJob here for selection changes).
         self.setupScriptJob()
         
+        # Make sure we clean up on scene close.
+        self.setupSceneCloseJobs()
+
         # Call selectionChanged to update UI based on current Maya selection.
         self.selectionChanged()
   
@@ -657,6 +660,28 @@ class Animation_UI(QtWidgets.QDialog):
         super(Animation_UI, self).closeEvent(event)
         
         event.accept()
+
+    def setupSceneCloseJobs(self):
+        for evt in ("NewSceneOpened", "SceneOpened"):
+            try:
+                jobID = cmds.scriptJob(
+                    event=[evt, self.closeFromSceneChange],
+                    parent=self.objectName(),   # auto-kill when the UI closes
+                    protected=True
+                )
+                self.scriptJobs.append(jobID)
+            except RuntimeError as exc:
+                cmds.warning(f"Could not create scene-close scriptJob for {evt}: {exc}")
+
+    def closeFromSceneChange(self, *args):
+        # Avoid re-entry if already closing
+        if not self.isVisible():
+            return
+        try:
+            self.deleteScriptJob()  # kills selection/weight jobs too
+        except Exception:
+            pass
+        self.close()
 
     def initializeBlueprintModuleList(self):
         # Set the namespace to the selected character.
@@ -949,7 +974,7 @@ class Animation_UI(QtWidgets.QDialog):
         self.moduleWeights_updateMatchingButton()
 
     def create_moduleWeightsScriptJob(self, weightAttributes):
-        jobID = cmds.scriptJob(event=["timeChanged", partial(self.moduleWeights_timeUpdateScriptJobCallback, weightAttributes)])
+        jobID = cmds.scriptJob(event=["timeChanged", partial(self.moduleWeights_timeUpdateScriptJobCallback, weightAttributes)], killWithScene=True, protected=True)
         self.scriptJobs.append(jobID)
         
     def moduleWeights_timeUpdateScriptJobCallback(self, weightAttributes):
