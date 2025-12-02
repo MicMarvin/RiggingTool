@@ -32,7 +32,7 @@ global proc shelf_RiggingTool () {
         -style "iconOnly" 
         -marginWidth 1
         -marginHeight 1
-        -command "import os\ntry:\n    os.environ[\"RIGGING_TOOL_ROOT\"]\nexcept KeyError:\n    print(\"RIGGING_TOOL_ROOT environment variable not correctly configured.\")\nelse:\n    import importlib\n    import RiggingTool.Modules.System.blueprint_UI as blueprint_UI\n    #importlib.reload(blueprint_UI) #Only needed for testing\n    blueprint_UI.Blueprint_UI.display()" 
+        -command "import os\ntry:\n    os.environ[\"RIGGING_TOOL_ROOT\"]\nexcept KeyError:\n    print(\"RIGGING_TOOL_ROOT environment variable not correctly configured.\")\nelse:\n    import importlib\n    import RiggingTool.Modules.System.blueprint_UI as blueprint_UI\n    #importlib.reload(blueprint_UI) #Only needed for testing\n    blueprint_UI.Blueprint_UI.display()"
         -sourceType "python" 
         -commandRepeatable 1
         -flat 1
@@ -103,10 +103,23 @@ global proc shelf_RiggingTool () {
         -commandRepeatable 1
         -flat 1
     ;
+	separator
+        -enable 1
+        -width 12
+        -height 35
+        -manage 1
+        -visible 1
+        -preventOverride 0
+        -enableBackground 0
+        -backgroundColor 0 0 0 
+        -highlightColor 0.321569 0.521569 0.65098 
+        -style "shelf" 
+        -horizontal 0
+    ;
     shelfButton
         -enableCommandRepeat 1
         -flexibleWidthType 3
-        -flexibleWidthValue 32
+        -flexibleWidthValue 25
         -enable 1
         -width 28
         -height 34
@@ -139,7 +152,7 @@ global proc shelf_RiggingTool () {
     shelfButton
         -enableCommandRepeat 1
         -flexibleWidthType 3
-        -flexibleWidthValue 32
+        -flexibleWidthValue 28
         -enable 1
         -width 31
         -height 34
@@ -201,6 +214,19 @@ global proc shelf_RiggingTool () {
         -sourceType "python" 
         -commandRepeatable 1
         -flat 1
+    ;
+	separator
+        -enable 1
+        -width 12
+        -height 35
+        -manage 1
+        -visible 1
+        -preventOverride 0
+        -enableBackground 0
+        -backgroundColor 0 0 0 
+        -highlightColor 0.321569 0.521569 0.65098 
+        -style "shelf" 
+        -horizontal 0
     ;
     shelfButton
         -enableCommandRepeat 1
