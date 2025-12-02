@@ -191,6 +191,16 @@ class FloatAttrControlWidget(QtWidgets.QWidget):
         if self.callback is not None:
             self.callback(floatVal)
 
+    def setValue(self, value):
+        """Update spin and slider without firing callbacks/signals."""
+        self.doubleSpin.blockSignals(True)
+        self.slider.blockSignals(True)
+        self.doubleSpin.setValue(value)
+        self.slider.setValue(int(round(value * self.conversion)))
+        self.slider.blockSignals(False)
+        self.doubleSpin.blockSignals(False)
+
+
 #---------------------------------------------------------------------
 # ColorControlWidget class using PySide2.
 #---------------------------------------------------------------------
