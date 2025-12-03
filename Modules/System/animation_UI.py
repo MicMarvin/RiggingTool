@@ -1077,23 +1077,27 @@ class Animation_UI(QtWidgets.QDialog):
                 preferencesWidget.setContentLayout(prefLayout)
                 moduleSpecificPreferencesLayout.addWidget(preferencesWidget)
 
-                # Create an icon scale control using our FloatAttrControlWidget.
+                # Icon group (Scale + Color)
+                iconGroup = QtWidgets.QGroupBox("Icons")
+                iconLayout = QtWidgets.QVBoxLayout(iconGroup)
+
                 fullAttrIconScale = self.selectedBlueprintModule + ":" + currentlySelectedModuleNamespace + ":module_grp.iconScale"
                 currentScale = cmds.getAttr(fullAttrIconScale)
-                iconScaleControl = FloatAttrControlWidget(fullAttrIconScale, "Icon Scale:", minVal=0.1, maxVal=5.0,
+                iconScaleControl = FloatAttrControlWidget(fullAttrIconScale, "Scale:", minVal=0.1, maxVal=5.0,
                                                           initialValue=currentScale, conversion=1000,
                                                           callback=lambda newVal: cmds.setAttr(fullAttrIconScale, newVal))
-                prefLayout.addWidget(iconScaleControl)
+                iconLayout.addWidget(iconScaleControl)
 
-                # Create an icon color control using our ColorControlWidget.
                 colorAttr = self.selectedBlueprintModule + ":" + currentlySelectedModuleNamespace + ":module_grp.overrideColor"
                 currentColor = cmds.getAttr(colorAttr)
                 colorInitial = currentColor  # UI displays this value
-                colorControl = ColorControlWidget(colorAttr, "Icon Color:",
-                                                   minVal=1, maxVal=31,
-                                                   initialValue=colorInitial,
-                                                   callback=lambda newVal: cmds.setAttr(colorAttr, newVal))
-                prefLayout.addWidget(colorControl)
+                colorControl = ColorControlWidget(colorAttr, "Color:",
+                                                  minVal=1, maxVal=31,
+                                                  initialValue=colorInitial,
+                                                  callback=lambda newVal: cmds.setAttr(colorAttr, newVal))
+                iconLayout.addWidget(colorControl)
+
+                prefLayout.addWidget(iconGroup)
 
                 moduleInst.UI_preferences(prefLayout)
                 self.UIElements["matchingButton"].setEnabled(matchButtonEnable)
