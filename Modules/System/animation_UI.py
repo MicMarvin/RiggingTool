@@ -787,6 +787,8 @@ class Animation_UI(QtWidgets.QDialog):
                 pass
             
     def selectionChanged(self):
+        if getattr(self, "_suppressSelectionChanged", False):
+            return
         selection = cmds.ls(selection=True, transforms=True)
         if selection:
             selectedNode = selection[0]
@@ -1070,6 +1072,7 @@ class Animation_UI(QtWidgets.QDialog):
                 moduleInst = moduleClass(self.selectedBlueprintModule + ":" + currentlySelectedModuleNamespace)
                 # Let moduleInst add its UI controls to the given layout.
                 moduleInst.UI(layout)
+                self.selectPrimaryModuleControl(currentlySelectedModuleNamespace)
 
                 # Create a preferences section as a collapsible widget.
                 preferencesWidget = CollapsibleWidget(title="Preferences", settingsKey="AnimationUI/Preferences")
@@ -1107,6 +1110,60 @@ class Animation_UI(QtWidgets.QDialog):
   
     def iconColour_callback(self, currentlySelectedModuleNamespace, value):
         cmds.setAttr(self.selectedBlueprintModule + ":" + currentlySelectedModuleNamespace + ":module_grp.overrideColor", value)
+
+    def selectPrimaryModuleControl(self, moduleNamespace):
+        # Do nothing if pinned; honor current viewport selection when pinned.
+        pin = self.UIElements.get("pinButton")
+        if pin and pin.isChecked():
+            return
+
+        grp = f"{self.selectedBlueprintModule}:{moduleNamespace}:module_grp"
+        if not cmds.objExists(grp):
+            print(f"[Animation_UI] module_grp not found for module {moduleNamespace}")
+            return
+
+        transforms = cmds.listRelatives(grp, ad=True, type="transform", fullPath=True) or []
+        root = cmds.ls(grp, long=True) or []
+        transforms.extend(root)
+        # Sort deterministically: shallower paths first, then by original discovery order to preserve chain order.
+        transforms = sorted(
+            enumerate(transforms),
+            key=lambda item: (item[1].count("|"), item[0])
+        )
+        transforms = [t for _, t in transforms]
+
+        def has_real_shape(xform):
+            if not cmds.objExists(xform):
+                return False
+            node_type = cmds.nodeType(xform)
+            if node_type and node_type.endswith("Constraint"):
+                return False
+            shapes = cmds.listRelatives(xform, shapes=True, fullPath=True) or []
+            for s in shapes:
+                if cmds.getAttr(s + ".intermediateObject"):
+                    continue
+                if cmds.nodeType(s) == "clusterHandle":
+                    continue
+                return True
+            return False
+
+        target_xform = None
+        for t in transforms:
+            if "control" in t.lower() and has_real_shape(t):
+                target_xform = t
+                break
+
+        if target_xform is None:
+            print(f"[Animation_UI] No selectable transform found for module {moduleNamespace}")
+            return
+
+        # Prevent the selectionChanged scriptJob from re-entering while we programmatically select.
+        self._suppressSelectionChanged = True
+        try:
+            cmds.select(target_xform, r=True)
+            print(f"[Animation_UI] Selected {target_xform} for module {moduleNamespace}")
+        finally:
+            self._suppressSelectionChanged = False
         
     def deleteSelectedModule(self):
         selectedItems = self.UIElements["animationModule_textScroll"].selectedItems()
