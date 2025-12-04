@@ -257,12 +257,16 @@ class ControlObject:
         cmds.setAttr(spaceSwitcher + ".currentSpace", index)
         cmds.setKeyframe(spaceSwitcher, at="currentSpace", ott="step")
 
-        # Adding this try/except loop for compatibility with older versions of Maya - MIC
-        try:
-            animCurveName = utils.stripAllNamespaces(spaceSwitcher)[1]  # Adding this to get proper name because Maya no longer automatically names anim curves with namespace - MIC
-            utils.addNodeToContainer(animModuleNamespace + ":module_container", animCurveName + "_currentSpace")
-        except TypeError:
-            utils.addNodeToContainer(animModuleNamespace + ":module_container", spaceSwitcher + "_currentSpace")
+        # Maya versions name the animCurve differently; grab the actual curve driving currentSpace,
+        # rename it into this module's namespace for uniqueness, and add that node to our container.
+        curve = cmds.listConnections(spaceSwitcher + ".currentSpace", s=True, d=False, type="animCurve") or []
+        if curve:
+            desired = f"{spaceSwitcher}_currentSpace"
+            try:
+                curve[0] = cmds.rename(curve[0], desired)
+            except Exception:
+                desired = curve[0]
+            utils.addNodeToContainer(animModuleNamespace + ":module_container", desired)
 
         if maintainOffset:
             if self.globalScale == True:
