@@ -529,8 +529,6 @@ class Blueprint():
         cmds.connectAttr(hookGrp + ".scaleY", moduleGrp + ".hierarchicalScale")
 
 
-
-
     def UI(self, blueprint_UI_instance, parentTopRowLayout, parentColumn01Layout, parentColumn02Layout, parentColumn03Layout, parentBottomRowLayout):
         self.blueprint_UI_instance = blueprint_UI_instance
         self.parentTopRowLayout = parentTopRowLayout
@@ -570,7 +568,6 @@ class Blueprint():
         rotationOrderComboBox.currentIndexChanged.connect(updateRotationOrder)
 
 
-
     def attributeChange_callbackMethod(self, object, attribute, *args):
         if self.blueprint_UI_instance.symmetryMoveCheckBox.isChecked():
             moduleInfo = utils.stripLeadingNamespace(object)
@@ -585,7 +582,6 @@ class Blueprint():
                 newValue = cmds.getAttr(object + attribute)
                 mirrorObj = mirrorModule + ":" + objectName
                 cmds.setAttr(mirrorObj + attribute, newValue)
-
 
 
     def delete(self):
@@ -643,8 +639,6 @@ class Blueprint():
                 groupSelected.UngroupSelected()
 
 
-
-
     def renameModuleInstance(self, newName):
         if newName == self.userSpecifiedName:
             return True
@@ -676,7 +670,6 @@ class Blueprint():
             self.containerName = self.moduleNamespace + ":module_container"
 
             return True
-
 
 
     def initializeHook(self, rootTranslationControl):
@@ -736,7 +729,6 @@ class Blueprint():
         utils.addNodeToContainer(hookContainer, hookRepresentationContainer)
 
 
-
     def rehook(self, newHookObject):
         oldHookObject = self.findHookObject()
 
@@ -780,7 +772,6 @@ class Blueprint():
         return hookObject
 
 
-
     def lock_phase3(self, hookObject):
         moduleContainer = self.moduleNamespace + ":module_container"
         if hookObject != None:
@@ -796,7 +787,6 @@ class Blueprint():
             utils.addNodeToContainer(moduleContainer, [parentConstraint, scaleConstraint])
 
 
-
     def snapRootToHook(self):
         rootControl = self.getTranslationControl(self.moduleNamespace + ":" + self.jointInfo[0][0])
         hookObject = self.findHookObject()
@@ -806,7 +796,6 @@ class Blueprint():
 
         hookObjectPos = cmds.xform(hookObject, q=True, worldSpace=True, translation=True)
         cmds.xform(rootControl, worldSpace=True, absolute=True, translation=hookObjectPos)
-
 
 
     def constrainRootToHook(self):
@@ -825,7 +814,6 @@ class Blueprint():
         cmds.select(clear=True)
 
 
-
     def unconstrainRootFromHook(self):
         rootControl = self.getTranslationControl(self.moduleNamespace + ":" + self.jointInfo[0][0])
         rootControl_hookConstraint = rootControl + "_hookConstraint"
@@ -842,13 +830,11 @@ class Blueprint():
             cmds.setToolTo("moveSuperContext")
 
 
-
     def isRootConstrained(self):
         rootControl = self.getTranslationControl(self.moduleNamespace + ":" + self.jointInfo[0][0])
         rootControl_hookConstraint = rootControl + "_hookConstraint"
 
         return cmds.objExists(rootControl_hookConstraint)
-
 
 
     def canModuleBeMirrored(self):
@@ -952,7 +938,6 @@ class Blueprint():
         cmds.select(clear=True)
 
 
-
     def createPreferredAngleRepresentation(self, joint, scaleTarget, childOfOrientationControl=False):
         paRepresentationFile = os.environ["RIGGING_TOOL_ROOT"] + "/RiggingTool/ControlObjects/Blueprint/preferredAngle_representation.ma"
         cmds.file(paRepresentationFile, i=True, defaultNamespace=True)
@@ -988,7 +973,6 @@ class Blueprint():
         return control
 
 
-
     def getPreferredAngleControl(self, jointName):
         return jointName + "_preferredAngle_representation"
 
@@ -1018,7 +1002,6 @@ class Blueprint():
             self.attributeChange_callbackMethod(preferredAngle_representation, ".axis")
 
         preferredAngleComboBox.currentIndexChanged.connect(updatePreferredAngle)
-
 
 
     def createSingleJointOrientationControlAtJoint(self, joint):
