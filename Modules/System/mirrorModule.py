@@ -234,7 +234,7 @@ class MirrorModule:
         translationRadioCollection = "translation_radioCollection_all"
         textLabel = "* all modules"
 
-        behaviourName = "behaviour__"
+        behaviorName = "behavior__"
         orientationName = "orientation__"
         mirroredName = "mirrored__"
         worldSpaceName = "worldSpace__"
@@ -244,7 +244,7 @@ class MirrorModule:
             translationRadioCollection = "translation_radioCollection_" + moduleName
             textLabel = moduleName
 
-            behaviourName = "behaviour__" + moduleName
+            behaviorName = "behavior__" + moduleName
             orientationName = "orientation__" + moduleName
             mirroredName = "mirrored__" + moduleName
             worldSpaceName = "worldSpace__" + moduleName
@@ -266,18 +266,18 @@ class MirrorModule:
         gridLayout.addWidget(rotationLabel, 0, 0)
 
         # Create unique radio buttons for rotation settings
-        rotationBehaviourButton = QtWidgets.QRadioButton("Behaviour")
+        rotationBehaviorButton = QtWidgets.QRadioButton("Behavior")
         rotationOrientationButton = QtWidgets.QRadioButton("Orientation")
 
-        # Set "Behaviour" as the default selected option
-        rotationBehaviourButton.setChecked(True)
+        # Set "Behavior" as the default selected option
+        rotationBehaviorButton.setChecked(True)
 
         # Add to the UIElements dictionary to keep track of the widgets for this module
         self.UIElements[rotationRadioCollection] = QtWidgets.QButtonGroup(self.mirrorWindow)
-        self.UIElements[rotationRadioCollection].addButton(rotationBehaviourButton)
+        self.UIElements[rotationRadioCollection].addButton(rotationBehaviorButton)
         self.UIElements[rotationRadioCollection].addButton(rotationOrientationButton)
 
-        gridLayout.addWidget(rotationBehaviourButton, 0, 1)
+        gridLayout.addWidget(rotationBehaviorButton, 0, 1)
         gridLayout.addWidget(rotationOrientationButton, 0, 2)
 
         # Row 2: Translation label and radio buttons

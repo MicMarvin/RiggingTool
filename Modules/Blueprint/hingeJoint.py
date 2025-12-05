@@ -52,7 +52,7 @@ class HingeJoint(blueprintMod.Blueprint):
                 mirrorXZ = True
 
             mirrorBehavior = False
-            if self.rotationFunction == "Behaviour":
+            if self.rotationFunction == "Behavior":
                 mirrorBehavior = True
 
             mirrorJoints = cmds.mirrorJoint(tempDuplicateNodes[0], mirrorXY=mirrorXY, mirrorYZ=mirrorYZ, mirrorXZ=mirrorXZ, mirrorBehavior=mirrorBehavior)
@@ -101,19 +101,6 @@ class HingeJoint(blueprintMod.Blueprint):
         self.createRotationOrderUIControl(joints[1])
 
     def lock_phase1(self):
-        # Gather and return all required information from this module's control objects
-
-        # jointPositions = list of joint positions from root down the hierarchy
-        # jointOrientations = a list of orientations, or a list of axis information (orientJoint and secondaryAxisOrient for joint command)
-        #            # These are passed in the following tuple: (orientations, None) or (None, axisInfo)
-        # jointRotationOrders = a list of joint rotation orders (integer valuesgathered with getAttr)
-        # jointPreferredAngles = a list of joint preferred angles, optional (can pass None)
-        # hookObject = self.findHookObjectForLock()
-        # rootTransform = a bool, either True or False. True = R, T, and S on root joint. False = R only
-        #
-        # moduleInfo = (jointPositions, jointOrientations, jointRotationOrders, jointPreferredAngles, hookObject, rootTransform)
-        # return moduleInfo
-
         jointPositions = []
         jointOrientationValues = []
         jointRotationOrders = []
