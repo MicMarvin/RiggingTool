@@ -221,7 +221,7 @@ def basic_stretchy_IK(rootJoint, endJoint, container=None, lockMinimumLength=Tru
 
         cmds.setAttr(multNode + ".input1X", cmds.getAttr(joint + ".translateX"))
         cmds.connectAttr(lockBlend + ".outputR", multNode + ".input2X")
-        cmds.connectAttr(multNode + ".outputX", joint + ".translateX")
+        cmds.connectAttr(multNode + ".output", joint + ".translate")
 
     if container is not None:
         addNodeToContainer(container, containedNodes, ihb=True)
