@@ -25,20 +25,10 @@ class LegFoot(hingeJoint.HingeJoint):
     def install_custom(self, joints):
         hingeJoint.HingeJoint.install_custom(self, joints)
 
-        #  This section is for aligning the joint orientation of the foot (ankle, ball, toe) to be the same as the leg.
-        #  However, this was not accounted for in video #187 when setting up the legIKReverseFoot.py controls on the foot
-        #  which rotate on the "z axis" instead of "y axis".
-        #  I'm leaving this commented out for now so I can continue with the tutorial. Ultimately all the joints should
-        #  have the same orientation in the leg. - MIC
-
-        #  This behavior is different between Maya2010 and Maya 2018
-        #  Removing this code breaks Maya2010, so for now I'm leaving it and focussing on 2018.
         ankleOrientationControl = self.createOrientationControl(joints[2], joints[3])
         ballOrientationControl = self.createOrientationControl(joints[3], joints[4])
-        # cmds.setAttr(ankleOrientationControl + ".rotateX", 180)
-        # cmds.setAttr(ballOrientationControl + ".rotateX", -90)
-        cmds.setAttr(ankleOrientationControl + ".rotateX", -90)
-        cmds.setAttr(ballOrientationControl + ".rotateX", -90)
+        cmds.setAttr(ankleOrientationControl + ".rotateX", 90)
+        cmds.setAttr(ballOrientationControl + ".rotateX", 90)
 
         cmds.xform(self.getTranslationControl(joints[1]), worldSpace=True, absolute=True, translation=[0.0, -4.0, 1.0])
         cmds.xform(self.getTranslationControl(joints[2]), worldSpace=True, absolute=True, translation=[0.0, -8.0, 0.0])

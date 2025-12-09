@@ -1,77 +1,73 @@
 //Maya ASCII 2022 scene
-//Name: 01_Legs.ma
-//Last modified: Wed, Dec 11, 2024 07:31:05 PM
+//Name: 01_Leg_Foot.ma
+//Last modified: Mon, Dec 08, 2025 04:36:16 PM
 //Codeset: 1252
 requires maya "2022";
 requires "stereoCamera" "10.0";
 requires "mtoa" "5.0.0.1";
-currentUnit -l centimeter -a degree -t ntsc;
+currentUnit -l centimeter -a degree -t film;
 fileInfo "application" "maya";
 fileInfo "product" "Maya 2022";
 fileInfo "version" "2022";
 fileInfo "cutIdentifier" "202110272215-ad32f8f1e6";
-fileInfo "osv" "Windows 10 Pro for Workstations v2009 (Build: 19045)";
-fileInfo "UUID" "BD17F5B9-481A-ACAD-EB3E-9AA08A241CA7";
+fileInfo "osv" "Windows 10 Pro v2009 (Build: 26200)";
+fileInfo "UUID" "F9235C53-4D19-4C5D-2181-FBB499232757";
 createNode transform -n "LegFoot__instance_1:module_grp";
-	rename -uid "1B9B3EE1-45E6-8399-6FA3-98AAC98ECBD1";
+	rename -uid "BF5DF276-4073-AC1B-7569-A7A9E63DE931";
 	addAttr -ci true -sn "mirrorLinks" -ln "mirrorLinks" -dt "string";
 	setAttr ".mirrorLinks" -type "string" "LegFoot__instance_1_mirror__X";
 createNode transform -n "LegFoot__instance_1:joints_grp" -p "LegFoot__instance_1:module_grp";
-	rename -uid "C87E66BC-4362-72E5-1D24-1585A76F5EB7";
+	rename -uid "04435487-4357-1C4A-8D9D-B08B292FFEC3";
 createNode joint -n "LegFoot__instance_1:hip_joint" -p "LegFoot__instance_1:joints_grp";
-	rename -uid "48F47C3B-4D5C-66BA-D76A-D2B8C73644F2";
+	rename -uid "6D9E15CD-4325-A5F5-44BE-23A8BE287D61";
 	setAttr ".v" no;
-	setAttr ".r" -type "double3" 89.999999999999929 -104.03624346792657 -75.963756532073504 ;
+	setAttr ".r" -type "double3" 0 -104.03624346792654 -75.963756532073532 ;
 	setAttr ".ro" 3;
 	setAttr ".mnrl" -type "double3" -360 -360 -360 ;
 	setAttr ".mxrl" -type "double3" 360 360 360 ;
 	setAttr ".jo" -type "double3" 0 14.036243467926484 0 ;
 createNode joint -n "LegFoot__instance_1:knee_joint" -p "LegFoot__instance_1:hip_joint";
-	rename -uid "8F761810-4B24-46D1-CC11-E7BD6910B111";
+	rename -uid "63E63CD0-4271-4EAB-F9BB-F185481CFF15";
 	setAttr ".v" no;
-	setAttr ".t" -type "double3" 1.2053368091583252 0 3.3306690738754696e-16 ;
-	setAttr ".r" -type "double3" 180 -3.166472612658624e-14 1.9389052748400701e-30 ;
+	setAttr ".r" -type "double3" 179.99999999999915 28.072486935852993 -28.072486284218037 ;
 	setAttr ".ro" 3;
 	setAttr ".mnrl" -type "double3" -360 -360 -360 ;
 	setAttr ".mxrl" -type "double3" 360 360 360 ;
 	setAttr ".jo" -type "double3" 0 -28.072486935852961 0 ;
 createNode joint -n "LegFoot__instance_1:ankle_joint" -p "LegFoot__instance_1:knee_joint";
-	rename -uid "5045B888-43C3-9434-3012-BA8AA2598378";
+	rename -uid "39A50B7B-4F30-7F97-E6C1-2E8B77E705F5";
 	setAttr ".v" no;
-	setAttr ".t" -type "double3" 1.2053366899490356 0 3.3306690738754696e-16 ;
-	setAttr ".r" -type "double3" 90.000000000000071 59.806417898519662 46.48887222312122 ;
+	setAttr ".r" -type "double3" 34.513338521473372 2.4956289093961619 -47.134494530234406 ;
 	setAttr ".mnrl" -type "double3" -360 -360 -360 ;
 	setAttr ".mxrl" -type "double3" 360 360 360 ;
 	setAttr ".jo" -type "double3" 153.4273414719969 -23.00936329637852 -128.00775720672615 ;
 createNode joint -n "LegFoot__instance_1:ball_joint" -p "LegFoot__instance_1:ankle_joint";
-	rename -uid "C6384923-46A5-7DD5-84DB-40A6B49B0270";
+	rename -uid "57D5ADFE-4FC1-AA5B-DF2F-518F464D875F";
 	setAttr ".v" no;
-	setAttr ".t" -type "double3" 0.92445111274719238 -1.3322676295501878e-15 -8.8817841970012523e-16 ;
-	setAttr ".r" -type "double3" 51.432560808574024 -55.722094138537642 -56.620290040644072 ;
+	setAttr ".r" -type "double3" 51.432559561809562 -55.72209520428116 -56.620288531820179 ;
 	setAttr ".mnrl" -type "double3" -360 -360 -360 ;
 	setAttr ".mxrl" -type "double3" 360 360 360 ;
 	setAttr ".jo" -type "double3" -7.2465789628297293e-14 69.443954780416533 46.488872223121135 ;
 createNode joint -n "LegFoot__instance_1:toe_joint" -p "LegFoot__instance_1:ball_joint";
-	rename -uid "C41E365A-4384-BE6B-E800-E39BCC5F6FE6";
+	rename -uid "7F0D6BF4-43E3-B6E1-D7D2-E78FA945ADDD";
 	setAttr ".v" no;
-	setAttr ".t" -type "double3" 0.87701129913330078 2.7755575615628914e-15 -1.6653345369377669e-16 ;
 	setAttr ".mnrl" -type "double3" -360 -360 -360 ;
 	setAttr ".mxrl" -type "double3" 360 360 360 ;
 	setAttr ".jo" -type "double3" 0 89.999999999999957 0 ;
 createNode ikEffector -n "LegFoot__instance_1:ball_jointikEffector" -p "LegFoot__instance_1:ball_joint";
-	rename -uid "A2053B88-4F2B-08C4-3FD6-F5B75F89A85A";
+	rename -uid "F20FA25B-4ECC-4733-3986-919BC5A0E0DE";
 	setAttr ".v" no;
 	setAttr ".hd" yes;
 createNode ikEffector -n "LegFoot__instance_1:ankle_jointikEffector" -p "LegFoot__instance_1:ankle_joint";
-	rename -uid "38971617-46B8-9278-C77C-799280DD0100";
+	rename -uid "C1AB50F1-43CB-555A-9F0F-04AE5AE00A74";
 	setAttr ".v" no;
 	setAttr ".hd" yes;
 createNode ikEffector -n "LegFoot__instance_1:knee_jointikEffector" -p "LegFoot__instance_1:knee_joint";
-	rename -uid "CEAF4A4C-46F9-3A5D-15E9-E7A30722D9F1";
+	rename -uid "3CA98A15-4A6B-A448-FDCE-BEA13D20B8C7";
 	setAttr ".v" no;
 	setAttr ".hd" yes;
 createNode pointConstraint -n "LegFoot__instance_1:hip_joint_pointConstraint" -p "LegFoot__instance_1:hip_joint";
-	rename -uid "64031C50-4592-D81D-7673-B6B9715552A1";
+	rename -uid "A0585E8F-446F-F35E-9DCC-F6BC8875B795";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "hip_joint_translation_controlW0" 
 		-dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
@@ -88,15 +84,15 @@ createNode pointConstraint -n "LegFoot__instance_1:hip_joint_pointConstraint" -p
 	setAttr ".erp" yes;
 	setAttr -k on ".w0";
 createNode ikEffector -n "LegFoot__instance_1:hip_jointikEffector" -p "LegFoot__instance_1:hip_joint";
-	rename -uid "CCC79976-446C-1625-C81C-2FA21A91E50F";
+	rename -uid "BE68E3C1-4A33-01CA-2533-F489FD0A94CF";
 	setAttr ".v" no;
 	setAttr ".hd" yes;
 createNode ikHandle -n "LegFoot__instance_1:hip_joint_ikHandle" -p "LegFoot__instance_1:joints_grp";
-	rename -uid "78A088D5-4983-53D0-F773-DE977DAC40DF";
+	rename -uid "A88CB2DC-4659-0478-161B-3B92C27F2E19";
 	setAttr ".v" no;
 	setAttr ".roc" yes;
 createNode poleVectorConstraint -n "hip_joint_ikHandle_poleVectorConstraint1" -p "LegFoot__instance_1:hip_joint_ikHandle";
-	rename -uid "1FF12861-4CC8-BD56-9692-E4A629897A9F";
+	rename -uid "2A94A73E-4D66-0EB4-A5BC-56B4A448D20B";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "hip_joint_translation_control_poleVectorLocatorW0" 
 		-dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
@@ -115,7 +111,7 @@ createNode poleVectorConstraint -n "hip_joint_ikHandle_poleVectorConstraint1" -p
 	setAttr -k on ".w0";
 createNode pointConstraint -n "LegFoot__instance_1:hip_joint_ikHandle_pointConstraint" 
 		-p "LegFoot__instance_1:hip_joint_ikHandle";
-	rename -uid "85AA827E-4DD2-D128-5AA4-C2B8235B8E33";
+	rename -uid "540B6F80-4FE6-5EA0-5295-839DC8C1B3B1";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "knee_joint_endPosLocatorW0" -dv 1 
 		-min 0 -at "double";
 	setAttr -k on ".nds";
@@ -133,14 +129,14 @@ createNode pointConstraint -n "LegFoot__instance_1:hip_joint_ikHandle_pointConst
 	setAttr ".rst" -type "double3" 4 0 -1.0000000000000002 ;
 	setAttr -k on ".w0";
 createNode transform -n "LegFoot__instance_1:hip_joint_rootPosLocator" -p "LegFoot__instance_1:joints_grp";
-	rename -uid "3F2FB3F4-4802-2919-9980-B8BB11AEF4F1";
+	rename -uid "91160BEB-4C97-4F72-3DAF-5F86D1762AE3";
 	setAttr ".v" no;
 createNode locator -n "LegFoot__instance_1:hip_joint_rootPosLocatorShape" -p "LegFoot__instance_1:hip_joint_rootPosLocator";
-	rename -uid "84B44E69-4FB3-07E7-5651-4590C58E8074";
+	rename -uid "CEC7A6E7-417D-8DE0-CC84-53AD174A7FF8";
 	setAttr -k off ".v";
 createNode pointConstraint -n "LegFoot__instance_1:hip_joint_rootPosLocator_pointConstraint" 
 		-p "LegFoot__instance_1:hip_joint_rootPosLocator";
-	rename -uid "95C17DB0-4D71-DC00-ACB8-99943529B894";
+	rename -uid "9DE00A06-4874-11C4-CEAC-50B90C53C804";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "hip_jointW0" -dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
 	setAttr -k off ".v";
@@ -156,14 +152,14 @@ createNode pointConstraint -n "LegFoot__instance_1:hip_joint_rootPosLocator_poin
 	setAttr ".erp" yes;
 	setAttr -k on ".w0";
 createNode transform -n "LegFoot__instance_1:knee_joint_endPosLocator" -p "LegFoot__instance_1:joints_grp";
-	rename -uid "4004B82C-4E97-63E7-8097-938E85EFCD87";
+	rename -uid "C95CED9C-4CBB-38DC-8919-D381695B218A";
 	setAttr ".v" no;
 createNode locator -n "LegFoot__instance_1:knee_joint_endPosLocatorShape" -p "LegFoot__instance_1:knee_joint_endPosLocator";
-	rename -uid "649885FE-4C0A-90C9-6C72-5EBB4B6AE230";
+	rename -uid "E9BA9551-4AAA-25E5-D80E-8A99AF894331";
 	setAttr -k off ".v";
 createNode pointConstraint -n "LegFoot__instance_1:knee_joint_endPosLocator_pointConstraint" 
 		-p "LegFoot__instance_1:knee_joint_endPosLocator";
-	rename -uid "531590B4-4689-53B4-0CC4-0DBE936DA6C1";
+	rename -uid "9972AC00-4DFF-92C3-B949-639F22516781";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "knee_joint_translation_controlW0" 
 		-dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
@@ -181,12 +177,12 @@ createNode pointConstraint -n "LegFoot__instance_1:knee_joint_endPosLocator_poin
 	setAttr ".rst" -type "double3" 4 0 -1.0000000000000002 ;
 	setAttr -k on ".w0";
 createNode ikHandle -n "LegFoot__instance_1:knee_joint_ikHandle" -p "LegFoot__instance_1:joints_grp";
-	rename -uid "03BBE6D2-4205-D85A-4B1E-9E8EB2086486";
+	rename -uid "403B4B3F-4A5C-CE07-4672-2CB1324F192D";
 	setAttr ".v" no;
 	setAttr ".roc" yes;
 createNode poleVectorConstraint -n "knee_joint_ikHandle_poleVectorConstraint1" -p
 		 "LegFoot__instance_1:knee_joint_ikHandle";
-	rename -uid "6854883B-4D53-FD2E-65C6-C09A5F32697B";
+	rename -uid "2E3DAC0A-42E4-62CA-57E4-F884F82E6AA1";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "knee_joint_translation_control_poleVectorLocatorW0" 
 		-dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
@@ -201,11 +197,11 @@ createNode poleVectorConstraint -n "knee_joint_ikHandle_poleVectorConstraint1" -
 	setAttr -k off ".sy";
 	setAttr -k off ".sz";
 	setAttr ".erp" yes;
-	setAttr ".rst" -type "double3" 9.6671985527763127e-08 -0.49999999999999967 -2.4167996159896177e-08 ;
+	setAttr ".rst" -type "double3" 9.6671985527763127e-08 -0.5 -2.4167996159896177e-08 ;
 	setAttr -k on ".w0";
 createNode pointConstraint -n "LegFoot__instance_1:knee_joint_ikHandle_pointConstraint" 
 		-p "LegFoot__instance_1:knee_joint_ikHandle";
-	rename -uid "0B2E345B-4F39-833E-78BE-1F9BC1EAE4F2";
+	rename -uid "D76D95AF-4A87-4107-D7FB-4B959E14AF61";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "ankle_joint_endPosLocatorW0" -dv 
 		1 -min 0 -at "double";
 	setAttr -k on ".nds";
@@ -220,17 +216,17 @@ createNode pointConstraint -n "LegFoot__instance_1:knee_joint_ikHandle_pointCons
 	setAttr -k off ".sy";
 	setAttr -k off ".sz";
 	setAttr ".erp" yes;
-	setAttr ".rst" -type "double3" 7.5294116680338963 -1.9402850002906642 -1.8823529170084747 ;
+	setAttr ".rst" -type "double3" 7.999999903328014 0 2.4167995937851572e-08 ;
 	setAttr -k on ".w0";
 createNode transform -n "LegFoot__instance_1:knee_joint_rootPosLocator" -p "LegFoot__instance_1:joints_grp";
-	rename -uid "02F2BE05-4B52-2E53-53F2-FE8A0F54EC1D";
+	rename -uid "B50FCD27-4B1B-C8A9-EA20-C79EC7BA4A50";
 	setAttr ".v" no;
 createNode locator -n "LegFoot__instance_1:knee_joint_rootPosLocatorShape" -p "LegFoot__instance_1:knee_joint_rootPosLocator";
-	rename -uid "D533A3B7-4D04-EAC4-E573-A4A47E1860B1";
+	rename -uid "87A390B3-4EA9-4265-B740-20A30E092309";
 	setAttr -k off ".v";
 createNode pointConstraint -n "LegFoot__instance_1:knee_joint_rootPosLocator_pointConstraint" 
 		-p "LegFoot__instance_1:knee_joint_rootPosLocator";
-	rename -uid "A2D43FE7-4EAB-7A00-DC61-62B603236813";
+	rename -uid "4310558D-43DD-B6E1-6902-EC9A37F7CF63";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "knee_jointW0" -dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
 	setAttr -k off ".v";
@@ -244,17 +240,17 @@ createNode pointConstraint -n "LegFoot__instance_1:knee_joint_rootPosLocator_poi
 	setAttr -k off ".sy";
 	setAttr -k off ".sz";
 	setAttr ".erp" yes;
-	setAttr ".rst" -type "double3" 3.9999999033280145 -3.3306690738754696e-16 -0.99999997583200406 ;
+	setAttr ".rst" -type "double3" 3.9999999033280145 0 -0.99999997583200406 ;
 	setAttr -k on ".w0";
 createNode transform -n "LegFoot__instance_1:ankle_joint_endPosLocator" -p "LegFoot__instance_1:joints_grp";
-	rename -uid "FB570F35-4D8B-2120-3CEF-43A7A3657FB7";
+	rename -uid "324664B8-402A-DD08-328B-BEAEE8EF39C6";
 	setAttr ".v" no;
 createNode locator -n "LegFoot__instance_1:ankle_joint_endPosLocatorShape" -p "LegFoot__instance_1:ankle_joint_endPosLocator";
-	rename -uid "BBDF0234-4891-7787-41B0-42BCB5A52745";
+	rename -uid "194DD910-4E68-4A13-B596-3DA1384DE3CC";
 	setAttr -k off ".v";
 createNode pointConstraint -n "LegFoot__instance_1:ankle_joint_endPosLocator_pointConstraint" 
 		-p "LegFoot__instance_1:ankle_joint_endPosLocator";
-	rename -uid "4FD05014-4E5F-27B6-420C-32B9B2890308";
+	rename -uid "46709A64-467A-EEA8-4850-6D8A3AABD7C9";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "ankle_joint_translation_controlW0" 
 		-dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
@@ -272,12 +268,12 @@ createNode pointConstraint -n "LegFoot__instance_1:ankle_joint_endPosLocator_poi
 	setAttr ".rst" -type "double3" 8 0 -2.2204460492503131e-16 ;
 	setAttr -k on ".w0";
 createNode ikHandle -n "LegFoot__instance_1:ankle_joint_ikHandle" -p "LegFoot__instance_1:joints_grp";
-	rename -uid "846B8294-4A39-8792-128E-7E934A23288D";
+	rename -uid "0376D1D7-4559-0416-3171-9FA774A6A8DF";
 	setAttr ".v" no;
 	setAttr ".roc" yes;
 createNode poleVectorConstraint -n "ankle_joint_ikHandle_poleVectorConstraint1" -p
 		 "LegFoot__instance_1:ankle_joint_ikHandle";
-	rename -uid "208200EE-4F7D-B063-1D19-D0B233BB34A4";
+	rename -uid "49828B56-45CE-326E-BD04-CE971DE7EE5A";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "ankle_joint_translation_control_poleVectorLocatorW0" 
 		-dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
@@ -292,11 +288,11 @@ createNode poleVectorConstraint -n "ankle_joint_ikHandle_poleVectorConstraint1" 
 	setAttr -k off ".sy";
 	setAttr -k off ".sz";
 	setAttr ".erp" yes;
-	setAttr ".rst" -type "double3" 1.8197079754145307e-07 -0.50000000000000044 4.5492696276738798e-08 ;
+	setAttr ".rst" -type "double3" 1.9334397016734783e-07 -0.5 -1.1102230246251565e-16 ;
 	setAttr -k on ".w0";
 createNode pointConstraint -n "LegFoot__instance_1:ankle_joint_ikHandle_pointConstraint" 
 		-p "LegFoot__instance_1:ankle_joint_ikHandle";
-	rename -uid "D4FD2B77-4188-DA1F-231F-58B6DEB6BE86";
+	rename -uid "8FC38F98-43F0-BF24-1C83-2C86661CF7E9";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "ball_joint_endPosLocatorW0" -dv 1 
 		-min 0 -at "double";
 	setAttr -k on ".nds";
@@ -311,17 +307,17 @@ createNode pointConstraint -n "LegFoot__instance_1:ankle_joint_ikHandle_pointCon
 	setAttr -k off ".sy";
 	setAttr -k off ".sz";
 	setAttr ".erp" yes;
-	setAttr ".rst" -type "double3" 3.3592910232237818 -4.8507116566562551 -10.437165288306224 ;
+	setAttr ".rst" -type "double3" 1.2372074031929969e-08 -9.0000004571467187 2.9999991771358148 ;
 	setAttr -k on ".w0";
 createNode transform -n "LegFoot__instance_1:ankle_joint_rootPosLocator" -p "LegFoot__instance_1:joints_grp";
-	rename -uid "8DE4F698-4E88-7AD4-5D5F-05AFC3A4CA78";
+	rename -uid "D2FF9CF8-4FD3-A333-6467-B790E7E547FC";
 	setAttr ".v" no;
 createNode locator -n "LegFoot__instance_1:ankle_joint_rootPosLocatorShape" -p "LegFoot__instance_1:ankle_joint_rootPosLocator";
-	rename -uid "340C6D09-46BB-BB85-A715-52B2CBDDDDC5";
+	rename -uid "D4AB2392-4420-37CD-F6D6-8E8B0BD4A217";
 	setAttr -k off ".v";
 createNode pointConstraint -n "LegFoot__instance_1:ankle_joint_rootPosLocator_pointConstraint" 
 		-p "LegFoot__instance_1:ankle_joint_rootPosLocator";
-	rename -uid "93E79CD8-426E-5520-F5A8-65943DBE482B";
+	rename -uid "5879A2C1-47BE-EE68-9EBB-1EB3784D4F66";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "ankle_jointW0" -dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
 	setAttr -k off ".v";
@@ -335,17 +331,17 @@ createNode pointConstraint -n "LegFoot__instance_1:ankle_joint_rootPosLocator_po
 	setAttr -k off ".sy";
 	setAttr -k off ".sz";
 	setAttr ".erp" yes;
-	setAttr ".rst" -type "double3" 7.9999998180292025 4.6421107194575482e-16 -4.5492696498783403e-08 ;
+	setAttr ".rst" -type "double3" 7.9999998066560298 -1.3642211818372073e-23 -1.1102230246251565e-16 ;
 	setAttr -k on ".w0";
 createNode transform -n "LegFoot__instance_1:ball_joint_endPosLocator" -p "LegFoot__instance_1:joints_grp";
-	rename -uid "980A69C6-49AD-E24D-D6CB-D8AB72259B98";
+	rename -uid "B1163F98-4ADA-9A59-B09D-35A765E6F566";
 	setAttr ".v" no;
 createNode locator -n "LegFoot__instance_1:ball_joint_endPosLocatorShape" -p "LegFoot__instance_1:ball_joint_endPosLocator";
-	rename -uid "6FF71111-4459-7835-C5CB-43917F058543";
+	rename -uid "8400C6A1-4280-D878-3C2F-AD9ABD64D87E";
 	setAttr -k off ".v";
 createNode pointConstraint -n "LegFoot__instance_1:ball_joint_endPosLocator_pointConstraint" 
 		-p "LegFoot__instance_1:ball_joint_endPosLocator";
-	rename -uid "C458ADF2-4196-C45D-6B02-D5994FF56ECD";
+	rename -uid "38047210-4B6E-E178-93A6-9A8192F5889E";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "ball_joint_translation_controlW0" 
 		-dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
@@ -363,12 +359,12 @@ createNode pointConstraint -n "LegFoot__instance_1:ball_joint_endPosLocator_poin
 	setAttr ".rst" -type "double3" 0 -9.0000000000000018 2.9999999999999991 ;
 	setAttr -k on ".w0";
 createNode ikHandle -n "LegFoot__instance_1:ball_joint_ikHandle" -p "LegFoot__instance_1:joints_grp";
-	rename -uid "7943F704-4CAE-1F0F-DF82-07B051EBA932";
+	rename -uid "B44DF6C2-465C-63AB-8D11-EAB12DCDD05D";
 	setAttr ".v" no;
 	setAttr ".roc" yes;
 createNode poleVectorConstraint -n "ball_joint_ikHandle_poleVectorConstraint1" -p
 		 "LegFoot__instance_1:ball_joint_ikHandle";
-	rename -uid "CE04B03C-4FB9-3EAB-96E0-CE96BD1F5188";
+	rename -uid "DBBBA5C4-42AA-8162-D537-FBA342F299D8";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "ball_joint_translation_control_poleVectorLocatorW0" 
 		-dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
@@ -383,11 +379,11 @@ createNode poleVectorConstraint -n "ball_joint_ikHandle_poleVectorConstraint1" -
 	setAttr -k off ".sy";
 	setAttr -k off ".sz";
 	setAttr ".erp" yes;
-	setAttr ".rst" -type "double3" 9.7418398681270446e-08 -0.4999998904042986 -3.653190727703759e-08 ;
+	setAttr ".rst" -type "double3" 1.1199202987199897e-07 -0.49999988801724982 -6.6328916137337046e-08 ;
 	setAttr -k on ".w0";
 createNode pointConstraint -n "LegFoot__instance_1:ball_joint_ikHandle_pointConstraint" 
 		-p "LegFoot__instance_1:ball_joint_ikHandle";
-	rename -uid "63A20B35-467F-D677-6F69-8DACB4DDCBEA";
+	rename -uid "E6062AB2-41CF-3C34-D1FD-6FAE77895226";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "toe_joint_endPosLocatorW0" -dv 1 
 		-min 0 -at "double";
 	setAttr -k on ".nds";
@@ -402,17 +398,17 @@ createNode pointConstraint -n "LegFoot__instance_1:ball_joint_ikHandle_pointCons
 	setAttr -k off ".sy";
 	setAttr -k off ".sz";
 	setAttr ".erp" yes;
-	setAttr ".rst" -type "double3" -7.3306962250496752e-07 -8.9999995208414063 6.000000036531782 ;
+	setAttr ".rst" -type "double3" -5.0945151985892799e-07 -8.9999997401863059 6.0000000663288677 ;
 	setAttr -k on ".w0";
 createNode transform -n "LegFoot__instance_1:ball_joint_rootPosLocator" -p "LegFoot__instance_1:joints_grp";
-	rename -uid "E2E1FECB-46D4-D3A9-29D9-8BA860A49B7B";
+	rename -uid "216E1726-435A-8D29-0FD9-74B1D9235EBA";
 	setAttr ".v" no;
 createNode locator -n "LegFoot__instance_1:ball_joint_rootPosLocatorShape" -p "LegFoot__instance_1:ball_joint_rootPosLocator";
-	rename -uid "18B9DAE5-4D29-5542-40C7-01A726CF2817";
+	rename -uid "8296E943-412E-B6DE-5A43-1A80DC2561A0";
 	setAttr -k off ".v";
 createNode pointConstraint -n "LegFoot__instance_1:ball_joint_rootPosLocator_pointConstraint" 
 		-p "LegFoot__instance_1:ball_joint_rootPosLocator";
-	rename -uid "B9034FA0-4202-BCE3-4A1F-52BCF5ADF5BA";
+	rename -uid "76B2CC56-4573-4071-698E-F6AAF2C5E649";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "ball_jointW0" -dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
 	setAttr -k off ".v";
@@ -426,17 +422,17 @@ createNode pointConstraint -n "LegFoot__instance_1:ball_joint_rootPosLocator_poi
 	setAttr -k off ".sy";
 	setAttr -k off ".sz";
 	setAttr ".erp" yes;
-	setAttr ".rst" -type "double3" -9.7418398681270446e-08 -9.0000001095957032 3.0000000365319064 ;
+	setAttr ".rst" -type "double3" -1.1199202987199897e-07 -9.000000111982752 3.0000000663289152 ;
 	setAttr -k on ".w0";
 createNode transform -n "LegFoot__instance_1:toe_joint_endPosLocator" -p "LegFoot__instance_1:joints_grp";
-	rename -uid "B6214327-4FB2-5140-B7D1-598E13977065";
+	rename -uid "DCB8CF90-4A15-C336-D4F4-B3B2CF392709";
 	setAttr ".v" no;
 createNode locator -n "LegFoot__instance_1:toe_joint_endPosLocatorShape" -p "LegFoot__instance_1:toe_joint_endPosLocator";
-	rename -uid "79DC2A4F-4E3C-B2C5-EAF4-BDB92BB151E1";
+	rename -uid "7A599368-4FDC-9562-4F66-05942EA90028";
 	setAttr -k off ".v";
 createNode pointConstraint -n "LegFoot__instance_1:toe_joint_endPosLocator_pointConstraint" 
 		-p "LegFoot__instance_1:toe_joint_endPosLocator";
-	rename -uid "F11D1F1D-4328-9CDE-D722-D18629C5ECF7";
+	rename -uid "DAB57FA5-434A-AB06-AB78-CB929341433E";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "toe_joint_translation_controlW0" 
 		-dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
@@ -454,16 +450,16 @@ createNode pointConstraint -n "LegFoot__instance_1:toe_joint_endPosLocator_point
 	setAttr ".rst" -type "double3" 2.2186712959340957e-31 -9.0000000000000018 6 ;
 	setAttr -k on ".w0";
 createNode transform -n "LegFoot__instance_1:hierarchyRepresentations_grp" -p "LegFoot__instance_1:module_grp";
-	rename -uid "E87A9FD2-4B54-C8A4-C4A8-268930801DB1";
+	rename -uid "773155F0-4E96-D043-EBE7-3A8DFC2DEFDA";
 createNode transform -n "LegFoot__instance_1:hip_joint_hierarchy_representation_parentConstraint_grp" 
 		-p "LegFoot__instance_1:hierarchyRepresentations_grp";
-	rename -uid "88D6637A-40B5-4C5B-DEA1-E8AAC19A3DA2";
+	rename -uid "A14A93BC-4485-896F-CE89-DCBE26436D29";
 createNode transform -n "LegFoot__instance_1:hip_joint_hierarchy_representation" 
 		-p "LegFoot__instance_1:hip_joint_hierarchy_representation_parentConstraint_grp";
-	rename -uid "04D5A312-47C5-9B72-2140-7486E332DAB2";
+	rename -uid "F481F1D5-48C1-414A-BC21-DEA2BBFA511D";
 createNode nurbsSurface -n "LegFoot__instance_1:hip_joint_hierarchy_representationShape" 
 		-p "LegFoot__instance_1:hip_joint_hierarchy_representation";
-	rename -uid "F3546602-478C-2232-7B44-A6A5FAE9DE6E";
+	rename -uid "5FF86BDF-4E75-1BD3-D03E-3DBE5464751B";
 	addAttr -ci true -sn "mso" -ln "miShadingSamplesOverride" -min 0 -max 1 -at "bool";
 	addAttr -ci true -sn "msh" -ln "miShadingSamples" -min 0 -smx 8 -at "float";
 	addAttr -ci true -sn "mdo" -ln "miMaxDisplaceOverride" -min 0 -max 1 -at "bool";
@@ -535,7 +531,7 @@ createNode nurbsSurface -n "LegFoot__instance_1:hip_joint_hierarchy_representati
 	setAttr ".nvfa" 4.5;
 createNode transform -n "LegFoot__instance_1:hip_joint_hierarchy_arrow_representation" 
 		-p "LegFoot__instance_1:hip_joint_hierarchy_representation";
-	rename -uid "44231C53-40BD-D2DC-014D-C0844B8B01CE";
+	rename -uid "531FDAC7-4914-3DE9-03EA-D8B3ABE95601";
 	setAttr ".r" -type "double3" 0 0 -90 ;
 	setAttr ".s" -type "double3" 0.46739519169468152 0.46739519169468152 0.46739519169468152 ;
 	setAttr ".rp" -type "double3" 1.1102230246251565e-16 0.5 0 ;
@@ -544,7 +540,7 @@ createNode transform -n "LegFoot__instance_1:hip_joint_hierarchy_arrow_represent
 	setAttr ".spt" -type "double3" -1.2651181092870475e-16 -0.56975854455648134 0 ;
 createNode mesh -n "LegFoot__instance_1:hip_joint_hierarchy_arrow_representationShape" 
 		-p "LegFoot__instance_1:hip_joint_hierarchy_arrow_representation";
-	rename -uid "4507634D-456A-490C-C087-2A895B43CA9C";
+	rename -uid "DB6C252C-4B33-5B5C-0306-639F95A73EF2";
 	addAttr -ci true -sn "mso" -ln "miShadingSamplesOverride" -min 0 -max 1 -at "bool";
 	addAttr -ci true -sn "msh" -ln "miShadingSamples" -min 0 -smx 8 -at "float";
 	addAttr -ci true -sn "mdo" -ln "miMaxDisplaceOverride" -min 0 -max 1 -at "bool";
@@ -601,7 +597,7 @@ createNode mesh -n "LegFoot__instance_1:hip_joint_hierarchy_arrow_representation
 	setAttr ".vnm" 0;
 createNode parentConstraint -n "hip_joint_hierarchy_representation_parentConstraint_grp_parentConstraint1" 
 		-p "LegFoot__instance_1:hip_joint_hierarchy_representation_parentConstraint_grp";
-	rename -uid "20E4F13F-4C38-5800-52BB-16A174B7CFAF";
+	rename -uid "6064F8C3-4628-4C1D-3200-139A55A440B6";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "hip_jointW0" -dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
 	setAttr -k off ".v";
@@ -615,12 +611,12 @@ createNode parentConstraint -n "hip_joint_hierarchy_representation_parentConstra
 	setAttr -k off ".sy";
 	setAttr -k off ".sz";
 	setAttr ".erp" yes;
-	setAttr ".lr" -type "double3" 0 194.03624346792651 89.999999999999986 ;
-	setAttr ".rsrr" -type "double3" 90 14.036243467926484 0 ;
+	setAttr ".lr" -type "double3" 90.000000000000057 -14.036243467926468 -90.000000000000028 ;
+	setAttr ".rsrr" -type "double3" 0 14.036243467926484 0 ;
 	setAttr -k on ".w0";
 createNode scaleConstraint -n "hip_joint_hierarchy_representation_parentConstraint_grp_scaleConstraint1" 
 		-p "LegFoot__instance_1:hip_joint_hierarchy_representation_parentConstraint_grp";
-	rename -uid "60551487-4562-3B1B-035C-4FAD2A48115E";
+	rename -uid "AA8D8ABC-430D-F1A2-2285-B389B6CC5B89";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "module_transformW0" -dv 1 -min 0 
 		-at "double";
 	setAttr -k on ".nds";
@@ -638,13 +634,13 @@ createNode scaleConstraint -n "hip_joint_hierarchy_representation_parentConstrai
 	setAttr -k on ".w0";
 createNode transform -n "LegFoot__instance_1:knee_joint_hierarchy_representation_parentConstraint_grp" 
 		-p "LegFoot__instance_1:hierarchyRepresentations_grp";
-	rename -uid "54C71EF2-40E7-0EBB-CEA6-10A91494FE57";
+	rename -uid "9F114EF6-4E49-F8E4-B618-5887A480C7A7";
 createNode transform -n "LegFoot__instance_1:knee_joint_hierarchy_representation" 
 		-p "LegFoot__instance_1:knee_joint_hierarchy_representation_parentConstraint_grp";
-	rename -uid "4B8CE0FB-49D1-9D77-09FA-FE92ECD847D4";
+	rename -uid "DEED38AA-44A4-8ED0-CDC9-28AD9FEF5558";
 createNode nurbsSurface -n "LegFoot__instance_1:knee_joint_hierarchy_representationShape" 
 		-p "LegFoot__instance_1:knee_joint_hierarchy_representation";
-	rename -uid "8879AD52-4465-FA3F-83E6-50B4D8ED9744";
+	rename -uid "31306D37-4DD0-0D24-6C1F-1C954989A4E3";
 	addAttr -ci true -sn "mso" -ln "miShadingSamplesOverride" -min 0 -max 1 -at "bool";
 	addAttr -ci true -sn "msh" -ln "miShadingSamples" -min 0 -smx 8 -at "float";
 	addAttr -ci true -sn "mdo" -ln "miMaxDisplaceOverride" -min 0 -max 1 -at "bool";
@@ -716,7 +712,7 @@ createNode nurbsSurface -n "LegFoot__instance_1:knee_joint_hierarchy_representat
 	setAttr ".nvfa" 4.5;
 createNode transform -n "LegFoot__instance_1:knee_joint_hierarchy_arrow_representation" 
 		-p "LegFoot__instance_1:knee_joint_hierarchy_representation";
-	rename -uid "782ABE92-4BDC-840C-32FC-A69632750626";
+	rename -uid "9D07353E-4660-0183-B1B1-4AB70BF29D17";
 	setAttr ".r" -type "double3" 0 0 -90 ;
 	setAttr ".s" -type "double3" 0.46739519169468152 0.46739519169468152 0.46739519169468152 ;
 	setAttr ".rp" -type "double3" 1.1102230246251565e-16 0.5 0 ;
@@ -725,7 +721,7 @@ createNode transform -n "LegFoot__instance_1:knee_joint_hierarchy_arrow_represen
 	setAttr ".spt" -type "double3" -1.2651181092870475e-16 -0.56975854455648134 0 ;
 createNode mesh -n "LegFoot__instance_1:knee_joint_hierarchy_arrow_representationShape" 
 		-p "LegFoot__instance_1:knee_joint_hierarchy_arrow_representation";
-	rename -uid "0402878D-40F7-FDC3-CEDF-AF8696DD45F5";
+	rename -uid "67D97924-4689-9B42-DE18-CEB0760D1997";
 	addAttr -ci true -sn "mso" -ln "miShadingSamplesOverride" -min 0 -max 1 -at "bool";
 	addAttr -ci true -sn "msh" -ln "miShadingSamples" -min 0 -smx 8 -at "float";
 	addAttr -ci true -sn "mdo" -ln "miMaxDisplaceOverride" -min 0 -max 1 -at "bool";
@@ -782,7 +778,7 @@ createNode mesh -n "LegFoot__instance_1:knee_joint_hierarchy_arrow_representatio
 	setAttr ".vnm" 0;
 createNode parentConstraint -n "knee_joint_hierarchy_representation_parentConstraint_grp_parentConstraint1" 
 		-p "LegFoot__instance_1:knee_joint_hierarchy_representation_parentConstraint_grp";
-	rename -uid "645B4B33-4C08-E2F5-2BEC-038B7784FEE2";
+	rename -uid "D549E722-42FB-3A4A-C9DB-2C8DA50DCB24";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "knee_jointW0" -dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
 	setAttr -k off ".v";
@@ -796,13 +792,13 @@ createNode parentConstraint -n "knee_joint_hierarchy_representation_parentConstr
 	setAttr -k off ".sy";
 	setAttr -k off ".sz";
 	setAttr ".erp" yes;
-	setAttr ".lr" -type "double3" -6.5568814498634063e-15 14.036243467926461 -90.000000000000028 ;
-	setAttr ".rst" -type "double3" 3.9999999033280145 -3.3306690738754696e-16 -0.99999997583200406 ;
-	setAttr ".rsrr" -type "double3" 90.00000537351896 -14.036242816291594 1.8031423935855737e-14 ;
+	setAttr ".lr" -type "double3" -90.000000000000782 14.036242816291564 -89.999999999999972 ;
+	setAttr ".rst" -type "double3" 3.9999999033280145 0 -0.99999997583200406 ;
+	setAttr ".rsrr" -type "double3" 5.3997386567638355e-06 -14.036243467926477 -9.770514741336417e-23 ;
 	setAttr -k on ".w0";
 createNode scaleConstraint -n "knee_joint_hierarchy_representation_parentConstraint_grp_scaleConstraint1" 
 		-p "LegFoot__instance_1:knee_joint_hierarchy_representation_parentConstraint_grp";
-	rename -uid "8E5EB4A4-4587-CB26-C0D9-0AA3589D8FF2";
+	rename -uid "013F0107-4CDF-7845-2E98-6F9A1BB4DA57";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "module_transformW0" -dv 1 -min 0 
 		-at "double";
 	setAttr -k on ".nds";
@@ -819,25 +815,25 @@ createNode scaleConstraint -n "knee_joint_hierarchy_representation_parentConstra
 	setAttr ".erp" yes;
 	setAttr -k on ".w0";
 createNode transform -n "LegFoot__instance_1:orientationControls_grp" -p "LegFoot__instance_1:module_grp";
-	rename -uid "E8A3F3D2-4CEA-7262-49E2-C6A89619C85E";
+	rename -uid "47364D32-4ACC-2F55-DE34-9AAA9DEBCCAF";
 createNode transform -n "LegFoot__instance_1:ankle_joint_orientation_control_parentConstraint_grp" 
 		-p "LegFoot__instance_1:orientationControls_grp";
-	rename -uid "11535FFC-4FE8-10D7-964D-CE989457567D";
+	rename -uid "6D8C0592-4729-6AC9-913D-DC961E06F6C5";
 createNode transform -n "LegFoot__instance_1:ankle_joint_orientation_control" -p
 		 "LegFoot__instance_1:ankle_joint_orientation_control_parentConstraint_grp";
-	rename -uid "C3F13C05-4231-35EA-ACF1-FD8C53FAF8CC";
+	rename -uid "D0214338-4CD2-A8DF-457E-6E846D244FB5";
 	setAttr -l on -k off ".v";
 	setAttr -l on -k off ".tx";
 	setAttr -l on -k off ".ty";
 	setAttr -l on -k off ".tz";
-	setAttr ".r" -type "double3" -90 0 0 ;
+	setAttr ".r" -type "double3" 90 0 0 ;
 	setAttr -l on -k off ".ry";
 	setAttr -l on -k off ".rz";
 	setAttr -k off ".sx";
 	setAttr -l on -k off ".sy";
 	setAttr -l on -k off ".sz";
 createNode mesh -n "LegFoot__instance_1:ankle_joint_orientation_controlShape" -p "LegFoot__instance_1:ankle_joint_orientation_control";
-	rename -uid "6CAD352E-426F-4C19-5DBA-CBAD3A9D094C";
+	rename -uid "48F90572-489C-A4AD-66A1-AAB86B9932DF";
 	addAttr -ci true -sn "mso" -ln "miShadingSamplesOverride" -min 0 -max 1 -at "bool";
 	addAttr -ci true -sn "msh" -ln "miShadingSamples" -min 0 -smx 8 -at "float";
 	addAttr -ci true -sn "mdo" -ln "miMaxDisplaceOverride" -min 0 -max 1 -at "bool";
@@ -970,7 +966,7 @@ createNode mesh -n "LegFoot__instance_1:ankle_joint_orientation_controlShape" -p
 	setAttr ".vnm" 0;
 createNode parentConstraint -n "ankle_joint_orientation_control_parentConstraint_grp_parentConstraint1" 
 		-p "LegFoot__instance_1:ankle_joint_orientation_control_parentConstraint_grp";
-	rename -uid "A6242B1F-4737-6B02-F650-15B9DE74BB0F";
+	rename -uid "6C75CA46-4C21-5BC9-86CC-5CB560F60654";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "ankle_jointW0" -dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
 	setAttr -k off ".v";
@@ -984,13 +980,13 @@ createNode parentConstraint -n "ankle_joint_orientation_control_parentConstraint
 	setAttr -k off ".sy";
 	setAttr -k off ".sz";
 	setAttr ".erp" yes;
-	setAttr ".lr" -type "double3" 90 -71.565049946043942 -89.999999999999986 ;
-	setAttr ".rst" -type "double3" 7.9999998180292025 4.6421107194575482e-16 -4.5492696498783403e-08 ;
-	setAttr ".rsrr" -type "double3" 164.78554420631559 -13.989666476620616 228.36646131057068 ;
+	setAttr ".lr" -type "double3" 90.000000000000043 -71.56504778857645 -90.000000000000043 ;
+	setAttr ".rst" -type "double3" 7.9999998066560298 -1.3642211818372073e-23 -1.1102230246251565e-16 ;
+	setAttr ".rsrr" -type "double3" -15.214462134673392 -166.01033359806192 48.366461306734749 ;
 	setAttr -k on ".w0";
 createNode scaleConstraint -n "ankle_joint_orientation_control_parentConstraint_grp_scaleConstraint1" 
 		-p "LegFoot__instance_1:ankle_joint_orientation_control_parentConstraint_grp";
-	rename -uid "55E8E78E-40E8-084C-40E0-779B6D337780";
+	rename -uid "038FC65A-4286-FDDD-6365-3AAC134591E4";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "module_transformW0" -dv 1 -min 0 
 		-at "double";
 	setAttr -k on ".nds";
@@ -1008,21 +1004,21 @@ createNode scaleConstraint -n "ankle_joint_orientation_control_parentConstraint_
 	setAttr -k on ".w0";
 createNode transform -n "LegFoot__instance_1:ball_joint_orientation_control_parentConstraint_grp" 
 		-p "LegFoot__instance_1:orientationControls_grp";
-	rename -uid "90C1EA83-4486-FE08-BB55-EBBE374A030E";
+	rename -uid "23B2AF12-426E-F095-B599-C6A5C800BEF7";
 createNode transform -n "LegFoot__instance_1:ball_joint_orientation_control" -p "LegFoot__instance_1:ball_joint_orientation_control_parentConstraint_grp";
-	rename -uid "3BAAAEFA-4BA9-8B64-EAC2-4DBBCABEA419";
+	rename -uid "41B28684-4431-53F8-06A5-C6BAA388E20A";
 	setAttr -l on -k off ".v";
 	setAttr -l on -k off ".tx";
 	setAttr -l on -k off ".ty";
 	setAttr -l on -k off ".tz";
-	setAttr ".r" -type "double3" -90 0 0 ;
+	setAttr ".r" -type "double3" 90 0 0 ;
 	setAttr -l on -k off ".ry";
 	setAttr -l on -k off ".rz";
 	setAttr -k off ".sx";
 	setAttr -l on -k off ".sy";
 	setAttr -l on -k off ".sz";
 createNode mesh -n "LegFoot__instance_1:ball_joint_orientation_controlShape" -p "LegFoot__instance_1:ball_joint_orientation_control";
-	rename -uid "3BA3971F-4EDE-2E80-4082-C49E95977693";
+	rename -uid "A775BCC8-4288-4BA4-D626-3E8DBAC70D8B";
 	addAttr -ci true -sn "mso" -ln "miShadingSamplesOverride" -min 0 -max 1 -at "bool";
 	addAttr -ci true -sn "msh" -ln "miShadingSamples" -min 0 -smx 8 -at "float";
 	addAttr -ci true -sn "mdo" -ln "miMaxDisplaceOverride" -min 0 -max 1 -at "bool";
@@ -1155,7 +1151,7 @@ createNode mesh -n "LegFoot__instance_1:ball_joint_orientation_controlShape" -p 
 	setAttr ".vnm" 0;
 createNode parentConstraint -n "ball_joint_orientation_control_parentConstraint_grp_parentConstraint1" 
 		-p "LegFoot__instance_1:ball_joint_orientation_control_parentConstraint_grp";
-	rename -uid "15D58B86-4AB1-F327-2EB9-79BCF7DB6A9A";
+	rename -uid "32C19337-4A5D-9C72-F369-6881A1075564";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "ball_jointW0" -dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
 	setAttr -k off ".v";
@@ -1169,13 +1165,13 @@ createNode parentConstraint -n "ball_joint_orientation_control_parentConstraint_
 	setAttr -k off ".sy";
 	setAttr -k off ".sz";
 	setAttr ".erp" yes;
-	setAttr ".lr" -type "double3" -7.0669094840732261e-14 -89.999999060872895 0 ;
-	setAttr ".rst" -type "double3" -9.7418398681270446e-08 -9.0000001095957032 3.0000000365319064 ;
-	setAttr ".rsrr" -type "double3" 1.1214690361206528e-05 -89.999983452591593 0 ;
+	setAttr ".lr" -type "double3" 5.556665871148747e-14 -89.999999855278872 0 ;
+	setAttr ".rst" -type "double3" -1.1199202987199897e-07 -9.000000111982752 3.0000000663289152 ;
+	setAttr ".rsrr" -type "double3" 1.2853629989592541e-05 -89.999989605615596 0 ;
 	setAttr -k on ".w0";
 createNode scaleConstraint -n "ball_joint_orientation_control_parentConstraint_grp_scaleConstraint1" 
 		-p "LegFoot__instance_1:ball_joint_orientation_control_parentConstraint_grp";
-	rename -uid "4F8CEFE2-412A-AE33-A665-5291C1105CBB";
+	rename -uid "E870B62F-477C-A853-F530-77B84F563D3D";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "module_transformW0" -dv 1 -min 0 
 		-at "double";
 	setAttr -k on ".nds";
@@ -1193,15 +1189,15 @@ createNode scaleConstraint -n "ball_joint_orientation_control_parentConstraint_g
 	setAttr -k on ".w0";
 createNode transform -n "LegFoot__instance_1:preferredAngleRepresentation_grp" -p
 		 "LegFoot__instance_1:module_grp";
-	rename -uid "3A0B8094-4DD5-6B93-AA5C-F8B21028645F";
+	rename -uid "37854431-4311-3CCA-0684-4C84A0722E2A";
 createNode transform -n "LegFoot__instance_1:IK_knee_joint_preferredAngle_parentConstraintGrp" 
 		-p "LegFoot__instance_1:preferredAngleRepresentation_grp";
-	rename -uid "1753D6B8-46F0-0D41-C0A5-A38FC0B8B6F7";
+	rename -uid "B1BF6E72-436E-B09E-7807-A49C92E5EB92";
 	setAttr ".rp" -type "double3" -1.1920928955078125e-07 0.00014042854309082031 0.11461406946182251 ;
 	setAttr ".sp" -type "double3" -1.1920928955078125e-07 0.00014042854309082031 0.11461406946182251 ;
 createNode transform -n "LegFoot__instance_1:IK_knee_joint_preferredAngle_representation" 
 		-p "LegFoot__instance_1:IK_knee_joint_preferredAngle_parentConstraintGrp";
-	rename -uid "68453C01-4F0C-2854-F1C3-60BB986AF95D";
+	rename -uid "D57ADD6F-49AC-86A4-0547-AAB778007EC6";
 	addAttr -ci true -sn "axis" -ln "axis" -min 0 -max 3 -en "+Y:-Y:+Z:-Z" -at "enum";
 	setAttr -l on -k off ".v";
 	setAttr ".ovdt" 2;
@@ -1218,7 +1214,7 @@ createNode transform -n "LegFoot__instance_1:IK_knee_joint_preferredAngle_repres
 	setAttr -l on -k on ".axis";
 createNode mesh -n "LegFoot__instance_1:IK_knee_joint_preferredAngle_representationShape" 
 		-p "LegFoot__instance_1:IK_knee_joint_preferredAngle_representation";
-	rename -uid "45B1BF3C-48A3-BC44-E6EB-9CBCB5007667";
+	rename -uid "6F6B1CD6-4DE8-9375-AA47-0386E2E5924B";
 	setAttr -k off ".v";
 	setAttr ".vir" yes;
 	setAttr ".vif" yes;
@@ -3391,7 +3387,7 @@ createNode mesh -n "LegFoot__instance_1:IK_knee_joint_preferredAngle_representat
 	setAttr ".vnm" 0;
 createNode parentConstraint -n "IK_knee_joint_preferredAngle_parentConstraintGrp_parentConstraint1" 
 		-p "LegFoot__instance_1:IK_knee_joint_preferredAngle_parentConstraintGrp";
-	rename -uid "EC13DA4D-4447-2534-9350-B78D4CA65725";
+	rename -uid "1E764A2C-418C-56C9-D10A-E294D763BE22";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "IK_knee_jointW0" -dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
 	setAttr -k off ".v";
@@ -3405,13 +3401,13 @@ createNode parentConstraint -n "IK_knee_joint_preferredAngle_parentConstraintGrp
 	setAttr -k off ".sy";
 	setAttr -k off ".sz";
 	setAttr ".erp" yes;
-	setAttr ".lr" -type "double3" -0.00032642846615167496 14.036346271858047 -90.000158341596844 ;
-	setAttr ".rst" -type "double3" 3.9999968874998624 -0.00014042854309082031 -1.1146265853600541 ;
-	setAttr ".rsrr" -type "double3" 180 -14.036423091218692 3.4036466322568074e-15 ;
+	setAttr ".lr" -type "double3" -0.00019086311864019288 14.036330506031224 -90.000092582335014 ;
+	setAttr ".rst" -type "double3" 3.9999952714314184 -0.00014042854309082031 -1.114633049525503 ;
+	setAttr ".rsrr" -type "double3" 180 -14.03651568366173 3.4036686337163941e-15 ;
 	setAttr -k on ".w0";
 createNode scaleConstraint -n "IK_knee_joint_preferredAngle_parentConstraintGrp_scaleConstraint1" 
 		-p "LegFoot__instance_1:IK_knee_joint_preferredAngle_parentConstraintGrp";
-	rename -uid "EF5EFA72-469F-D0E8-B386-B493AAF8EDD8";
+	rename -uid "7F4C409D-46C9-89BD-6809-3797CA8B358E";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "knee_joint_translation_controlW0" 
 		-dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
@@ -3428,27 +3424,27 @@ createNode scaleConstraint -n "IK_knee_joint_preferredAngle_parentConstraintGrp_
 	setAttr ".erp" yes;
 	setAttr -k on ".w0";
 createNode transform -n "LegFoot__instance_1:hook_grp" -p "LegFoot__instance_1:module_grp";
-	rename -uid "1B788312-4DB7-99F9-B510-AAB6811A4489";
+	rename -uid "EECF4DD4-4526-CF41-C1D3-A395912E1829";
 createNode joint -n "LegFoot__instance_1:hook_root_joint" -p "LegFoot__instance_1:hook_grp";
-	rename -uid "F5A2242D-4F87-7CA8-F30D-D8BFA86FA75C";
+	rename -uid "60D57D5C-4E96-91A7-DF80-A59665CC376D";
 	setAttr ".v" no;
 	setAttr ".r" -type "double3" 180 0 0 ;
 	setAttr ".mnrl" -type "double3" -360 -360 -360 ;
 	setAttr ".mxrl" -type "double3" 360 360 360 ;
 	setAttr ".jo" -type "double3" 0 0 90 ;
 createNode joint -n "LegFoot__instance_1:hook_target_joint" -p "LegFoot__instance_1:hook_root_joint";
-	rename -uid "A3E959C1-4D6E-F665-11A1-F890151B1C2E";
+	rename -uid "C1545551-4E5A-7BFF-AD0A-B09E8DD7B4D0";
 	setAttr ".v" no;
 	setAttr ".mnrl" -type "double3" -360 -360 -360 ;
 	setAttr ".mxrl" -type "double3" 360 360 360 ;
 	setAttr ".jo" -type "double3" 0 0 -90 ;
 createNode ikEffector -n "LegFoot__instance_1:hook_root_jointikEffector" -p "LegFoot__instance_1:hook_root_joint";
-	rename -uid "2FCDB501-4F55-5B8E-85AF-BD853E5B770C";
+	rename -uid "9DD10488-433E-C945-B994-FFB0800A8CF4";
 	setAttr ".v" no;
 	setAttr ".hd" yes;
 createNode pointConstraint -n "LegFoot__instance_1:hook_root_joint_pointConstraint" 
 		-p "LegFoot__instance_1:hook_root_joint";
-	rename -uid "76FE9E59-48B1-CECC-68A7-0F9A714AC895";
+	rename -uid "0774EB0B-4BFB-3AA0-AED2-F3937A65EA5D";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "hip_joint_translation_controlW0" 
 		-dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
@@ -3465,13 +3461,13 @@ createNode pointConstraint -n "LegFoot__instance_1:hook_root_joint_pointConstrai
 	setAttr ".erp" yes;
 	setAttr -k on ".w0";
 createNode transform -n "LegFoot__instance_1:unhookedTarget" -p "LegFoot__instance_1:hook_grp";
-	rename -uid "7B4465F9-499B-5432-8428-3EBE27EF4823";
+	rename -uid "CD81F84A-4916-BF97-672A-3DAE27735581";
 	setAttr ".v" no;
 createNode locator -n "LegFoot__instance_1:unhookedTargetShape" -p "LegFoot__instance_1:unhookedTarget";
-	rename -uid "619A42EA-45D5-8745-21F5-A2805A5B5613";
+	rename -uid "04A418B6-4701-B84C-A123-4095E44E2F58";
 	setAttr -k off ".v";
 createNode pointConstraint -n "unhookedTarget_pointConstraint1" -p "LegFoot__instance_1:unhookedTarget";
-	rename -uid "3A7C8FB5-4427-2BD0-C9C3-DF9298A9EA74";
+	rename -uid "FB5FA0EF-49E8-D1E6-8C12-80B4B6448945";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "hip_joint_translation_controlW0" 
 		-dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
@@ -3490,12 +3486,12 @@ createNode pointConstraint -n "unhookedTarget_pointConstraint1" -p "LegFoot__ins
 	setAttr ".rst" -type "double3" 0 0.001 0 ;
 	setAttr -k on ".w0";
 createNode ikHandle -n "LegFoot__instance_1:hook_root_joint_ikHandle" -p "LegFoot__instance_1:hook_grp";
-	rename -uid "4433F2FD-4B7B-05BB-67E3-7A9D68F917BA";
+	rename -uid "BDFDC36E-4F5D-2011-DC09-E580AF9A2D9D";
 	setAttr ".v" no;
 	setAttr ".roc" yes;
 createNode poleVectorConstraint -n "hook_root_joint_ikHandle_poleVectorConstraint1" 
 		-p "LegFoot__instance_1:hook_root_joint_ikHandle";
-	rename -uid "8148BFA2-43CD-0715-D977-0CAFA201F8AF";
+	rename -uid "9DE93116-454F-B320-D68B-DA8229000274";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "hook_root_joint_ikHandle_poleVectorLocatorW0" 
 		-dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
@@ -3514,7 +3510,7 @@ createNode poleVectorConstraint -n "hook_root_joint_ikHandle_poleVectorConstrain
 	setAttr -k on ".w0";
 createNode pointConstraint -n "LegFoot__instance_1:hook_root_joint_ikHandle_pointConstraint" 
 		-p "LegFoot__instance_1:hook_root_joint_ikHandle";
-	rename -uid "F7CD7BC6-40B5-8116-907D-FE9B6F303A8E";
+	rename -uid "70995E2F-4940-B7D2-9A8E-FCB616D3CF58";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "hook_target_joint_endPosLocatorW0" 
 		-dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
@@ -3532,15 +3528,15 @@ createNode pointConstraint -n "LegFoot__instance_1:hook_root_joint_ikHandle_poin
 	setAttr ".rst" -type "double3" 0 0.001 0 ;
 	setAttr -k on ".w0";
 createNode transform -n "LegFoot__instance_1:hook_root_joint_rootPosLocator" -p "LegFoot__instance_1:hook_grp";
-	rename -uid "B327B416-4C0D-8438-C3EB-CB9C3383C1B6";
+	rename -uid "082280E4-445E-4A3F-AED3-20A975F31E7A";
 	setAttr ".v" no;
 createNode locator -n "LegFoot__instance_1:hook_root_joint_rootPosLocatorShape" -p
 		 "LegFoot__instance_1:hook_root_joint_rootPosLocator";
-	rename -uid "75FE6CC6-4F61-5EB9-840A-BCBDF35BD226";
+	rename -uid "BCA341E9-43A9-9AF9-8420-49B291035128";
 	setAttr -k off ".v";
 createNode pointConstraint -n "LegFoot__instance_1:hook_root_joint_rootPosLocator_pointConstraint" 
 		-p "LegFoot__instance_1:hook_root_joint_rootPosLocator";
-	rename -uid "A712F156-4E0E-3EF7-7B89-99870C478FA7";
+	rename -uid "A55D153D-4106-B947-7ADF-379DC74AB4E9";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "hook_root_jointW0" -dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
 	setAttr -k off ".v";
@@ -3556,14 +3552,14 @@ createNode pointConstraint -n "LegFoot__instance_1:hook_root_joint_rootPosLocato
 	setAttr ".erp" yes;
 	setAttr -k on ".w0";
 createNode transform -n "LegFoot__instance_1:hook_target_joint_endPosLocator" -p "LegFoot__instance_1:hook_grp";
-	rename -uid "BB9FF9B2-44B8-3E50-7842-48AB1032A182";
+	rename -uid "6F07236D-467A-4F0D-8339-46A560B9B7F8";
 	setAttr ".v" no;
 createNode locator -n "LegFoot__instance_1:hook_target_joint_endPosLocatorShape" 
 		-p "LegFoot__instance_1:hook_target_joint_endPosLocator";
-	rename -uid "B729D250-48BF-898E-4FBC-43B4AD69CDE9";
+	rename -uid "46E47018-4C48-B6CA-2190-4DB1B344B4E9";
 	setAttr -k off ".v";
 createNode pointConstraint -n "LegFoot__instance_1:hook_pointConstraint" -p "LegFoot__instance_1:hook_target_joint_endPosLocator";
-	rename -uid "43F8FC8A-48FB-B175-2522-5787FAD4B819";
+	rename -uid "5AC12B6A-4B45-219F-8F61-97B57C6CC4E5";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "unhookedTargetW0" -dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
 	setAttr -k off ".v";
@@ -3581,22 +3577,22 @@ createNode pointConstraint -n "LegFoot__instance_1:hook_pointConstraint" -p "Leg
 	setAttr -k on ".w0";
 createNode transform -n "LegFoot__instance_1:hook_root_joint_ikHandle_poleVectorLocator" 
 		-p "LegFoot__instance_1:hook_grp";
-	rename -uid "761E471F-4A5D-15B4-02D5-349B20629D2B";
+	rename -uid "E38A2876-460A-B319-2CD7-8F815ECE2677";
 	setAttr ".v" no;
 	setAttr ".t" -type "double3" 0 1 0 ;
 createNode locator -n "LegFoot__instance_1:hook_root_joint_ikHandle_poleVectorLocatorShape" 
 		-p "LegFoot__instance_1:hook_root_joint_ikHandle_poleVectorLocator";
-	rename -uid "3F22F20A-4262-8140-0C84-3088982CB988";
+	rename -uid "0412D8D2-4B71-E05A-3AF6-BBB3B0118600";
 	setAttr -k off ".v";
 createNode transform -n "LegFoot__instance_1:hook_root_joint_hook_representation_parentConstraint_grp" 
 		-p "LegFoot__instance_1:hook_grp";
-	rename -uid "CB25BF8D-46CE-2E2D-2704-7396F03EC1E0";
+	rename -uid "6DDCFBF8-44F4-A59B-CC82-148AA93BEC95";
 createNode transform -n "LegFoot__instance_1:hook_root_joint_hook_representation" 
 		-p "LegFoot__instance_1:hook_root_joint_hook_representation_parentConstraint_grp";
-	rename -uid "BD592D38-4959-46EE-086F-4893788205F0";
+	rename -uid "22DFCE4B-49F7-B78B-140A-5B808C57350B";
 createNode nurbsSurface -n "LegFoot__instance_1:hook_root_joint_hook_representationShape" 
 		-p "LegFoot__instance_1:hook_root_joint_hook_representation";
-	rename -uid "0F71F42E-4EBE-2463-4C93-CCA5AE7C2672";
+	rename -uid "136F92FA-470D-BCF7-A1D5-F39F0DE3DCE4";
 	addAttr -ci true -sn "mso" -ln "miShadingSamplesOverride" -min 0 -max 1 -at "bool";
 	addAttr -ci true -sn "msh" -ln "miShadingSamples" -min 0 -smx 8 -at "float";
 	addAttr -ci true -sn "mdo" -ln "miMaxDisplaceOverride" -min 0 -max 1 -at "bool";
@@ -3668,7 +3664,7 @@ createNode nurbsSurface -n "LegFoot__instance_1:hook_root_joint_hook_representat
 	setAttr ".nvfa" 4.5;
 createNode parentConstraint -n "hook_root_joint_hook_representation_parentConstraint_grp_parentConstraint1" 
 		-p "LegFoot__instance_1:hook_root_joint_hook_representation_parentConstraint_grp";
-	rename -uid "E614F5AB-45E5-4388-6D76-ECAEAE2E9327";
+	rename -uid "B4F6AADA-4A83-2F55-3CAB-6EB50E970D17";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "hook_root_jointW0" -dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
 	setAttr -k off ".v";
@@ -3687,7 +3683,7 @@ createNode parentConstraint -n "hook_root_joint_hook_representation_parentConstr
 	setAttr -k on ".w0";
 createNode scaleConstraint -n "hook_root_joint_hook_representation_parentConstraint_grp_scaleConstraint1" 
 		-p "LegFoot__instance_1:hook_root_joint_hook_representation_parentConstraint_grp";
-	rename -uid "18560CAD-444C-516B-E0DE-47B39A54A045";
+	rename -uid "F06D3FAE-4CAA-B898-0CD6-59B4F513DABD";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "module_transformW0" -dv 1 -min 0 
 		-at "double";
 	setAttr -k on ".nds";
@@ -3705,19 +3701,19 @@ createNode scaleConstraint -n "hook_root_joint_hook_representation_parentConstra
 	setAttr -k on ".w0";
 createNode transform -n "LegFoot__instance_1:hip_joint_translation_control_poleVectorLocator_parentConstraintGrp" 
 		-p "LegFoot__instance_1:module_grp";
-	rename -uid "B1B78F40-4147-3049-D886-F8B818275CAB";
+	rename -uid "24BDBB2E-42FC-AA12-A661-E5969377291E";
 createNode transform -n "LegFoot__instance_1:hip_joint_translation_control_poleVectorLocator" 
 		-p "LegFoot__instance_1:hip_joint_translation_control_poleVectorLocator_parentConstraintGrp";
-	rename -uid "A11C4663-4224-BE13-F2B4-3E9C7692EB96";
+	rename -uid "1FC9E1E6-4B63-E6F1-42AC-358B2CA0723E";
 	setAttr ".v" no;
 	setAttr ".t" -type "double3" 0 -0.5 0 ;
 createNode locator -n "LegFoot__instance_1:hip_joint_translation_control_poleVectorLocatorShape" 
 		-p "LegFoot__instance_1:hip_joint_translation_control_poleVectorLocator";
-	rename -uid "DE2A484F-433B-0A42-C054-7EBCBA2DB2BB";
+	rename -uid "6B02DCBB-41D8-8A18-9994-8EA7714C786F";
 	setAttr -k off ".v";
 createNode parentConstraint -n "hip_joint_translation_control_poleVectorLocator_parentConstraintGrp_parentConstraint1" 
 		-p "LegFoot__instance_1:hip_joint_translation_control_poleVectorLocator_parentConstraintGrp";
-	rename -uid "23E6BABD-4846-8FEB-5194-65A773ED2457";
+	rename -uid "3B26C7AB-4E1F-B62D-2D74-E7A2BBDBF648";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "hip_joint_translation_controlW0" 
 		-dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
@@ -3735,19 +3731,19 @@ createNode parentConstraint -n "hip_joint_translation_control_poleVectorLocator_
 	setAttr -k on ".w0";
 createNode transform -n "LegFoot__instance_1:knee_joint_translation_control_poleVectorLocator_parentConstraintGrp" 
 		-p "LegFoot__instance_1:module_grp";
-	rename -uid "6B845CBE-4D0A-663D-C606-78A3DF1442C5";
+	rename -uid "401A40D5-489B-0B68-66CE-EFB27CF70DDA";
 createNode transform -n "LegFoot__instance_1:knee_joint_translation_control_poleVectorLocator" 
 		-p "LegFoot__instance_1:knee_joint_translation_control_poleVectorLocator_parentConstraintGrp";
-	rename -uid "C2D66EA2-406E-777F-8D9A-DAB3516A4FF0";
+	rename -uid "B4FFB9D8-440B-B77E-29C8-AEB9DA80BAA0";
 	setAttr ".v" no;
 	setAttr ".t" -type "double3" 0 -0.5 0 ;
 createNode locator -n "LegFoot__instance_1:knee_joint_translation_control_poleVectorLocatorShape" 
 		-p "LegFoot__instance_1:knee_joint_translation_control_poleVectorLocator";
-	rename -uid "55156C72-4B39-FAF9-9CD2-929CA99C5C5D";
+	rename -uid "1835D256-46C7-87E5-9D57-6AA2BDE7FD1E";
 	setAttr -k off ".v";
 createNode parentConstraint -n "knee_joint_translation_control_poleVectorLocator_parentConstraintGrp_parentConstraint1" 
 		-p "LegFoot__instance_1:knee_joint_translation_control_poleVectorLocator_parentConstraintGrp";
-	rename -uid "DFC85575-4DAF-47C9-2F16-6C93E004FE3F";
+	rename -uid "FD5A8DFE-4E64-3A9B-AAB1-B69162B26952";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "knee_joint_translation_controlW0" 
 		-dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
@@ -3766,19 +3762,19 @@ createNode parentConstraint -n "knee_joint_translation_control_poleVectorLocator
 	setAttr -k on ".w0";
 createNode transform -n "LegFoot__instance_1:ankle_joint_translation_control_poleVectorLocator_parentConstraintGrp" 
 		-p "LegFoot__instance_1:module_grp";
-	rename -uid "35959802-4359-B083-AF65-68BC11E3A109";
+	rename -uid "AE16AD87-4AB0-C95D-3BA7-EC9225C5604C";
 createNode transform -n "LegFoot__instance_1:ankle_joint_translation_control_poleVectorLocator" 
 		-p "LegFoot__instance_1:ankle_joint_translation_control_poleVectorLocator_parentConstraintGrp";
-	rename -uid "4B39CCDF-40C4-EE16-B66C-78A3A4D30B65";
+	rename -uid "29F29970-43B7-D3E6-4554-FEB42D32B72B";
 	setAttr ".v" no;
 	setAttr ".t" -type "double3" 0 -0.5 0 ;
 createNode locator -n "LegFoot__instance_1:ankle_joint_translation_control_poleVectorLocatorShape" 
 		-p "LegFoot__instance_1:ankle_joint_translation_control_poleVectorLocator";
-	rename -uid "E5563AB1-4D34-CCDA-E76A-AA89C5BAC686";
+	rename -uid "78A13413-43CA-2994-822B-538298A934DB";
 	setAttr -k off ".v";
 createNode parentConstraint -n "ankle_joint_translation_control_poleVectorLocator_parentConstraintGrp_parentConstraint1" 
 		-p "LegFoot__instance_1:ankle_joint_translation_control_poleVectorLocator_parentConstraintGrp";
-	rename -uid "E9BA7CFC-4585-5CD0-802A-23976380E3D9";
+	rename -uid "07EAE599-438F-3EF6-393D-908DC83DAD4C";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "ankle_joint_translation_controlW0" 
 		-dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
@@ -3797,19 +3793,19 @@ createNode parentConstraint -n "ankle_joint_translation_control_poleVectorLocato
 	setAttr -k on ".w0";
 createNode transform -n "LegFoot__instance_1:ball_joint_translation_control_poleVectorLocator_parentConstraintGrp" 
 		-p "LegFoot__instance_1:module_grp";
-	rename -uid "6607F4D4-4608-3356-BD91-2BB61B203043";
+	rename -uid "E9B3CA7F-4203-252B-0994-11B2982CC4E9";
 createNode transform -n "LegFoot__instance_1:ball_joint_translation_control_poleVectorLocator" 
 		-p "LegFoot__instance_1:ball_joint_translation_control_poleVectorLocator_parentConstraintGrp";
-	rename -uid "6F64DD4D-4A90-9810-AAB9-D5BFDFF2DFC0";
+	rename -uid "24FE7D54-451B-DA2B-91C5-7BA941DE0115";
 	setAttr ".v" no;
 	setAttr ".t" -type "double3" 0 -0.5 0 ;
 createNode locator -n "LegFoot__instance_1:ball_joint_translation_control_poleVectorLocatorShape" 
 		-p "LegFoot__instance_1:ball_joint_translation_control_poleVectorLocator";
-	rename -uid "84560312-4B9F-27B2-5C8E-5CB0CEF6DF12";
+	rename -uid "B23CCF9C-4EA2-C7AE-5D1B-8FA7492C5C6B";
 	setAttr -k off ".v";
 createNode parentConstraint -n "ball_joint_translation_control_poleVectorLocator_parentConstraintGrp_parentConstraint1" 
 		-p "LegFoot__instance_1:ball_joint_translation_control_poleVectorLocator_parentConstraintGrp";
-	rename -uid "DA1C8B4F-477E-54DC-1967-25B001B8CA51";
+	rename -uid "26E99577-427D-C554-A626-BDBB4C490280";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "ball_joint_translation_controlW0" 
 		-dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
@@ -3827,55 +3823,55 @@ createNode parentConstraint -n "ball_joint_translation_control_poleVectorLocator
 	setAttr ".rst" -type "double3" 0 -9.0000000000000018 2.9999999999999991 ;
 	setAttr -k on ".w0";
 createNode transform -n "LegFoot__instance_1:IK_hip_joint_positionLocator" -p "LegFoot__instance_1:module_grp";
-	rename -uid "F3D3B420-407D-FAD1-088A-AB8AC1C74E53";
+	rename -uid "051D5F1C-4161-2DDE-CC4A-6FB8DB08B827";
 	setAttr ".v" no;
 createNode locator -n "LegFoot__instance_1:IK_hip_joint_positionLocatorShape" -p "LegFoot__instance_1:IK_hip_joint_positionLocator";
-	rename -uid "4DD37007-4DC8-68B6-1690-909F06886A77";
+	rename -uid "4426AAB8-45DC-5FDC-85A1-EDB7A68899A2";
 	setAttr -k off ".v";
 createNode joint -n "LegFoot__instance_1:IK_hip_joint" -p "LegFoot__instance_1:IK_hip_joint_positionLocator";
-	rename -uid "FD3D31C3-4B98-C2C2-7870-C3B72A57C887";
+	rename -uid "83B66EE6-490F-121B-7467-EEAE83771920";
 	setAttr ".v" no;
-	setAttr ".r" -type "double3" 14.450074065641065 -13.609060182559508 -93.469845250244262 ;
+	setAttr ".r" -type "double3" 14.450208678537001 -13.609044915460043 -93.46984120252155 ;
 	setAttr ".mnrl" -type "double3" -360 -360 -360 ;
 	setAttr ".mxrl" -type "double3" 360 360 360 ;
 	setAttr ".jo" -type "double3" 0 14.036243467926484 0 ;
 	setAttr ".pa" -type "double3" 0 -50 0 ;
 createNode joint -n "LegFoot__instance_1:IK_knee_joint" -p "LegFoot__instance_1:IK_hip_joint";
-	rename -uid "2F304A3C-473A-0D3F-D334-F58DF27CE6AF";
+	rename -uid "6FAC5BF8-4A85-13E0-654C-E08D5C41246B";
 	setAttr ".v" no;
-	setAttr ".t" -type "double3" 1.2053368091583252 0 3.3306690738754696e-16 ;
-	setAttr ".r" -type "double3" 0 56.145179480006725 0 ;
+	setAttr ".t" -type "double3" 4.123105525970459 0 3.3306690738754696e-16 ;
+	setAttr ".r" -type "double3" 0 56.145147948065024 0 ;
 	setAttr ".mnrl" -type "double3" -360 -360 -360 ;
 	setAttr ".mxrl" -type "double3" 360 360 360 ;
 	setAttr ".jo" -type "double3" 0 -28.072486935852961 0 ;
 	setAttr ".pa" -type "double3" 0 50 0 ;
 createNode joint -n "LegFoot__instance_1:IK_ankle_joint" -p "LegFoot__instance_1:IK_knee_joint";
-	rename -uid "50F6BC04-41BF-9A04-EA01-5995D8A619AA";
+	rename -uid "7E5EF426-43D6-4D5E-CE8D-D5BCD09E8CD2";
 	setAttr ".v" no;
-	setAttr ".t" -type "double3" 1.2053368091583252 0 3.3306690738754696e-16 ;
+	setAttr ".t" -type "double3" 4.123105525970459 0 3.3306690738754696e-16 ;
 	setAttr ".mnrl" -type "double3" -360 -360 -360 ;
 	setAttr ".mxrl" -type "double3" 360 360 360 ;
 	setAttr ".jo" -type "double3" 153.4273414719969 -23.00936329637852 -128.00775720672615 ;
 createNode joint -n "LegFoot__instance_1:IK_ball_joint" -p "LegFoot__instance_1:IK_ankle_joint";
-	rename -uid "4B838962-497C-F8D7-3975-4D8B84F98D40";
+	rename -uid "56E32B38-4BDB-F5BF-95D2-809C2FF8E0B0";
 	setAttr ".v" no;
 	setAttr ".t" -type "double3" 12.409673645990857 -1.3322676295501878e-15 -8.8817841970012523e-16 ;
 	setAttr ".mnrl" -type "double3" -360 -360 -360 ;
 	setAttr ".mxrl" -type "double3" 360 360 360 ;
 	setAttr ".jo" -type "double3" -7.2465789628297293e-14 69.443954780416533 46.488872223121135 ;
 createNode joint -n "LegFoot__instance_1:IK_toe_joint" -p "LegFoot__instance_1:IK_ball_joint";
-	rename -uid "E1A7708D-40EC-2327-D9CD-47B8C7C99438";
+	rename -uid "FA3DB11B-42B3-F29F-AFA5-07A31E6CFDC3";
 	setAttr ".v" no;
 	setAttr ".t" -type "double3" 3.0000000000000009 2.7755575615628914e-15 -1.6653345369377669e-16 ;
 	setAttr ".mnrl" -type "double3" -360 -360 -360 ;
 	setAttr ".mxrl" -type "double3" 360 360 360 ;
 	setAttr ".jo" -type "double3" 0 89.999999999999957 0 ;
 createNode ikEffector -n "LegFoot__instance_1:IK_hip_joint_ikEffector" -p "LegFoot__instance_1:IK_knee_joint";
-	rename -uid "F208C669-4276-8499-32D2-46931B722350";
+	rename -uid "CFDC842C-4E62-4718-F617-2D9CACEE976B";
 	setAttr ".v" no;
 	setAttr ".hd" yes;
 createNode pointConstraint -n "IK_hip_joint_positionLocator_pointConstraint1" -p "LegFoot__instance_1:IK_hip_joint_positionLocator";
-	rename -uid "FD616C44-4739-EA0D-0FF7-04968792728C";
+	rename -uid "13819A72-4F6A-5EC4-5B3D-90900857CF03";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "hip_joint_translation_controlW0" 
 		-dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
@@ -3892,15 +3888,15 @@ createNode pointConstraint -n "IK_hip_joint_positionLocator_pointConstraint1" -p
 	setAttr ".erp" yes;
 	setAttr -k on ".w0";
 createNode transform -n "LegFoot__instance_1:IK_knee_joint_positionLocator" -p "LegFoot__instance_1:module_grp";
-	rename -uid "CCC0D280-4907-004A-FF89-F080E247E87A";
+	rename -uid "9A424476-4847-3A10-B507-B5819169DE3A";
 	setAttr ".v" no;
 createNode locator -n "LegFoot__instance_1:IK_knee_joint_positionLocatorShape" -p
 		 "LegFoot__instance_1:IK_knee_joint_positionLocator";
-	rename -uid "5DAD7230-4788-1875-5320-6BAA1749AAEC";
+	rename -uid "835BEC3C-4EE1-CA91-2B07-66894FBD8291";
 	setAttr -k off ".v";
 createNode pointConstraint -n "IK_knee_joint_positionLocator_pointConstraint1" -p
 		 "LegFoot__instance_1:IK_knee_joint_positionLocator";
-	rename -uid "B6100A63-466B-7E2A-BDB0-24BE2564F35A";
+	rename -uid "4E85C175-4CD7-0524-B027-5284E6DA3D34";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "knee_joint_translation_controlW0" 
 		-dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
@@ -3919,20 +3915,20 @@ createNode pointConstraint -n "IK_knee_joint_positionLocator_pointConstraint1" -
 	setAttr -k on ".w0";
 createNode transform -n "LegFoot__instance_1:IK_hip_joint_ikHandle_positionLocator" 
 		-p "LegFoot__instance_1:module_grp";
-	rename -uid "86B51F54-4018-B63D-B749-29AC4E98C79E";
+	rename -uid "36CC4EAD-4D1A-11E8-7FD1-2A80768C266A";
 	setAttr ".v" no;
 createNode locator -n "LegFoot__instance_1:IK_hip_joint_ikHandle_positionLocatorShape" 
 		-p "LegFoot__instance_1:IK_hip_joint_ikHandle_positionLocator";
-	rename -uid "0C646862-4B32-D687-38E2-E6A530F1CC51";
+	rename -uid "6BBFA74E-422E-CCF7-52FC-D3A89FD5A56D";
 	setAttr -k off ".v";
 createNode ikHandle -n "LegFoot__instance_1:IK_hip_joint_ikHandle" -p "LegFoot__instance_1:IK_hip_joint_ikHandle_positionLocator";
-	rename -uid "275E432C-4C2A-B1B2-0D93-2C880AA31963";
+	rename -uid "5553F3E4-4B22-04C9-2D6D-B8954D4AA8F9";
 	setAttr ".v" no;
-	setAttr ".t" -type "double3" -3.2315781481884187e-06 0 1.7763568394002505e-15 ;
+	setAttr ".t" -type "double3" -6.4634356480297583e-06 0 1.7763568394002505e-15 ;
 	setAttr ".roc" yes;
 createNode poleVectorConstraint -n "IK_hip_joint_ikHandle_poleVectorConstraint1" 
 		-p "LegFoot__instance_1:IK_hip_joint_ikHandle";
-	rename -uid "400AB5E6-4E4F-8E12-1166-B0ADA0A5FDE9";
+	rename -uid "74C1C46D-4A76-665E-0CFA-DBB38AAC77C1";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "IK_knee_joint_positionLocatorW0" 
 		-dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
@@ -3951,7 +3947,7 @@ createNode poleVectorConstraint -n "IK_hip_joint_ikHandle_poleVectorConstraint1"
 	setAttr -k on ".w0";
 createNode pointConstraint -n "IK_hip_joint_ikHandle_positionLocator_pointConstraint1" 
 		-p "LegFoot__instance_1:IK_hip_joint_ikHandle_positionLocator";
-	rename -uid "BD848C6E-42BD-8A89-10AE-C386E87884E4";
+	rename -uid "300F0D6B-4428-1DB3-9E7C-249B9F557515";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "ankle_joint_translation_controlW0" 
 		-dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
@@ -3969,69 +3965,65 @@ createNode pointConstraint -n "IK_hip_joint_ikHandle_positionLocator_pointConstr
 	setAttr ".rst" -type "double3" 8 0 -2.2204460492503131e-16 ;
 	setAttr -k on ".w0";
 createNode transform -n "LegFoot__instance_1_mirror:module_grp";
-	rename -uid "C98E4685-4DAF-2BFA-02C2-698F0B14D179";
+	rename -uid "3A155410-4FE8-D2EB-0DEC-109CE3471797";
 	addAttr -ci true -k true -sn "mirrorInfo" -ln "mirrorInfo" -min 0 -max 3 -en "none:x:y:z" 
 		-at "enum";
 	addAttr -ci true -sn "mirrorLinks" -ln "mirrorLinks" -dt "string";
 	setAttr -k on ".mirrorInfo" 1;
 	setAttr ".mirrorLinks" -type "string" "LegFoot__instance_1__X";
 createNode transform -n "LegFoot__instance_1_mirror:joints_grp" -p "LegFoot__instance_1_mirror:module_grp";
-	rename -uid "F3E61201-4DF8-7C8B-E5A2-7E8A689C5EB7";
+	rename -uid "BC6EA45F-4A6D-BC8A-C294-828A87E88C0E";
 createNode joint -n "LegFoot__instance_1_mirror:hip_joint" -p "LegFoot__instance_1_mirror:joints_grp";
-	rename -uid "E93BC9D9-43A4-0F81-C369-F48766E2865F";
+	rename -uid "91492F8B-4A85-5D37-5A49-91946DCA2D8A";
 	setAttr ".v" no;
-	setAttr ".r" -type "double3" 90.000000000000057 -104.03624346792641 -75.963756532073504 ;
+	setAttr ".r" -type "double3" 180 75.96375653207356 75.963756532073532 ;
 	setAttr ".ro" 3;
 	setAttr ".mnrl" -type "double3" -360 -360 -360 ;
 	setAttr ".mxrl" -type "double3" 360 360 360 ;
-	setAttr ".jo" -type "double3" -180 -14.036243467926482 0 ;
+	setAttr ".jo" -type "double3" 0 14.036243467926484 0 ;
 createNode joint -n "LegFoot__instance_1_mirror:knee_joint" -p "LegFoot__instance_1_mirror:hip_joint";
-	rename -uid "D1D35307-49DD-836C-6F41-63B446725B4B";
+	rename -uid "74BBABA2-4D9F-3D67-2406-488CA217D8E6";
 	setAttr ".v" no;
-	setAttr ".t" -type "double3" -1.2053368091583252 -2.4651903288156619e-32 -2.2204460492503131e-16 ;
-	setAttr ".r" -type "double3" -180 -6.3329452253172479e-14 2.259022879976033e-14 ;
+	setAttr ".r" -type "double3" 179.99999999999991 28.072486935852936 -28.072486284218034 ;
 	setAttr ".ro" 3;
 	setAttr ".mnrl" -type "double3" -360 -360 -360 ;
 	setAttr ".mxrl" -type "double3" 360 360 360 ;
-	setAttr ".jo" -type "double3" -9.3556123980464918e-16 -28.072486935852947 3.7422449592185975e-15 ;
+	setAttr ".jo" -type "double3" 0 -28.072486935852947 0 ;
 createNode joint -n "LegFoot__instance_1_mirror:ankle_joint" -p "LegFoot__instance_1_mirror:knee_joint";
-	rename -uid "4BBD1074-4431-67D8-D084-A19B07D4E2E3";
+	rename -uid "2C932A9F-4D15-5B31-5777-BE9E2FA68E44";
 	setAttr ".v" no;
-	setAttr ".t" -type "double3" -1.2053366899490356 -2.376163815039583e-16 -6.6613381477509392e-16 ;
-	setAttr ".r" -type "double3" 89.999999999999872 59.806417898519932 46.488872223121078 ;
+	setAttr ".r" -type "double3" -34.513338521473351 -2.4956289093968129 132.86550546976602 ;
 	setAttr ".mnrl" -type "double3" -360 -360 -360 ;
 	setAttr ".mxrl" -type "double3" 360 360 360 ;
-	setAttr ".jo" -type "double3" 153.42734147199693 -23.00936329637851 -128.00775720672615 ;
+	setAttr ".jo" -type "double3" 153.4273414719969 -23.00936329637851 -128.00775720672615 ;
 createNode joint -n "LegFoot__instance_1_mirror:ball_joint" -p "LegFoot__instance_1_mirror:ankle_joint";
-	rename -uid "4485E7D2-41E4-72E7-E793-018458A07DE5";
+	rename -uid "F7857F80-4BCC-6DFD-6F77-739F9CC708D9";
 	setAttr ".v" no;
-	setAttr ".t" -type "double3" -0.92445111274719238 -2.6645352591003757e-15 4.4408920985006262e-16 ;
-	setAttr ".r" -type "double3" 141.43256080857378 -55.722094138537599 -56.620290040643546 ;
+	setAttr ".r" -type "double3" 51.432558244734381 -55.722096330126739 -56.620286937907032 ;
 	setAttr ".mnrl" -type "double3" -360 -360 -360 ;
 	setAttr ".mxrl" -type "double3" 360 360 360 ;
-	setAttr ".jo" -type "double3" 0 69.443954780416519 46.488872223121142 ;
+	setAttr ".jo" -type "double3" 1.8116447407074304e-14 69.443954780416504 46.488872223121135 ;
 createNode joint -n "LegFoot__instance_1_mirror:toe_joint" -p "LegFoot__instance_1_mirror:ball_joint";
-	rename -uid "84BD563D-4D64-913D-C121-5FBBB6082E90";
+	rename -uid "2B56324C-469C-8C91-663D-78B983CB8E85";
 	setAttr ".v" no;
-	setAttr ".t" -type "double3" -0.87701129913330078 -1.7763568394002505e-15 3.7747583763379879e-15 ;
 	setAttr ".mnrl" -type "double3" -360 -360 -360 ;
 	setAttr ".mxrl" -type "double3" 360 360 360 ;
-	setAttr ".jo" -type "double3" -3.7834538482102502e-15 89.999999999999986 0 ;
+	setAttr ".jo" -type "double3" 3.8863641667465023e-16 89.999999999999972 0 ;
 createNode ikEffector -n "LegFoot__instance_1_mirror:ball_jointikEffector" -p "LegFoot__instance_1_mirror:ball_joint";
-	rename -uid "6A291018-4ED2-1F74-F55E-DBAD0F8D3C24";
+	rename -uid "B3C8D708-4816-1B12-34A3-8C8006B9A0C1";
 	setAttr ".v" no;
 	setAttr ".hd" yes;
 createNode ikEffector -n "LegFoot__instance_1_mirror:ankle_jointikEffector" -p "LegFoot__instance_1_mirror:ankle_joint";
-	rename -uid "8DA8F4D4-4C74-612E-2E6D-D4822FDD281A";
+	rename -uid "DD170AFD-4438-4B27-AC2B-3FA5EA2D63EC";
 	setAttr ".v" no;
 	setAttr ".hd" yes;
 createNode ikEffector -n "LegFoot__instance_1_mirror:knee_jointikEffector" -p "LegFoot__instance_1_mirror:knee_joint";
-	rename -uid "D0F73CE9-4FAE-0943-18CF-778422CD3AD7";
+	rename -uid "809C68C8-43EB-8F84-3207-AEB649743B49";
 	setAttr ".v" no;
 	setAttr ".hd" yes;
 createNode pointConstraint -n "LegFoot__instance_1_mirror:hip_joint_pointConstraint" 
 		-p "LegFoot__instance_1_mirror:hip_joint";
-	rename -uid "45220A93-4E12-4F2E-A967-53842FD34A06";
+	rename -uid "47215EEB-4D52-C388-30CC-3ABDA7E20568";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "hip_joint_translation_controlW0" 
 		-dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
@@ -4048,15 +4040,15 @@ createNode pointConstraint -n "LegFoot__instance_1_mirror:hip_joint_pointConstra
 	setAttr ".erp" yes;
 	setAttr -k on ".w0";
 createNode ikEffector -n "LegFoot__instance_1_mirror:hip_jointikEffector" -p "LegFoot__instance_1_mirror:hip_joint";
-	rename -uid "3860973B-4E1C-BA09-F8B2-B38AD7093FE2";
+	rename -uid "068DAD9B-4124-8F13-2C47-419E85CA6701";
 	setAttr ".v" no;
 	setAttr ".hd" yes;
 createNode ikHandle -n "LegFoot__instance_1_mirror:hip_joint_ikHandle" -p "LegFoot__instance_1_mirror:joints_grp";
-	rename -uid "49A305B4-4213-82F0-26B8-30BB63399F86";
+	rename -uid "348A6EFC-4B25-D630-DEA9-B7BA51E740C4";
 	setAttr ".v" no;
 	setAttr ".roc" yes;
 createNode poleVectorConstraint -n "hip_joint_ikHandle_poleVectorConstraint2" -p "LegFoot__instance_1_mirror:hip_joint_ikHandle";
-	rename -uid "FDCFBA3A-4283-4D25-733A-BDA2C82D3F16";
+	rename -uid "A1C57BE9-4BD2-3137-0FC5-ADBA7BFA74E3";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "hip_joint_translation_control_poleVectorLocatorW0" 
 		-dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
@@ -4075,7 +4067,7 @@ createNode poleVectorConstraint -n "hip_joint_ikHandle_poleVectorConstraint2" -p
 	setAttr -k on ".w0";
 createNode pointConstraint -n "LegFoot__instance_1_mirror:hip_joint_ikHandle_pointConstraint" 
 		-p "LegFoot__instance_1_mirror:hip_joint_ikHandle";
-	rename -uid "74BCFB89-4511-7B4E-E6DB-59AE1B4C59AF";
+	rename -uid "727CEB1B-48D1-8A6E-4580-61908A320AFD";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "knee_joint_endPosLocatorW0" -dv 1 
 		-min 0 -at "double";
 	setAttr -k on ".nds";
@@ -4090,18 +4082,18 @@ createNode pointConstraint -n "LegFoot__instance_1_mirror:hip_joint_ikHandle_poi
 	setAttr -k off ".sy";
 	setAttr -k off ".sz";
 	setAttr ".erp" yes;
-	setAttr ".rst" -type "double3" -4 -1.5246018321978835e-32 -1 ;
+	setAttr ".rst" -type "double3" -4 0 -1 ;
 	setAttr -k on ".w0";
 createNode transform -n "LegFoot__instance_1_mirror:hip_joint_rootPosLocator" -p "LegFoot__instance_1_mirror:joints_grp";
-	rename -uid "19D1158B-417F-96E8-5C4E-8297E239891B";
+	rename -uid "7A4806F8-4E1B-FE5F-6CA3-DA9191448C94";
 	setAttr ".v" no;
 createNode locator -n "LegFoot__instance_1_mirror:hip_joint_rootPosLocatorShape" 
 		-p "LegFoot__instance_1_mirror:hip_joint_rootPosLocator";
-	rename -uid "9FD1C3B0-47C2-BC07-E082-7986BC879C8C";
+	rename -uid "0A303391-4F26-7188-6DEB-63B9670AF5B0";
 	setAttr -k off ".v";
 createNode pointConstraint -n "LegFoot__instance_1_mirror:hip_joint_rootPosLocator_pointConstraint" 
 		-p "LegFoot__instance_1_mirror:hip_joint_rootPosLocator";
-	rename -uid "08B47331-4507-3C51-3F6F-A5B17D5EF0FD";
+	rename -uid "3F0054F2-4752-7E93-E2BC-82888C3D5FD3";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "hip_jointW0" -dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
 	setAttr -k off ".v";
@@ -4117,15 +4109,15 @@ createNode pointConstraint -n "LegFoot__instance_1_mirror:hip_joint_rootPosLocat
 	setAttr ".erp" yes;
 	setAttr -k on ".w0";
 createNode transform -n "LegFoot__instance_1_mirror:knee_joint_endPosLocator" -p "LegFoot__instance_1_mirror:joints_grp";
-	rename -uid "7A2C3D63-4436-EB91-2B8E-F4A537F43A08";
+	rename -uid "2D49F2E9-4785-4686-980B-88A082D18B26";
 	setAttr ".v" no;
 createNode locator -n "LegFoot__instance_1_mirror:knee_joint_endPosLocatorShape" 
 		-p "LegFoot__instance_1_mirror:knee_joint_endPosLocator";
-	rename -uid "93A6A5B0-410C-499E-386D-8A92FC568E3A";
+	rename -uid "8E7D67CF-4B0B-0F1B-900D-2FA20AF1301A";
 	setAttr -k off ".v";
 createNode pointConstraint -n "LegFoot__instance_1_mirror:knee_joint_endPosLocator_pointConstraint" 
 		-p "LegFoot__instance_1_mirror:knee_joint_endPosLocator";
-	rename -uid "029A8D0B-4F83-ECF9-15AB-F2AA35E8C582";
+	rename -uid "6BFC478D-4EBB-6AF4-B5C1-F68794DD2C73";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "knee_joint_translation_controlW0" 
 		-dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
@@ -4140,15 +4132,15 @@ createNode pointConstraint -n "LegFoot__instance_1_mirror:knee_joint_endPosLocat
 	setAttr -k off ".sy";
 	setAttr -k off ".sz";
 	setAttr ".erp" yes;
-	setAttr ".rst" -type "double3" -4 2.4651903288156619e-32 -1 ;
+	setAttr ".rst" -type "double3" -4 0 -1 ;
 	setAttr -k on ".w0";
 createNode ikHandle -n "LegFoot__instance_1_mirror:knee_joint_ikHandle" -p "LegFoot__instance_1_mirror:joints_grp";
-	rename -uid "3C866553-4008-9E4A-7F83-EC8B4EFC1C24";
+	rename -uid "67322745-497F-9FED-2F9B-6199B061DE77";
 	setAttr ".v" no;
 	setAttr ".roc" yes;
 createNode poleVectorConstraint -n "knee_joint_ikHandle_poleVectorConstraint2" -p
 		 "LegFoot__instance_1_mirror:knee_joint_ikHandle";
-	rename -uid "F43DDF32-4EB7-2BAD-81B9-2EBA40C65758";
+	rename -uid "FF2B078D-4F0D-B3C4-A345-C1961899B5C2";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "knee_joint_translation_control_poleVectorLocatorW0" 
 		-dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
@@ -4163,11 +4155,11 @@ createNode poleVectorConstraint -n "knee_joint_ikHandle_poleVectorConstraint2" -
 	setAttr -k off ".sy";
 	setAttr -k off ".sz";
 	setAttr ".erp" yes;
-	setAttr ".rst" -type "double3" -9.6671985527763127e-08 0.49999999999999978 -2.4167996048873874e-08 ;
+	setAttr ".rst" -type "double3" -9.6671985527763127e-08 0.5 -2.4167996603985387e-08 ;
 	setAttr -k on ".w0";
 createNode pointConstraint -n "LegFoot__instance_1_mirror:knee_joint_ikHandle_pointConstraint" 
 		-p "LegFoot__instance_1_mirror:knee_joint_ikHandle";
-	rename -uid "F16AE496-44EC-9D4E-714F-A39F94C40AAF";
+	rename -uid "F150447C-4371-2694-6EB3-EFADB53A70E9";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "ankle_joint_endPosLocatorW0" -dv 
 		1 -min 0 -at "double";
 	setAttr -k on ".nds";
@@ -4182,19 +4174,19 @@ createNode pointConstraint -n "LegFoot__instance_1_mirror:knee_joint_ikHandle_po
 	setAttr -k off ".sy";
 	setAttr -k off ".sz";
 	setAttr ".erp" yes;
-	setAttr ".rst" -type "double3" -7.5294116680338963 1.940285000290664 -1.8823529170084752 ;
+	setAttr ".rst" -type "double3" -7.999999903328014 0 -1.999999975832004 ;
 	setAttr -k on ".w0";
 createNode transform -n "LegFoot__instance_1_mirror:knee_joint_rootPosLocator" -p
 		 "LegFoot__instance_1_mirror:joints_grp";
-	rename -uid "421D07B9-49AA-74F9-ED93-BA909301333E";
+	rename -uid "5FE35BD1-4274-2AD9-0FBF-2BBD01D50488";
 	setAttr ".v" no;
 createNode locator -n "LegFoot__instance_1_mirror:knee_joint_rootPosLocatorShape" 
 		-p "LegFoot__instance_1_mirror:knee_joint_rootPosLocator";
-	rename -uid "8B0CF3AE-4188-08D5-FDA7-6CA3F30D3EED";
+	rename -uid "D9640763-4814-37D2-4C3E-E1BFC8263D3D";
 	setAttr -k off ".v";
 createNode pointConstraint -n "LegFoot__instance_1_mirror:knee_joint_rootPosLocator_pointConstraint" 
 		-p "LegFoot__instance_1_mirror:knee_joint_rootPosLocator";
-	rename -uid "76B25448-49C9-35AC-2B2C-368BDE809CF6";
+	rename -uid "4C5AA3B3-40CB-F3E3-4CA1-FAABCB3EC6AA";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "knee_jointW0" -dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
 	setAttr -k off ".v";
@@ -4208,19 +4200,19 @@ createNode pointConstraint -n "LegFoot__instance_1_mirror:knee_joint_rootPosLoca
 	setAttr -k off ".sy";
 	setAttr -k off ".sz";
 	setAttr ".erp" yes;
-	setAttr ".rst" -type "double3" -3.9999999033280145 2.2204460492503131e-16 -0.99999997583200395 ;
+	setAttr ".rst" -type "double3" -3.9999999033280145 0 -0.9999999758320034 ;
 	setAttr -k on ".w0";
 createNode transform -n "LegFoot__instance_1_mirror:ankle_joint_endPosLocator" -p
 		 "LegFoot__instance_1_mirror:joints_grp";
-	rename -uid "3D26F626-4B0A-55DB-1331-91AAFA8A7899";
+	rename -uid "7C273015-4C9C-EAEF-367E-A6926F34DFE5";
 	setAttr ".v" no;
 createNode locator -n "LegFoot__instance_1_mirror:ankle_joint_endPosLocatorShape" 
 		-p "LegFoot__instance_1_mirror:ankle_joint_endPosLocator";
-	rename -uid "ED081650-4154-DB51-3B64-1A9555B6E904";
+	rename -uid "AAA866F7-4B29-6A3B-E30E-0F8184E06E98";
 	setAttr -k off ".v";
 createNode pointConstraint -n "LegFoot__instance_1_mirror:ankle_joint_endPosLocator_pointConstraint" 
 		-p "LegFoot__instance_1_mirror:ankle_joint_endPosLocator";
-	rename -uid "FB2BE989-4638-3451-C396-DBAE63DE3CE3";
+	rename -uid "84BE9144-41B0-5981-B30D-EA983739ACAB";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "ankle_joint_translation_controlW0" 
 		-dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
@@ -4235,15 +4227,15 @@ createNode pointConstraint -n "LegFoot__instance_1_mirror:ankle_joint_endPosLoca
 	setAttr -k off ".sy";
 	setAttr -k off ".sz";
 	setAttr ".erp" yes;
-	setAttr ".rst" -type "double3" -8 6.0684932812713713e-32 -2.2204460492503131e-16 ;
+	setAttr ".rst" -type "double3" -8 0 -3.3306690738754696e-16 ;
 	setAttr -k on ".w0";
 createNode ikHandle -n "LegFoot__instance_1_mirror:ankle_joint_ikHandle" -p "LegFoot__instance_1_mirror:joints_grp";
-	rename -uid "5B23849B-44E9-C8B7-0914-4FB478E86B54";
+	rename -uid "3CB8AEB3-4128-AA9D-B6AD-D39E65225A19";
 	setAttr ".v" no;
 	setAttr ".roc" yes;
 createNode poleVectorConstraint -n "ankle_joint_ikHandle_poleVectorConstraint2" -p
 		 "LegFoot__instance_1_mirror:ankle_joint_ikHandle";
-	rename -uid "3F2DD4CB-4EA3-1DDF-983A-848016748BB5";
+	rename -uid "D6DC3C09-418D-8F1B-DD10-D88C80D06905";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "ankle_joint_translation_control_poleVectorLocatorW0" 
 		-dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
@@ -4258,11 +4250,11 @@ createNode poleVectorConstraint -n "ankle_joint_ikHandle_poleVectorConstraint2" 
 	setAttr -k off ".sy";
 	setAttr -k off ".sz";
 	setAttr ".erp" yes;
-	setAttr ".rst" -type "double3" -1.8197079665327465e-07 0.49999999999999989 4.5492697103684875e-08 ;
+	setAttr ".rst" -type "double3" -1.8197079665327465e-07 0.5 4.5492695771417245e-08 ;
 	setAttr -k on ".w0";
 createNode pointConstraint -n "LegFoot__instance_1_mirror:ankle_joint_ikHandle_pointConstraint" 
 		-p "LegFoot__instance_1_mirror:ankle_joint_ikHandle";
-	rename -uid "8E0BB900-4245-841C-EC20-629BEB036FAB";
+	rename -uid "AD7B3D61-4E80-39E9-E3FB-0EAD4048C670";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "ball_joint_endPosLocatorW0" -dv 1 
 		-min 0 -at "double";
 	setAttr -k on ".nds";
@@ -4277,19 +4269,19 @@ createNode pointConstraint -n "LegFoot__instance_1_mirror:ankle_joint_ikHandle_p
 	setAttr -k off ".sy";
 	setAttr -k off ".sz";
 	setAttr ".erp" yes;
-	setAttr ".rst" -type "double3" 1.0063500288253939 4.8507133447970316 7.0253997639608672 ;
+	setAttr ".rst" -type "double3" 0.47058863048329602 -8.9999999108856539 -1.1176462059499723 ;
 	setAttr -k on ".w0";
 createNode transform -n "LegFoot__instance_1_mirror:ankle_joint_rootPosLocator" -p
 		 "LegFoot__instance_1_mirror:joints_grp";
-	rename -uid "1A12535A-4EB3-11B9-3BD5-FD83F2622561";
+	rename -uid "3DDCFAF5-47D0-95FD-14B0-4CB49F9881B0";
 	setAttr ".v" no;
 createNode locator -n "LegFoot__instance_1_mirror:ankle_joint_rootPosLocatorShape" 
 		-p "LegFoot__instance_1_mirror:ankle_joint_rootPosLocator";
-	rename -uid "5CC9929D-40D3-3B38-A4E4-D78F9DEC1DA1";
+	rename -uid "4EA3E419-40E9-F061-1864-7386AE4B20A5";
 	setAttr -k off ".v";
 createNode pointConstraint -n "LegFoot__instance_1_mirror:ankle_joint_rootPosLocator_pointConstraint" 
 		-p "LegFoot__instance_1_mirror:ankle_joint_rootPosLocator";
-	rename -uid "1210DAF9-4B46-BE38-7577-72B3DB180461";
+	rename -uid "35191738-4364-A293-7802-A38B8F91A6FD";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "ankle_jointW0" -dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
 	setAttr -k off ".v";
@@ -4303,18 +4295,18 @@ createNode pointConstraint -n "LegFoot__instance_1_mirror:ankle_joint_rootPosLoc
 	setAttr -k off ".sy";
 	setAttr -k off ".sz";
 	setAttr ".erp" yes;
-	setAttr ".rst" -type "double3" -7.9999998180292033 8.4270625105581905e-17 -4.5492697386961822e-08 ;
+	setAttr ".rst" -type "double3" -7.9999998180292033 1.3642211818372073e-23 -4.5492696165716495e-08 ;
 	setAttr -k on ".w0";
 createNode transform -n "LegFoot__instance_1_mirror:ball_joint_endPosLocator" -p "LegFoot__instance_1_mirror:joints_grp";
-	rename -uid "D75744F8-491B-A531-7B99-7095C063E3FE";
+	rename -uid "BB1F6CC6-49F6-6D73-11D4-05B061E22381";
 	setAttr ".v" no;
 createNode locator -n "LegFoot__instance_1_mirror:ball_joint_endPosLocatorShape" 
 		-p "LegFoot__instance_1_mirror:ball_joint_endPosLocator";
-	rename -uid "46D8B41C-4C31-E871-FD7C-2891A2BA4EE1";
+	rename -uid "DE2C67A3-43C1-9969-06C8-E9AF232EEC5E";
 	setAttr -k off ".v";
 createNode pointConstraint -n "LegFoot__instance_1_mirror:ball_joint_endPosLocator_pointConstraint" 
 		-p "LegFoot__instance_1_mirror:ball_joint_endPosLocator";
-	rename -uid "771F4D97-4418-0764-5D8E-6293F5EEE5C2";
+	rename -uid "021C3DFB-43AE-0B4B-154F-7E977328D5E1";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "ball_joint_translation_controlW0" 
 		-dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
@@ -4329,15 +4321,15 @@ createNode pointConstraint -n "LegFoot__instance_1_mirror:ball_joint_endPosLocat
 	setAttr -k off ".sy";
 	setAttr -k off ".sz";
 	setAttr ".erp" yes;
-	setAttr ".rst" -type "double3" 1.9984014443252818e-15 -9 3 ;
+	setAttr ".rst" -type "double3" 1.7763568394002505e-15 -9.0000000000000018 2.9999999999999996 ;
 	setAttr -k on ".w0";
 createNode ikHandle -n "LegFoot__instance_1_mirror:ball_joint_ikHandle" -p "LegFoot__instance_1_mirror:joints_grp";
-	rename -uid "7268D7FD-4CE6-ADEA-5537-58B63D83D972";
+	rename -uid "D19CD0B6-4215-68F0-B4E4-B4BCC91F471D";
 	setAttr ".v" no;
 	setAttr ".roc" yes;
 createNode poleVectorConstraint -n "ball_joint_ikHandle_poleVectorConstraint2" -p
 		 "LegFoot__instance_1_mirror:ball_joint_ikHandle";
-	rename -uid "000291CD-4170-950E-EAEA-978F51D9271B";
+	rename -uid "5ABD0661-4B4C-B81F-009B-B2819C083C0F";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "ball_joint_translation_control_poleVectorLocatorW0" 
 		-dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
@@ -4352,11 +4344,11 @@ createNode poleVectorConstraint -n "ball_joint_ikHandle_poleVectorConstraint2" -
 	setAttr -k off ".sy";
 	setAttr -k off ".sz";
 	setAttr ".erp" yes;
-	setAttr ".rst" -type "double3" -9.7418399347404261e-08 0.5000001095957014 -3.6531901059788652e-08 ;
+	setAttr ".rst" -type "double3" -9.7418396904913607e-08 0.50000010959570318 -3.6531895286628924e-08 ;
 	setAttr -k on ".w0";
 createNode pointConstraint -n "LegFoot__instance_1_mirror:ball_joint_ikHandle_pointConstraint" 
 		-p "LegFoot__instance_1_mirror:ball_joint_ikHandle";
-	rename -uid "3DCF7247-41DD-E1E5-B21F-D883850C4451";
+	rename -uid "19289550-43FB-C775-17B1-0599BDE4F737";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "toe_joint_endPosLocatorW0" -dv 1 
 		-min 0 -at "double";
 	setAttr -k on ".nds";
@@ -4371,19 +4363,19 @@ createNode pointConstraint -n "LegFoot__instance_1_mirror:ball_joint_ikHandle_po
 	setAttr -k off ".sy";
 	setAttr -k off ".sz";
 	setAttr ".erp" yes;
-	setAttr ".rst" -type "double3" 0.93506572965868351 -10.051947562789579 0.35064939550266994 ;
+	setAttr ".rst" -type "double3" -1.0375382557600206 -10.051948759310276 5.6109229009703494 ;
 	setAttr -k on ".w0";
 createNode transform -n "LegFoot__instance_1_mirror:ball_joint_rootPosLocator" -p
 		 "LegFoot__instance_1_mirror:joints_grp";
-	rename -uid "4B2832C0-48A4-2AEC-EF47-378313B01F7B";
+	rename -uid "0F06066D-4346-23E2-0AE4-85BD88761852";
 	setAttr ".v" no;
 createNode locator -n "LegFoot__instance_1_mirror:ball_joint_rootPosLocatorShape" 
 		-p "LegFoot__instance_1_mirror:ball_joint_rootPosLocator";
-	rename -uid "2597E0B7-4888-1885-80EC-009770DEFCDA";
+	rename -uid "D62D5F72-404E-3213-FAAB-CE9944176E64";
 	setAttr -k off ".v";
 createNode pointConstraint -n "LegFoot__instance_1_mirror:ball_joint_rootPosLocator_pointConstraint" 
 		-p "LegFoot__instance_1_mirror:ball_joint_rootPosLocator";
-	rename -uid "CC2232C0-4057-4E31-21ED-0A9DE2B0422F";
+	rename -uid "616FC80D-4389-18EC-226A-3698A1028841";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "ball_jointW0" -dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
 	setAttr -k off ".v";
@@ -4397,18 +4389,18 @@ createNode pointConstraint -n "LegFoot__instance_1_mirror:ball_joint_rootPosLoca
 	setAttr -k off ".sy";
 	setAttr -k off ".sz";
 	setAttr ".erp" yes;
-	setAttr ".rst" -type "double3" 9.7418401345805705e-08 -9.0000001095957014 3.0000000365319011 ;
+	setAttr ".rst" -type "double3" 9.7418398681270446e-08 -9.000000109595705 3.0000000365318948 ;
 	setAttr -k on ".w0";
 createNode transform -n "LegFoot__instance_1_mirror:toe_joint_endPosLocator" -p "LegFoot__instance_1_mirror:joints_grp";
-	rename -uid "5D9736AD-4B8A-8030-796A-3ABEC181C90D";
+	rename -uid "03B2EF38-4054-47DD-412E-DEB611263800";
 	setAttr ".v" no;
 createNode locator -n "LegFoot__instance_1_mirror:toe_joint_endPosLocatorShape" -p
 		 "LegFoot__instance_1_mirror:toe_joint_endPosLocator";
-	rename -uid "6A3DE63F-42B5-DF08-000D-8F8D2456B82C";
+	rename -uid "E5F1228E-4FCE-F8E8-24A0-83BB156FB9C1";
 	setAttr -k off ".v";
 createNode pointConstraint -n "LegFoot__instance_1_mirror:toe_joint_endPosLocator_pointConstraint" 
 		-p "LegFoot__instance_1_mirror:toe_joint_endPosLocator";
-	rename -uid "589B59D0-4892-A288-2A4C-30B9D5356E9F";
+	rename -uid "F0298BF2-49DB-D789-CB12-62A2D957E21A";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "toe_joint_translation_controlW0" 
 		-dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
@@ -4423,20 +4415,20 @@ createNode pointConstraint -n "LegFoot__instance_1_mirror:toe_joint_endPosLocato
 	setAttr -k off ".sy";
 	setAttr -k off ".sz";
 	setAttr ".erp" yes;
-	setAttr ".rst" -type "double3" -2.2204460492503131e-16 -9.0000000000000018 6 ;
+	setAttr ".rst" -type "double3" -4.4408920985006262e-16 -8.9999999999999982 6.0000000000000009 ;
 	setAttr -k on ".w0";
 createNode transform -n "LegFoot__instance_1_mirror:hierarchyRepresentations_grp" 
 		-p "LegFoot__instance_1_mirror:module_grp";
-	rename -uid "87B79B21-415D-E2BA-5E5D-FBAB4E389626";
+	rename -uid "8DB5B3D8-4B79-4AB5-2ECE-8D80595A1741";
 createNode transform -n "LegFoot__instance_1_mirror:hip_joint_hierarchy_representation_parentConstraint_grp" 
 		-p "LegFoot__instance_1_mirror:hierarchyRepresentations_grp";
-	rename -uid "4F2B3028-4E4B-D8EB-8D67-DD95A56FB47F";
+	rename -uid "51B1B998-4091-909A-36AC-5F8A2E746358";
 createNode transform -n "LegFoot__instance_1_mirror:hip_joint_hierarchy_representation" 
 		-p "LegFoot__instance_1_mirror:hip_joint_hierarchy_representation_parentConstraint_grp";
-	rename -uid "E2013CDB-4F0B-46F1-4364-63A74FA51DC9";
+	rename -uid "1D6D5115-43C6-9CE5-8A2B-3EB6B03D520C";
 createNode nurbsSurface -n "LegFoot__instance_1_mirror:hip_joint_hierarchy_representationShape" 
 		-p "LegFoot__instance_1_mirror:hip_joint_hierarchy_representation";
-	rename -uid "3858C6BA-4CA5-55D9-33FC-1FB1791917E8";
+	rename -uid "F928CDEF-4AAE-C89C-CD28-55BEE82875A2";
 	addAttr -ci true -sn "mso" -ln "miShadingSamplesOverride" -min 0 -max 1 -at "bool";
 	addAttr -ci true -sn "msh" -ln "miShadingSamples" -min 0 -smx 8 -at "float";
 	addAttr -ci true -sn "mdo" -ln "miMaxDisplaceOverride" -min 0 -max 1 -at "bool";
@@ -4508,7 +4500,7 @@ createNode nurbsSurface -n "LegFoot__instance_1_mirror:hip_joint_hierarchy_repre
 	setAttr ".nvfa" 4.5;
 createNode transform -n "LegFoot__instance_1_mirror:hip_joint_hierarchy_arrow_representation" 
 		-p "LegFoot__instance_1_mirror:hip_joint_hierarchy_representation";
-	rename -uid "0BEEB657-4F4F-46D4-1BA9-3AA57B0CFD1D";
+	rename -uid "E54D2438-422F-3462-CDE1-589A52FC8C38";
 	setAttr ".r" -type "double3" 0 0 -90 ;
 	setAttr ".s" -type "double3" 0.46739519169468152 0.46739519169468152 0.46739519169468152 ;
 	setAttr ".rp" -type "double3" 1.1102230246251565e-16 0.5 0 ;
@@ -4517,7 +4509,7 @@ createNode transform -n "LegFoot__instance_1_mirror:hip_joint_hierarchy_arrow_re
 	setAttr ".spt" -type "double3" -1.2651181092870475e-16 -0.56975854455648134 0 ;
 createNode mesh -n "LegFoot__instance_1_mirror:hip_joint_hierarchy_arrow_representationShape" 
 		-p "LegFoot__instance_1_mirror:hip_joint_hierarchy_arrow_representation";
-	rename -uid "CFD625B2-4B39-2198-A472-288DABE865A3";
+	rename -uid "B42106DF-4733-7546-594F-E6847AFADD42";
 	addAttr -ci true -sn "mso" -ln "miShadingSamplesOverride" -min 0 -max 1 -at "bool";
 	addAttr -ci true -sn "msh" -ln "miShadingSamples" -min 0 -smx 8 -at "float";
 	addAttr -ci true -sn "mdo" -ln "miMaxDisplaceOverride" -min 0 -max 1 -at "bool";
@@ -4574,7 +4566,7 @@ createNode mesh -n "LegFoot__instance_1_mirror:hip_joint_hierarchy_arrow_represe
 	setAttr ".vnm" 0;
 createNode parentConstraint -n "hip_joint_hierarchy_representation_parentConstraint_grp_parentConstraint2" 
 		-p "LegFoot__instance_1_mirror:hip_joint_hierarchy_representation_parentConstraint_grp";
-	rename -uid "943DDB0B-4B29-D191-7591-6EA69EF70F00";
+	rename -uid "2DEA0ACB-48AD-E874-4DDC-CF8DE84966FA";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "hip_jointW0" -dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
 	setAttr -k off ".v";
@@ -4588,12 +4580,12 @@ createNode parentConstraint -n "hip_joint_hierarchy_representation_parentConstra
 	setAttr -k off ".sy";
 	setAttr -k off ".sz";
 	setAttr ".erp" yes;
-	setAttr ".lr" -type "double3" -2.8686356343152407e-14 14.036243467926491 90 ;
-	setAttr ".rsrr" -type "double3" 90 -14.036243467926482 0 ;
+	setAttr ".lr" -type "double3" -89.999999999999972 14.036243467926464 90 ;
+	setAttr ".rsrr" -type "double3" 0 -14.036243467926475 0 ;
 	setAttr -k on ".w0";
 createNode scaleConstraint -n "hip_joint_hierarchy_representation_parentConstraint_grp_scaleConstraint2" 
 		-p "LegFoot__instance_1_mirror:hip_joint_hierarchy_representation_parentConstraint_grp";
-	rename -uid "0512D13C-4DA7-80C7-D23A-829D4A048FDE";
+	rename -uid "7A510DBB-420F-7883-488C-6CB600973332";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "module_transformW0" -dv 1 -min 0 
 		-at "double";
 	setAttr -k on ".nds";
@@ -4611,13 +4603,13 @@ createNode scaleConstraint -n "hip_joint_hierarchy_representation_parentConstrai
 	setAttr -k on ".w0";
 createNode transform -n "LegFoot__instance_1_mirror:knee_joint_hierarchy_representation_parentConstraint_grp" 
 		-p "LegFoot__instance_1_mirror:hierarchyRepresentations_grp";
-	rename -uid "8C63C9E3-40E5-C000-14BA-809537A93CAF";
+	rename -uid "FC331E8E-40D8-CF07-199C-73ADC05AA6F6";
 createNode transform -n "LegFoot__instance_1_mirror:knee_joint_hierarchy_representation" 
 		-p "LegFoot__instance_1_mirror:knee_joint_hierarchy_representation_parentConstraint_grp";
-	rename -uid "F46E9FE1-4C87-B147-BD60-12B62F374866";
+	rename -uid "1F797956-46A3-89B0-9AB4-0EB15A440A32";
 createNode nurbsSurface -n "LegFoot__instance_1_mirror:knee_joint_hierarchy_representationShape" 
 		-p "LegFoot__instance_1_mirror:knee_joint_hierarchy_representation";
-	rename -uid "0ECA16FF-4D8F-A2AA-6063-E2B4A49A1CFE";
+	rename -uid "4296301B-4ED8-A8D4-954A-629CF3373F2F";
 	addAttr -ci true -sn "mso" -ln "miShadingSamplesOverride" -min 0 -max 1 -at "bool";
 	addAttr -ci true -sn "msh" -ln "miShadingSamples" -min 0 -smx 8 -at "float";
 	addAttr -ci true -sn "mdo" -ln "miMaxDisplaceOverride" -min 0 -max 1 -at "bool";
@@ -4689,7 +4681,7 @@ createNode nurbsSurface -n "LegFoot__instance_1_mirror:knee_joint_hierarchy_repr
 	setAttr ".nvfa" 4.5;
 createNode transform -n "LegFoot__instance_1_mirror:knee_joint_hierarchy_arrow_representation" 
 		-p "LegFoot__instance_1_mirror:knee_joint_hierarchy_representation";
-	rename -uid "D5272809-4ED7-F4BC-0834-728374543873";
+	rename -uid "0A16560F-4516-BCE7-3D88-B2A8CD459554";
 	setAttr ".r" -type "double3" 0 0 -90 ;
 	setAttr ".s" -type "double3" 0.46739519169468152 0.46739519169468152 0.46739519169468152 ;
 	setAttr ".rp" -type "double3" 1.1102230246251565e-16 0.5 0 ;
@@ -4698,7 +4690,7 @@ createNode transform -n "LegFoot__instance_1_mirror:knee_joint_hierarchy_arrow_r
 	setAttr ".spt" -type "double3" -1.2651181092870475e-16 -0.56975854455648134 0 ;
 createNode mesh -n "LegFoot__instance_1_mirror:knee_joint_hierarchy_arrow_representationShape" 
 		-p "LegFoot__instance_1_mirror:knee_joint_hierarchy_arrow_representation";
-	rename -uid "E9146B32-493A-2AAB-9058-9C879A665C9D";
+	rename -uid "E8564D01-4CCD-FA66-FEBC-5FB683A936FC";
 	addAttr -ci true -sn "mso" -ln "miShadingSamplesOverride" -min 0 -max 1 -at "bool";
 	addAttr -ci true -sn "msh" -ln "miShadingSamples" -min 0 -smx 8 -at "float";
 	addAttr -ci true -sn "mdo" -ln "miMaxDisplaceOverride" -min 0 -max 1 -at "bool";
@@ -4755,7 +4747,7 @@ createNode mesh -n "LegFoot__instance_1_mirror:knee_joint_hierarchy_arrow_repres
 	setAttr ".vnm" 0;
 createNode parentConstraint -n "knee_joint_hierarchy_representation_parentConstraint_grp_parentConstraint2" 
 		-p "LegFoot__instance_1_mirror:knee_joint_hierarchy_representation_parentConstraint_grp";
-	rename -uid "018007A3-41D8-9BF6-B9B4-81AD716CFCFF";
+	rename -uid "1D4ACF5C-4DD5-2BD1-F075-48A255427228";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "knee_jointW0" -dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
 	setAttr -k off ".v";
@@ -4769,13 +4761,13 @@ createNode parentConstraint -n "knee_joint_hierarchy_representation_parentConstr
 	setAttr -k off ".sy";
 	setAttr -k off ".sz";
 	setAttr ".erp" yes;
-	setAttr ".lr" -type "double3" -180 -14.036243467926456 90 ;
-	setAttr ".rst" -type "double3" -3.9999999033280145 2.2204460492503131e-16 -0.99999997583200395 ;
-	setAttr ".rsrr" -type "double3" 89.999994626480984 14.036242816291578 1.2294152683537999e-14 ;
+	setAttr ".lr" -type "double3" 89.999999999999943 -14.036242816291557 90 ;
+	setAttr ".rst" -type "double3" -3.9999999033280145 0 -0.9999999758320034 ;
+	setAttr ".rsrr" -type "double3" -5.2630142203192109e-06 14.036242816291587 -9.7705147135559754e-23 ;
 	setAttr -k on ".w0";
 createNode scaleConstraint -n "knee_joint_hierarchy_representation_parentConstraint_grp_scaleConstraint2" 
 		-p "LegFoot__instance_1_mirror:knee_joint_hierarchy_representation_parentConstraint_grp";
-	rename -uid "79AA6D05-4DA1-C3FE-5B3E-6CB497678D60";
+	rename -uid "F3A32220-483A-2BBB-85F9-709AEBAA8C08";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "module_transformW0" -dv 1 -min 0 
 		-at "double";
 	setAttr -k on ".nds";
@@ -4792,18 +4784,18 @@ createNode scaleConstraint -n "knee_joint_hierarchy_representation_parentConstra
 	setAttr ".erp" yes;
 	setAttr -k on ".w0";
 createNode transform -n "LegFoot__instance_1_mirror:orientationControls_grp" -p "LegFoot__instance_1_mirror:module_grp";
-	rename -uid "7A384D0C-4B31-8BE0-86A4-1BB535FE9628";
+	rename -uid "76F05A6F-488B-5676-EF83-AC8095079D55";
 createNode transform -n "LegFoot__instance_1_mirror:ankle_joint_orientation_control_parentConstraint_grp" 
 		-p "LegFoot__instance_1_mirror:orientationControls_grp";
-	rename -uid "11237C6C-4930-7B3A-1D81-6ABE2114ECB9";
+	rename -uid "D2872D83-4259-63AB-041D-7BB12D1F98AC";
 createNode transform -n "LegFoot__instance_1_mirror:ankle_joint_orientation_control" 
 		-p "LegFoot__instance_1_mirror:ankle_joint_orientation_control_parentConstraint_grp";
-	rename -uid "557E1454-4762-E324-99BC-7FAB68C2EADA";
+	rename -uid "0F532C9F-4BBA-AADE-C452-0193CB553EED";
 	setAttr -l on -k off ".v";
 	setAttr -l on -k off ".tx";
 	setAttr -l on -k off ".ty";
 	setAttr -l on -k off ".tz";
-	setAttr ".r" -type "double3" -90 0 0 ;
+	setAttr ".r" -type "double3" 90 0 0 ;
 	setAttr -l on -k off ".ry";
 	setAttr -l on -k off ".rz";
 	setAttr -k off ".sx";
@@ -4811,7 +4803,7 @@ createNode transform -n "LegFoot__instance_1_mirror:ankle_joint_orientation_cont
 	setAttr -l on -k off ".sz";
 createNode mesh -n "LegFoot__instance_1_mirror:ankle_joint_orientation_controlShape" 
 		-p "LegFoot__instance_1_mirror:ankle_joint_orientation_control";
-	rename -uid "C9A293B7-4103-155D-A096-D59B8CAEA471";
+	rename -uid "794B126C-400A-800A-1F9E-AE93C6C6ECA1";
 	addAttr -ci true -sn "mso" -ln "miShadingSamplesOverride" -min 0 -max 1 -at "bool";
 	addAttr -ci true -sn "msh" -ln "miShadingSamples" -min 0 -smx 8 -at "float";
 	addAttr -ci true -sn "mdo" -ln "miMaxDisplaceOverride" -min 0 -max 1 -at "bool";
@@ -4944,7 +4936,7 @@ createNode mesh -n "LegFoot__instance_1_mirror:ankle_joint_orientation_controlSh
 	setAttr ".vnm" 0;
 createNode parentConstraint -n "ankle_joint_orientation_control_parentConstraint_grp_parentConstraint2" 
 		-p "LegFoot__instance_1_mirror:ankle_joint_orientation_control_parentConstraint_grp";
-	rename -uid "F845771C-4CA8-85C0-6F50-01B2F2369B96";
+	rename -uid "98B5C328-4FCC-005E-E5E1-5F8446DF3DC5";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "ankle_jointW0" -dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
 	setAttr -k off ".v";
@@ -4958,13 +4950,13 @@ createNode parentConstraint -n "ankle_joint_orientation_control_parentConstraint
 	setAttr -k off ".sy";
 	setAttr -k off ".sz";
 	setAttr ".erp" yes;
-	setAttr ".lr" -type "double3" 90.000000000000114 108.4349500539563 -89.999999999999844 ;
-	setAttr ".rst" -type "double3" -7.9999998180292033 8.4270625105581905e-17 -4.5492697386961822e-08 ;
-	setAttr ".rsrr" -type "double3" 164.7855087583082 13.989666476620593 131.63353868942932 ;
+	setAttr ".lr" -type "double3" -89.999999999999943 -108.43495221142359 89.999999999999957 ;
+	setAttr ".rst" -type "double3" -7.9999998180292033 1.3642211818372073e-23 -4.5492696165716495e-08 ;
+	setAttr ".rsrr" -type "double3" 195.21449124169158 -13.989666476620567 -48.366461310570713 ;
 	setAttr -k on ".w0";
 createNode scaleConstraint -n "ankle_joint_orientation_control_parentConstraint_grp_scaleConstraint2" 
 		-p "LegFoot__instance_1_mirror:ankle_joint_orientation_control_parentConstraint_grp";
-	rename -uid "B1FF8BEA-4544-50E3-112C-21AFB1CFF903";
+	rename -uid "55767572-4ECF-5414-3236-34A35197CDEB";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "module_transformW0" -dv 1 -min 0 
 		-at "double";
 	setAttr -k on ".nds";
@@ -4982,15 +4974,15 @@ createNode scaleConstraint -n "ankle_joint_orientation_control_parentConstraint_
 	setAttr -k on ".w0";
 createNode transform -n "LegFoot__instance_1_mirror:ball_joint_orientation_control_parentConstraint_grp" 
 		-p "LegFoot__instance_1_mirror:orientationControls_grp";
-	rename -uid "8E7048E7-46E0-1625-4061-27A6FFC9C246";
+	rename -uid "4E2396C1-41AD-A9BF-29FA-4FB103E768A8";
 createNode transform -n "LegFoot__instance_1_mirror:ball_joint_orientation_control" 
 		-p "LegFoot__instance_1_mirror:ball_joint_orientation_control_parentConstraint_grp";
-	rename -uid "1103D6C2-49CA-6E9B-36C2-E4A6B04E8FF8";
+	rename -uid "2C257C00-457B-5CBA-103F-1DB979503E81";
 	setAttr -l on -k off ".v";
 	setAttr -l on -k off ".tx";
 	setAttr -l on -k off ".ty";
 	setAttr -l on -k off ".tz";
-	setAttr ".r" -type "double3" -90 0 0 ;
+	setAttr ".r" -type "double3" 90 0 0 ;
 	setAttr -l on -k off ".ry";
 	setAttr -l on -k off ".rz";
 	setAttr -k off ".sx";
@@ -4998,7 +4990,7 @@ createNode transform -n "LegFoot__instance_1_mirror:ball_joint_orientation_contr
 	setAttr -l on -k off ".sz";
 createNode mesh -n "LegFoot__instance_1_mirror:ball_joint_orientation_controlShape" 
 		-p "LegFoot__instance_1_mirror:ball_joint_orientation_control";
-	rename -uid "68CD3F44-4020-B14E-A221-E6AF028165DE";
+	rename -uid "0FFF74CD-4E91-B1AE-A99C-5FA604E94ED5";
 	addAttr -ci true -sn "mso" -ln "miShadingSamplesOverride" -min 0 -max 1 -at "bool";
 	addAttr -ci true -sn "msh" -ln "miShadingSamples" -min 0 -smx 8 -at "float";
 	addAttr -ci true -sn "mdo" -ln "miMaxDisplaceOverride" -min 0 -max 1 -at "bool";
@@ -5131,7 +5123,7 @@ createNode mesh -n "LegFoot__instance_1_mirror:ball_joint_orientation_controlSha
 	setAttr ".vnm" 0;
 createNode parentConstraint -n "ball_joint_orientation_control_parentConstraint_grp_parentConstraint2" 
 		-p "LegFoot__instance_1_mirror:ball_joint_orientation_control_parentConstraint_grp";
-	rename -uid "CFADFCE4-4125-F906-BE1D-659AC740257A";
+	rename -uid "91BB915D-40D3-201B-8A97-AFA517181D15";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "ball_jointW0" -dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
 	setAttr -k off ".v";
@@ -5145,13 +5137,13 @@ createNode parentConstraint -n "ball_joint_orientation_control_parentConstraint_
 	setAttr -k off ".sy";
 	setAttr -k off ".sz";
 	setAttr ".erp" yes;
-	setAttr ".lr" -type "double3" 270.00000000000006 89.999999060872995 0 ;
-	setAttr ".rst" -type "double3" 9.7418401345805705e-08 -9.0000001095957014 3.0000000365319011 ;
-	setAttr ".rsrr" -type "double3" 89.999988836676067 89.9999971994947 0 ;
+	setAttr ".lr" -type "double3" 7.8072182550537115e-14 -89.999998415348244 0 ;
+	setAttr ".rst" -type "double3" 9.7418398681270446e-08 -9.000000109595705 3.0000000365318948 ;
+	setAttr ".rsrr" -type "double3" 180.00001116332368 -89.9999971994947 0 ;
 	setAttr -k on ".w0";
 createNode scaleConstraint -n "ball_joint_orientation_control_parentConstraint_grp_scaleConstraint2" 
 		-p "LegFoot__instance_1_mirror:ball_joint_orientation_control_parentConstraint_grp";
-	rename -uid "71B92404-4BB2-78E7-0472-63B80008EDF6";
+	rename -uid "88D03685-4AE8-9247-8710-E79F9612EB9C";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "module_transformW0" -dv 1 -min 0 
 		-at "double";
 	setAttr -k on ".nds";
@@ -5169,15 +5161,15 @@ createNode scaleConstraint -n "ball_joint_orientation_control_parentConstraint_g
 	setAttr -k on ".w0";
 createNode transform -n "LegFoot__instance_1_mirror:preferredAngleRepresentation_grp" 
 		-p "LegFoot__instance_1_mirror:module_grp";
-	rename -uid "E0E68A20-4C30-0A3A-4721-E5BC26625B27";
+	rename -uid "55C81937-44B2-6617-67AD-A0BD529628F1";
 createNode transform -n "LegFoot__instance_1_mirror:IK_knee_joint_preferredAngle_parentConstraintGrp" 
 		-p "LegFoot__instance_1_mirror:preferredAngleRepresentation_grp";
-	rename -uid "3583D548-459D-63C9-3AFE-6F81AF307D41";
+	rename -uid "F8980FED-4DBE-B4CA-B7DC-92B47508DBB5";
 	setAttr ".rp" -type "double3" -1.1920928955078125e-07 0.00014042854309082031 0.11461406946182251 ;
 	setAttr ".sp" -type "double3" -1.1920928955078125e-07 0.00014042854309082031 0.11461406946182251 ;
 createNode transform -n "LegFoot__instance_1_mirror:IK_knee_joint_preferredAngle_representation" 
 		-p "LegFoot__instance_1_mirror:IK_knee_joint_preferredAngle_parentConstraintGrp";
-	rename -uid "7594C7B6-4AB7-61EA-C2AF-CCA9FB87CF14";
+	rename -uid "1D266F28-4A6A-DF28-5C9D-FB87F5F75BCB";
 	addAttr -ci true -sn "axis" -ln "axis" -min 0 -max 3 -en "+Y:-Y:+Z:-Z" -at "enum";
 	setAttr -l on -k off ".v";
 	setAttr ".ovdt" 2;
@@ -5194,7 +5186,7 @@ createNode transform -n "LegFoot__instance_1_mirror:IK_knee_joint_preferredAngle
 	setAttr -l on -k on ".axis";
 createNode mesh -n "LegFoot__instance_1_mirror:IK_knee_joint_preferredAngle_representationShape" 
 		-p "LegFoot__instance_1_mirror:IK_knee_joint_preferredAngle_representation";
-	rename -uid "6E9BA044-42C4-5DE6-B655-C08BF766E1E3";
+	rename -uid "D8CDFBC5-4838-5BFE-D9BD-D4ADA0E1B6CE";
 	setAttr -k off ".v";
 	setAttr ".vir" yes;
 	setAttr ".vif" yes;
@@ -7367,7 +7359,7 @@ createNode mesh -n "LegFoot__instance_1_mirror:IK_knee_joint_preferredAngle_repr
 	setAttr ".vnm" 0;
 createNode parentConstraint -n "IK_knee_joint_preferredAngle_parentConstraintGrp_parentConstraint2" 
 		-p "LegFoot__instance_1_mirror:IK_knee_joint_preferredAngle_parentConstraintGrp";
-	rename -uid "14605806-4B87-615D-5F2C-B58975C99DF2";
+	rename -uid "BD58E8A0-4A6C-2A12-C9CC-77858AD6AB1F";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "IK_knee_jointW0" -dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
 	setAttr -k off ".v";
@@ -7381,13 +7373,13 @@ createNode parentConstraint -n "IK_knee_joint_preferredAngle_parentConstraintGrp
 	setAttr -k off ".sy";
 	setAttr -k off ".sz";
 	setAttr ".erp" yes;
-	setAttr ".lr" -type "double3" -0.00045474388259534806 194.0365651069724 -89.999832235967844 ;
-	setAttr ".rst" -type "double3" -3.9999982649846735 -0.00014042853273374048 -1.1146201218106684 ;
-	setAttr ".rsrr" -type "double3" -0.00018002804286047444 14.036340339150859 -7.4640145540505663e-05 ;
+	setAttr ".lr" -type "double3" 0.00014547862733690358 194.03646790610114 -90.000053671057017 ;
+	setAttr ".rst" -type "double3" -3.9999982651802175 -0.00013913869353351577 -1.1146201210446058 ;
+	setAttr ".rsrr" -type "double3" 1.8359319751660376e-05 14.036282721072764 -2.3452862188814289e-05 ;
 	setAttr -k on ".w0";
 createNode scaleConstraint -n "IK_knee_joint_preferredAngle_parentConstraintGrp_scaleConstraint2" 
 		-p "LegFoot__instance_1_mirror:IK_knee_joint_preferredAngle_parentConstraintGrp";
-	rename -uid "16BDBFA4-4305-1CA5-EFD4-0C8981B89000";
+	rename -uid "E8D96495-4E0A-8356-3DA1-B2833F9C6412";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "knee_joint_translation_controlW0" 
 		-dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
@@ -7404,27 +7396,27 @@ createNode scaleConstraint -n "IK_knee_joint_preferredAngle_parentConstraintGrp_
 	setAttr ".erp" yes;
 	setAttr -k on ".w0";
 createNode transform -n "LegFoot__instance_1_mirror:hook_grp" -p "LegFoot__instance_1_mirror:module_grp";
-	rename -uid "0689E1FE-41DE-EC39-F4AD-E996E9945545";
+	rename -uid "BBF51D34-4D12-39AC-AA7F-3F8B4EA56E40";
 createNode joint -n "LegFoot__instance_1_mirror:hook_root_joint" -p "LegFoot__instance_1_mirror:hook_grp";
-	rename -uid "A1D47999-4F88-D0E8-4CB1-2B80B5AB994E";
+	rename -uid "3E237076-4FA9-8D90-5B26-5FA51B482EDA";
 	setAttr ".v" no;
 	setAttr ".mnrl" -type "double3" -360 -360 -360 ;
 	setAttr ".mxrl" -type "double3" 360 360 360 ;
 	setAttr ".jo" -type "double3" 0 0 90 ;
 createNode joint -n "LegFoot__instance_1_mirror:hook_target_joint" -p "LegFoot__instance_1_mirror:hook_root_joint";
-	rename -uid "3B96525E-4DC1-A4C2-4D13-2EB928A1B453";
+	rename -uid "B6AF6E1B-4D19-CB98-28BA-50AB296D4064";
 	setAttr ".v" no;
 	setAttr ".mnrl" -type "double3" -360 -360 -360 ;
 	setAttr ".mxrl" -type "double3" 360 360 360 ;
 	setAttr ".jo" -type "double3" 0 0 -90 ;
 createNode ikEffector -n "LegFoot__instance_1_mirror:hook_root_jointikEffector" -p
 		 "LegFoot__instance_1_mirror:hook_root_joint";
-	rename -uid "A7DF8A63-4473-81DB-06F9-A097414125EC";
+	rename -uid "DA902F88-4508-765E-C3B5-B497E0B05009";
 	setAttr ".v" no;
 	setAttr ".hd" yes;
 createNode pointConstraint -n "LegFoot__instance_1_mirror:hook_root_joint_pointConstraint" 
 		-p "LegFoot__instance_1_mirror:hook_root_joint";
-	rename -uid "1FD01451-4066-E11C-3258-0D8DE90EB5AF";
+	rename -uid "5ECF9740-4395-42B9-AB72-0EBC8FD80B69";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "hip_joint_translation_controlW0" 
 		-dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
@@ -7441,13 +7433,13 @@ createNode pointConstraint -n "LegFoot__instance_1_mirror:hook_root_joint_pointC
 	setAttr ".erp" yes;
 	setAttr -k on ".w0";
 createNode transform -n "LegFoot__instance_1_mirror:unhookedTarget" -p "LegFoot__instance_1_mirror:hook_grp";
-	rename -uid "4F641AC6-423A-26BB-D716-1C9EF9E694E6";
+	rename -uid "C0A98E85-42BF-6FC9-4906-FFAA23F221BF";
 	setAttr ".v" no;
 createNode locator -n "LegFoot__instance_1_mirror:unhookedTargetShape" -p "LegFoot__instance_1_mirror:unhookedTarget";
-	rename -uid "04025B01-48A7-4427-2667-4FB2A997D179";
+	rename -uid "9C667764-4FDF-5AB8-95FC-34987FD86916";
 	setAttr -k off ".v";
 createNode pointConstraint -n "unhookedTarget_pointConstraint2" -p "LegFoot__instance_1_mirror:unhookedTarget";
-	rename -uid "876DF0BC-441A-96D2-3F3B-41B8ACFCB32C";
+	rename -uid "4B444EF5-41E6-F538-94E7-7E815BA8641D";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "hip_joint_translation_controlW0" 
 		-dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
@@ -7466,12 +7458,12 @@ createNode pointConstraint -n "unhookedTarget_pointConstraint2" -p "LegFoot__ins
 	setAttr ".rst" -type "double3" 0 0.001 0 ;
 	setAttr -k on ".w0";
 createNode ikHandle -n "LegFoot__instance_1_mirror:hook_root_joint_ikHandle" -p "LegFoot__instance_1_mirror:hook_grp";
-	rename -uid "817C1BC5-4847-5677-744F-4391BA1F0716";
+	rename -uid "EC6CDC51-45A9-4304-784D-CC9A56002162";
 	setAttr ".v" no;
 	setAttr ".roc" yes;
 createNode poleVectorConstraint -n "hook_root_joint_ikHandle_poleVectorConstraint2" 
 		-p "LegFoot__instance_1_mirror:hook_root_joint_ikHandle";
-	rename -uid "0822B488-4439-3F68-D224-46BE14873512";
+	rename -uid "5EE6E2E3-4C76-9582-8F6D-5D9EE6FD15C0";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "hook_root_joint_ikHandle_poleVectorLocatorW0" 
 		-dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
@@ -7490,7 +7482,7 @@ createNode poleVectorConstraint -n "hook_root_joint_ikHandle_poleVectorConstrain
 	setAttr -k on ".w0";
 createNode pointConstraint -n "LegFoot__instance_1_mirror:hook_root_joint_ikHandle_pointConstraint" 
 		-p "LegFoot__instance_1_mirror:hook_root_joint_ikHandle";
-	rename -uid "116B9914-45EA-235A-41B2-01A2DE1FDE98";
+	rename -uid "83AC6C85-4B51-85FB-2258-DAA4FE26B752";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "hook_target_joint_endPosLocatorW0" 
 		-dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
@@ -7509,15 +7501,15 @@ createNode pointConstraint -n "LegFoot__instance_1_mirror:hook_root_joint_ikHand
 	setAttr -k on ".w0";
 createNode transform -n "LegFoot__instance_1_mirror:hook_root_joint_rootPosLocator" 
 		-p "LegFoot__instance_1_mirror:hook_grp";
-	rename -uid "CA48B7CD-4233-217D-8BC3-F0A9E4D45AE7";
+	rename -uid "5D177342-4C4A-55AC-42F7-C5A25A144512";
 	setAttr ".v" no;
 createNode locator -n "LegFoot__instance_1_mirror:hook_root_joint_rootPosLocatorShape" 
 		-p "LegFoot__instance_1_mirror:hook_root_joint_rootPosLocator";
-	rename -uid "18AE0CE3-421E-213F-0F9E-ED8DCD57819A";
+	rename -uid "C43B3D74-498B-1DAB-A3C5-DAA39C4B547B";
 	setAttr -k off ".v";
 createNode pointConstraint -n "LegFoot__instance_1_mirror:hook_root_joint_rootPosLocator_pointConstraint" 
 		-p "LegFoot__instance_1_mirror:hook_root_joint_rootPosLocator";
-	rename -uid "BF5A76B1-4611-7C33-709C-F68EB70C487F";
+	rename -uid "CA968C9F-4C82-6E70-5035-9E83AA0144A7";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "hook_root_jointW0" -dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
 	setAttr -k off ".v";
@@ -7534,15 +7526,15 @@ createNode pointConstraint -n "LegFoot__instance_1_mirror:hook_root_joint_rootPo
 	setAttr -k on ".w0";
 createNode transform -n "LegFoot__instance_1_mirror:hook_target_joint_endPosLocator" 
 		-p "LegFoot__instance_1_mirror:hook_grp";
-	rename -uid "32F60D1D-4069-AA17-6443-20BFDED117B2";
+	rename -uid "1A876454-48FC-E787-3686-8DA37B38D3CD";
 	setAttr ".v" no;
 createNode locator -n "LegFoot__instance_1_mirror:hook_target_joint_endPosLocatorShape" 
 		-p "LegFoot__instance_1_mirror:hook_target_joint_endPosLocator";
-	rename -uid "1391A28B-4256-BA60-B15E-06BD116B4FDA";
+	rename -uid "313660D9-4500-F29B-7603-4CAEF9BCF4B5";
 	setAttr -k off ".v";
 createNode pointConstraint -n "LegFoot__instance_1_mirror:hook_pointConstraint" -p
 		 "LegFoot__instance_1_mirror:hook_target_joint_endPosLocator";
-	rename -uid "D9720392-4344-EE9C-E149-0C80DF488228";
+	rename -uid "0D4F3CF1-4DDF-6E8C-B562-139B138E464B";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "unhookedTargetW0" -dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
 	setAttr -k off ".v";
@@ -7560,22 +7552,22 @@ createNode pointConstraint -n "LegFoot__instance_1_mirror:hook_pointConstraint" 
 	setAttr -k on ".w0";
 createNode transform -n "LegFoot__instance_1_mirror:hook_root_joint_ikHandle_poleVectorLocator" 
 		-p "LegFoot__instance_1_mirror:hook_grp";
-	rename -uid "0F4F5905-4B1A-B8FE-4542-35894F8224A8";
+	rename -uid "A56011F3-4EB7-6628-EE73-239D92D31F8F";
 	setAttr ".v" no;
 	setAttr ".t" -type "double3" 0 1 0 ;
 createNode locator -n "LegFoot__instance_1_mirror:hook_root_joint_ikHandle_poleVectorLocatorShape" 
 		-p "LegFoot__instance_1_mirror:hook_root_joint_ikHandle_poleVectorLocator";
-	rename -uid "0CB6D497-452B-03DB-572F-C086EA9E0D1A";
+	rename -uid "47D17D22-48A2-C844-14C1-CCB5982C8AA5";
 	setAttr -k off ".v";
 createNode transform -n "LegFoot__instance_1_mirror:hook_root_joint_hook_representation_parentConstraint_grp" 
 		-p "LegFoot__instance_1_mirror:hook_grp";
-	rename -uid "5B42DF1A-412B-0505-846F-1B8367446E83";
+	rename -uid "BB0DF24B-462B-4F95-3E75-97BD7FCAC8E1";
 createNode transform -n "LegFoot__instance_1_mirror:hook_root_joint_hook_representation" 
 		-p "LegFoot__instance_1_mirror:hook_root_joint_hook_representation_parentConstraint_grp";
-	rename -uid "B3F4E7BB-467C-B815-3982-9196054A3E3D";
+	rename -uid "3ABD225A-40D0-0641-91CF-C99560D4CE5A";
 createNode nurbsSurface -n "LegFoot__instance_1_mirror:hook_root_joint_hook_representationShape" 
 		-p "LegFoot__instance_1_mirror:hook_root_joint_hook_representation";
-	rename -uid "32EC1885-441A-4D04-C259-0F82A1203472";
+	rename -uid "8EDE946A-43C2-531C-A6A9-98B8F1B7426E";
 	addAttr -ci true -sn "mso" -ln "miShadingSamplesOverride" -min 0 -max 1 -at "bool";
 	addAttr -ci true -sn "msh" -ln "miShadingSamples" -min 0 -smx 8 -at "float";
 	addAttr -ci true -sn "mdo" -ln "miMaxDisplaceOverride" -min 0 -max 1 -at "bool";
@@ -7647,7 +7639,7 @@ createNode nurbsSurface -n "LegFoot__instance_1_mirror:hook_root_joint_hook_repr
 	setAttr ".nvfa" 4.5;
 createNode parentConstraint -n "hook_root_joint_hook_representation_parentConstraint_grp_parentConstraint2" 
 		-p "LegFoot__instance_1_mirror:hook_root_joint_hook_representation_parentConstraint_grp";
-	rename -uid "9FE8FC77-4867-40C1-95A5-548399911E98";
+	rename -uid "D463C7EB-43CD-67B4-727C-8CB639C399B9";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "hook_root_jointW0" -dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
 	setAttr -k off ".v";
@@ -7666,7 +7658,7 @@ createNode parentConstraint -n "hook_root_joint_hook_representation_parentConstr
 	setAttr -k on ".w0";
 createNode scaleConstraint -n "hook_root_joint_hook_representation_parentConstraint_grp_scaleConstraint2" 
 		-p "LegFoot__instance_1_mirror:hook_root_joint_hook_representation_parentConstraint_grp";
-	rename -uid "CBC4691E-4D69-A4B5-041C-BCA510ED0810";
+	rename -uid "930B6105-43B4-E349-981B-25BF4A29ADA8";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "module_transformW0" -dv 1 -min 0 
 		-at "double";
 	setAttr -k on ".nds";
@@ -7684,19 +7676,19 @@ createNode scaleConstraint -n "hook_root_joint_hook_representation_parentConstra
 	setAttr -k on ".w0";
 createNode transform -n "LegFoot__instance_1_mirror:hip_joint_translation_control_poleVectorLocator_parentConstraintGrp" 
 		-p "LegFoot__instance_1_mirror:module_grp";
-	rename -uid "739DA8B7-452B-2A5E-E28A-8F8684CDED66";
+	rename -uid "031E3FAA-440E-9FA8-EB24-B0B990C4D3AC";
 createNode transform -n "LegFoot__instance_1_mirror:hip_joint_translation_control_poleVectorLocator" 
 		-p "LegFoot__instance_1_mirror:hip_joint_translation_control_poleVectorLocator_parentConstraintGrp";
-	rename -uid "6B78CCAC-410F-974F-6B10-F1A7EB00478A";
+	rename -uid "C5DDD8E0-4393-3C8E-44B2-F2AE82BEA8A2";
 	setAttr ".v" no;
-	setAttr ".t" -type "double3" 0 0.5 6.123233995736766e-17 ;
+	setAttr ".t" -type "double3" 0 0.5 6.1232339957367574e-17 ;
 createNode locator -n "LegFoot__instance_1_mirror:hip_joint_translation_control_poleVectorLocatorShape" 
 		-p "LegFoot__instance_1_mirror:hip_joint_translation_control_poleVectorLocator";
-	rename -uid "B1F0A21C-4BC6-CD72-E4C5-C485D50647EA";
+	rename -uid "EDC3554E-467C-F0B1-FA5A-AF842EBD2632";
 	setAttr -k off ".v";
 createNode parentConstraint -n "hip_joint_translation_control_poleVectorLocator_parentConstraintGrp_parentConstraint2" 
 		-p "LegFoot__instance_1_mirror:hip_joint_translation_control_poleVectorLocator_parentConstraintGrp";
-	rename -uid "FF47A19D-42EF-A436-E10B-9184E994180E";
+	rename -uid "357B765B-4F5D-BCDC-2D6D-07A878AF4F4D";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "hip_joint_translation_controlW0" 
 		-dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
@@ -7716,19 +7708,19 @@ createNode parentConstraint -n "hip_joint_translation_control_poleVectorLocator_
 	setAttr -k on ".w0";
 createNode transform -n "LegFoot__instance_1_mirror:knee_joint_translation_control_poleVectorLocator_parentConstraintGrp" 
 		-p "LegFoot__instance_1_mirror:module_grp";
-	rename -uid "EB7F6618-495B-9527-D6E5-CA8BFAB037DC";
+	rename -uid "804A39BF-4F48-EFA5-29A9-6583E3F77334";
 createNode transform -n "LegFoot__instance_1_mirror:knee_joint_translation_control_poleVectorLocator" 
 		-p "LegFoot__instance_1_mirror:knee_joint_translation_control_poleVectorLocator_parentConstraintGrp";
-	rename -uid "1F8EABB9-4F30-2807-A43D-4391A12A5B48";
+	rename -uid "A4C5007B-402C-D55D-20C6-6B970E7DFD79";
 	setAttr ".v" no;
-	setAttr ".t" -type "double3" 0 0.5 1.1102230246251565e-16 ;
+	setAttr ".t" -type "double3" 0 0.5 0 ;
 createNode locator -n "LegFoot__instance_1_mirror:knee_joint_translation_control_poleVectorLocatorShape" 
 		-p "LegFoot__instance_1_mirror:knee_joint_translation_control_poleVectorLocator";
-	rename -uid "BBBF9D90-49E0-9463-769A-BFABFD51F647";
+	rename -uid "3D5293EB-4ED5-5550-FF5A-4BA9FB60A84B";
 	setAttr -k off ".v";
 createNode parentConstraint -n "knee_joint_translation_control_poleVectorLocator_parentConstraintGrp_parentConstraint2" 
 		-p "LegFoot__instance_1_mirror:knee_joint_translation_control_poleVectorLocator_parentConstraintGrp";
-	rename -uid "87E37645-42AD-4354-DAB1-5F824354C7CB";
+	rename -uid "785605B9-4267-F40C-ADB9-BFA8B645333E";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "knee_joint_translation_controlW0" 
 		-dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
@@ -7744,24 +7736,24 @@ createNode parentConstraint -n "knee_joint_translation_control_poleVectorLocator
 	setAttr -k off ".sz";
 	setAttr ".erp" yes;
 	setAttr ".lr" -type "double3" 180 0 0 ;
-	setAttr ".rst" -type "double3" -4 2.4651903288156619e-32 -1 ;
+	setAttr ".rst" -type "double3" -4 0 -1 ;
 	setAttr ".rsrr" -type "double3" 180 0 0 ;
 	setAttr -k on ".w0";
 createNode transform -n "LegFoot__instance_1_mirror:ankle_joint_translation_control_poleVectorLocator_parentConstraintGrp" 
 		-p "LegFoot__instance_1_mirror:module_grp";
-	rename -uid "9C8CFE79-495A-3751-F757-09B526033AC8";
+	rename -uid "57E81B75-4839-850F-43D0-59A2CD792978";
 createNode transform -n "LegFoot__instance_1_mirror:ankle_joint_translation_control_poleVectorLocator" 
 		-p "LegFoot__instance_1_mirror:ankle_joint_translation_control_poleVectorLocator_parentConstraintGrp";
-	rename -uid "D88479F8-4159-CE68-1905-DA94D7807043";
+	rename -uid "B45C955C-47B0-5667-1D12-FB9D06FACCBC";
 	setAttr ".v" no;
-	setAttr ".t" -type "double3" 0 0.5 6.1232339957367623e-17 ;
+	setAttr ".t" -type "double3" 0 0.5 6.1232339957367673e-17 ;
 createNode locator -n "LegFoot__instance_1_mirror:ankle_joint_translation_control_poleVectorLocatorShape" 
 		-p "LegFoot__instance_1_mirror:ankle_joint_translation_control_poleVectorLocator";
-	rename -uid "9EC5CF6C-40E2-6F9E-E6AA-E4B0EB4D9CFA";
+	rename -uid "876542FF-4070-810F-E042-9DA73BA3ACB4";
 	setAttr -k off ".v";
 createNode parentConstraint -n "ankle_joint_translation_control_poleVectorLocator_parentConstraintGrp_parentConstraint2" 
 		-p "LegFoot__instance_1_mirror:ankle_joint_translation_control_poleVectorLocator_parentConstraintGrp";
-	rename -uid "0DB70EBE-4C3D-5120-8B6D-CD9733D70D6E";
+	rename -uid "2879A8A9-4C68-B19E-3548-91B47D97748E";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "ankle_joint_translation_controlW0" 
 		-dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
@@ -7777,24 +7769,24 @@ createNode parentConstraint -n "ankle_joint_translation_control_poleVectorLocato
 	setAttr -k off ".sz";
 	setAttr ".erp" yes;
 	setAttr ".lr" -type "double3" 180 0 0 ;
-	setAttr ".rst" -type "double3" -8 6.0684932812713713e-32 -2.2204460492503131e-16 ;
+	setAttr ".rst" -type "double3" -8 0 -3.3306690738754696e-16 ;
 	setAttr ".rsrr" -type "double3" 180 0 0 ;
 	setAttr -k on ".w0";
 createNode transform -n "LegFoot__instance_1_mirror:ball_joint_translation_control_poleVectorLocator_parentConstraintGrp" 
 		-p "LegFoot__instance_1_mirror:module_grp";
-	rename -uid "129CADC6-4006-14C1-4F72-8C9DA30750AE";
+	rename -uid "AEBEF8A5-49F3-407B-1E54-9C80EB870B11";
 createNode transform -n "LegFoot__instance_1_mirror:ball_joint_translation_control_poleVectorLocator" 
 		-p "LegFoot__instance_1_mirror:ball_joint_translation_control_poleVectorLocator_parentConstraintGrp";
-	rename -uid "8691D9A0-436F-E28C-A48F-52A22DADCEC1";
+	rename -uid "D903E7F9-475F-C2AF-561B-A48B874A9422";
 	setAttr ".v" no;
-	setAttr ".t" -type "double3" 0 0.5 1.1102230246251565e-16 ;
+	setAttr ".t" -type "double3" 0 0.5 -4.4408920985006262e-16 ;
 createNode locator -n "LegFoot__instance_1_mirror:ball_joint_translation_control_poleVectorLocatorShape" 
 		-p "LegFoot__instance_1_mirror:ball_joint_translation_control_poleVectorLocator";
-	rename -uid "43F59156-4723-E8D3-98E9-A6926CF0E09E";
+	rename -uid "02157CF0-44F9-1333-48D3-C2B9FF8E33F7";
 	setAttr -k off ".v";
 createNode parentConstraint -n "ball_joint_translation_control_poleVectorLocator_parentConstraintGrp_parentConstraint2" 
 		-p "LegFoot__instance_1_mirror:ball_joint_translation_control_poleVectorLocator_parentConstraintGrp";
-	rename -uid "E58C4B00-40E9-4FE0-09C7-F4B9C277F215";
+	rename -uid "051B00E9-4361-857A-854A-3BB8423E4FE3";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "ball_joint_translation_controlW0" 
 		-dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
@@ -7810,61 +7802,61 @@ createNode parentConstraint -n "ball_joint_translation_control_poleVectorLocator
 	setAttr -k off ".sz";
 	setAttr ".erp" yes;
 	setAttr ".lr" -type "double3" 180 0 0 ;
-	setAttr ".rst" -type "double3" 1.9984014443252818e-15 -9 3 ;
+	setAttr ".rst" -type "double3" 1.7763568394002505e-15 -9.0000000000000018 2.9999999999999996 ;
 	setAttr ".rsrr" -type "double3" 180 0 0 ;
 	setAttr -k on ".w0";
 createNode transform -n "LegFoot__instance_1_mirror:IK_hip_joint_positionLocator" 
 		-p "LegFoot__instance_1_mirror:module_grp";
-	rename -uid "69367920-40B1-13A3-3C5C-1F8E8D45C87B";
+	rename -uid "24C9F08B-4489-9CD3-2C1E-ED9A00F0AB21";
 	setAttr ".v" no;
 createNode locator -n "LegFoot__instance_1_mirror:IK_hip_joint_positionLocatorShape" 
 		-p "LegFoot__instance_1_mirror:IK_hip_joint_positionLocator";
-	rename -uid "BEFBD8E3-4EB5-0DBD-D1CD-1E88C74E0725";
+	rename -uid "33D9AF66-4350-0C45-41B3-60BC03205E6A";
 	setAttr -k off ".v";
 createNode joint -n "LegFoot__instance_1_mirror:IK_hip_joint" -p "LegFoot__instance_1_mirror:IK_hip_joint_positionLocator";
-	rename -uid "9CCC7A51-4246-D543-99B9-03882466EF35";
+	rename -uid "AC6CDBE3-4FB1-8C88-5DA7-7DAE1CB40A09";
 	setAttr ".v" no;
-	setAttr ".r" -type "double3" 14.450002498803718 -13.609274375970255 -93.469892329194522 ;
+	setAttr ".r" -type "double3" 14.450537359979055 -13.609144602058182 -93.469870739593617 ;
 	setAttr ".mnrl" -type "double3" -360 -360 -360 ;
 	setAttr ".mxrl" -type "double3" 360 360 360 ;
 	setAttr ".jo" -type "double3" -180 -14.036243467926482 0 ;
 	setAttr ".pa" -type "double3" 0 -50 0 ;
 createNode joint -n "LegFoot__instance_1_mirror:IK_knee_joint" -p "LegFoot__instance_1_mirror:IK_hip_joint";
-	rename -uid "231275D8-4F21-861F-B113-409D90A3B1CD";
+	rename -uid "3EC6AF9C-46CC-5DEC-CEE2-26BC4ED427AB";
 	setAttr ".v" no;
-	setAttr ".t" -type "double3" -1.2053368091583252 8.290701458690819e-12 7.0748591076126867e-07 ;
-	setAttr ".r" -type "double3" -1.6476845973834675e-05 56.145617150727389 3.8931820173668819e-05 ;
+	setAttr ".t" -type "double3" -4.123105525970459 5.0186521605155576e-11 -5.8633763537763173e-06 ;
+	setAttr ".r" -type "double3" 5.2710899373524805e-06 56.145389044746722 -1.2454435551483395e-05 ;
 	setAttr ".mnrl" -type "double3" -360 -360 -360 ;
 	setAttr ".mxrl" -type "double3" 360 360 360 ;
-	setAttr ".jo" -type "double3" 1.4842912056249647e-15 -28.072486935852965 -5.9371648224998572e-15 ;
+	setAttr ".jo" -type "double3" -3.1804373972154655e-16 -28.072486935852961 1.2721749588861862e-15 ;
 	setAttr ".pa" -type "double3" 0 50 0 ;
 createNode joint -n "LegFoot__instance_1_mirror:IK_ankle_joint" -p "LegFoot__instance_1_mirror:IK_knee_joint";
-	rename -uid "1A9F29A6-4A21-6BC7-F9B4-B9AED1F48D37";
+	rename -uid "5827CCF2-4767-C6F7-2DDC-2B8DCE2A29D4";
 	setAttr ".v" no;
-	setAttr ".t" -type "double3" -1.2053368091583252 -3.2315908240487801e-06 -7.0750323966084494e-07 ;
+	setAttr ".t" -type "double3" -4.123105525970459 3.5365222457173218e-06 3.4380144925960643e-06 ;
 	setAttr ".mnrl" -type "double3" -360 -360 -360 ;
 	setAttr ".mxrl" -type "double3" 360 360 360 ;
-	setAttr ".jo" -type "double3" 153.42734147199687 -23.00936329637852 -128.00775720672613 ;
+	setAttr ".jo" -type "double3" 153.42734147199687 -23.009363296378499 -128.00775720672615 ;
 createNode joint -n "IK_ball_joint1" -p "LegFoot__instance_1_mirror:IK_ankle_joint";
-	rename -uid "A4B36FD0-461F-3E48-61DF-8BAF31804A93";
+	rename -uid "7FB04271-4118-313A-9F7D-5F80669E9FA6";
 	setAttr ".v" no;
-	setAttr ".t" -type "double3" -12.40970275046732 3.2148622010286232e-05 -3.212588375989256e-06 ;
+	setAttr ".t" -type "double3" -12.409680614035519 1.485855855776208e-05 3.2025119949263825e-06 ;
 	setAttr ".mnrl" -type "double3" -360 -360 -360 ;
 	setAttr ".mxrl" -type "double3" 360 360 360 ;
-	setAttr ".jo" -type "double3" 3.6232894814148571e-14 69.44395478041649 46.48887222312112 ;
+	setAttr ".jo" -type "double3" 1.268151318495202e-13 69.443954780416519 46.48887222312122 ;
 createNode joint -n "IK_toe_joint1" -p "IK_ball_joint1";
-	rename -uid "7B68652A-4F41-B88E-F348-A18150AC79E3";
+	rename -uid "8108DDF7-49B1-64DA-C013-9792B901D53B";
 	setAttr ".v" no;
-	setAttr ".t" -type "double3" -3.0000035298101944 -8.7320083734354625e-05 -1.2655412575668379e-06 ;
+	setAttr ".t" -type "double3" -2.9999988235096384 7.4139744032919452e-06 -9.263184624686005e-06 ;
 	setAttr ".mnrl" -type "double3" -360 -360 -360 ;
 	setAttr ".mxrl" -type "double3" 360 360 360 ;
-	setAttr ".jo" -type "double3" 8.5377368141828076e-07 89.999999999999972 0 ;
+	setAttr ".jo" -type "double3" -7.778551782591039e-14 89.999999999999929 0 ;
 createNode ikEffector -n "LegFoot__instance_1_mirror:IK_hip_joint_ikEffector" -p "LegFoot__instance_1_mirror:IK_knee_joint";
-	rename -uid "B5BD4BEB-47BB-2B1C-0AE7-5986B5A33C88";
+	rename -uid "682DB5A8-4780-05AB-8A43-A686B166FD99";
 	setAttr ".v" no;
 	setAttr ".hd" yes;
 createNode pointConstraint -n "IK_hip_joint_positionLocator_pointConstraint2" -p "LegFoot__instance_1_mirror:IK_hip_joint_positionLocator";
-	rename -uid "DC19A7B7-46D4-F414-59ED-DCB662A7870D";
+	rename -uid "565FB04E-4E81-4F09-6547-4BAEFE69B760";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "hip_joint_translation_controlW0" 
 		-dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
@@ -7882,15 +7874,15 @@ createNode pointConstraint -n "IK_hip_joint_positionLocator_pointConstraint2" -p
 	setAttr -k on ".w0";
 createNode transform -n "LegFoot__instance_1_mirror:IK_knee_joint_positionLocator" 
 		-p "LegFoot__instance_1_mirror:module_grp";
-	rename -uid "C5DAE86D-44E3-FAAB-4580-9D9371620E02";
+	rename -uid "A7476DCA-45A4-EB3C-C1AE-CCB0A162DD40";
 	setAttr ".v" no;
 createNode locator -n "LegFoot__instance_1_mirror:IK_knee_joint_positionLocatorShape" 
 		-p "LegFoot__instance_1_mirror:IK_knee_joint_positionLocator";
-	rename -uid "801BA252-47F2-A658-519A-5682ADCEB1AD";
+	rename -uid "B35365AD-4A1B-EFC9-6767-BF9AD4ABC9E3";
 	setAttr -k off ".v";
 createNode pointConstraint -n "IK_knee_joint_positionLocator_pointConstraint2" -p
 		 "LegFoot__instance_1_mirror:IK_knee_joint_positionLocator";
-	rename -uid "C9A30F3B-4D13-F141-84FA-3DB75E88D41D";
+	rename -uid "92BC79A4-4738-5301-B263-D6B11DD4A5B5";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "knee_joint_translation_controlW0" 
 		-dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
@@ -7905,24 +7897,24 @@ createNode pointConstraint -n "IK_knee_joint_positionLocator_pointConstraint2" -
 	setAttr -k off ".sy";
 	setAttr -k off ".sz";
 	setAttr ".erp" yes;
-	setAttr ".rst" -type "double3" -4 2.4651903288156619e-32 -1 ;
+	setAttr ".rst" -type "double3" -4 0 -1 ;
 	setAttr -k on ".w0";
 createNode transform -n "LegFoot__instance_1_mirror:IK_hip_joint_ikHandle_positionLocator" 
 		-p "LegFoot__instance_1_mirror:module_grp";
-	rename -uid "83332CDA-49BD-3079-7A66-0FA6F19D33D3";
+	rename -uid "4ED8C033-4EC3-BFFF-263F-11ACE46A229D";
 	setAttr ".v" no;
 createNode locator -n "LegFoot__instance_1_mirror:IK_hip_joint_ikHandle_positionLocatorShape" 
 		-p "LegFoot__instance_1_mirror:IK_hip_joint_ikHandle_positionLocator";
-	rename -uid "47C122A8-4545-C2EF-F55C-118B68E318AF";
+	rename -uid "2E004FBC-4D1E-518E-CED4-2A8FAA28BC4C";
 	setAttr -k off ".v";
 createNode ikHandle -n "LegFoot__instance_1_mirror:IK_hip_joint_ikHandle" -p "LegFoot__instance_1_mirror:IK_hip_joint_ikHandle_positionLocator";
-	rename -uid "8E18017D-4859-0599-DC08-1BB0A11B7DD1";
+	rename -uid "F2FB88BA-43D0-62AA-7414-3C97F2DEB381";
 	setAttr ".v" no;
-	setAttr ".t" -type "double3" -6.4553633761519904e-16 1.8897270157580692e-06 6.106226635438361e-16 ;
+	setAttr ".t" -type "double3" -8.0804963211605386e-12 6.4636913075233338e-06 1.4432899320127035e-15 ;
 	setAttr ".roc" yes;
 createNode poleVectorConstraint -n "IK_hip_joint_ikHandle_poleVectorConstraint2" 
 		-p "LegFoot__instance_1_mirror:IK_hip_joint_ikHandle";
-	rename -uid "66E38C41-414B-A055-66F5-1683A75A09CF";
+	rename -uid "5C7221FE-4442-7695-0A5F-7EB8202935BB";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "IK_knee_joint_positionLocatorW0" 
 		-dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
@@ -7937,11 +7929,11 @@ createNode poleVectorConstraint -n "IK_hip_joint_ikHandle_poleVectorConstraint2"
 	setAttr -k off ".sy";
 	setAttr -k off ".sz";
 	setAttr ".erp" yes;
-	setAttr ".rst" -type "double3" -4.1482103163610355e-18 -1.16935 0.29233899999999996 ;
+	setAttr ".rst" -type "double3" -2.4723197664458518e-17 -3.9999899999999986 1.0000099999999998 ;
 	setAttr -k on ".w0";
 createNode pointConstraint -n "IK_hip_joint_ikHandle_positionLocator_pointConstraint2" 
 		-p "LegFoot__instance_1_mirror:IK_hip_joint_ikHandle_positionLocator";
-	rename -uid "557A7422-4157-CA5D-9A7E-C5B57FCBC8C8";
+	rename -uid "EE4413E0-4D36-D00E-F56A-9B96952AB4E3";
 	addAttr -dcb 0 -ci true -k true -sn "w0" -ln "ankle_joint_translation_controlW0" 
 		-dv 1 -min 0 -at "double";
 	setAttr -k on ".nds";
@@ -7956,17 +7948,18 @@ createNode pointConstraint -n "IK_hip_joint_ikHandle_positionLocator_pointConstr
 	setAttr -k off ".sy";
 	setAttr -k off ".sz";
 	setAttr ".erp" yes;
-	setAttr ".rst" -type "double3" -8 6.0684932812713713e-32 -2.2204460492503131e-16 ;
+	setAttr ".rst" -type "double3" -8 0 -3.3306690738754696e-16 ;
 	setAttr -k on ".w0";
-createNode transform -n "Group__legs";
-	rename -uid "28F5BF22-4A07-29F1-5FEA-69A7B42123DB";
+createNode transform -n "Group__Legs";
+	rename -uid "CCF6DA45-475D-CAB6-3524-99A7373C6BAF";
 	addAttr -ci true -h true -sn "aal" -ln "attributeAliasList" -dt "attributeAlias";
 	setAttr -l on -k off ".v";
+	setAttr ".t" -type "double3" 0 9.4862448550724405 0 ;
 	setAttr -k off ".sx";
 	setAttr -k off ".sz";
 	setAttr ".aal" -type "attributeAlias" {"globalScale","scaleY"} ;
-createNode mesh -n "Group__legsShape" -p "Group__legs";
-	rename -uid "E8A8EF38-46FA-AF55-35AA-ACAF3FE778F1";
+createNode mesh -n "Group__LegsShape" -p "Group__Legs";
+	rename -uid "3A24A67E-4DF3-E336-633E-5FA9B52927A3";
 	setAttr -k off ".v";
 	setAttr ".ovs" no;
 	setAttr ".ove" yes;
@@ -8017,617 +8010,14 @@ createNode mesh -n "Group__legsShape" -p "Group__legs";
 	setAttr ".pd[0]" -type "dataPolyComponent" Index_Data UV 0 ;
 	setAttr ".hfd" -type "dataPolyComponent" Index_Data Face 0 ;
 	setAttr ".vnm" 0;
-createNode transform -n "LegFoot__instance_1:module_transform" -p "Group__legs";
-	rename -uid "E3731502-4FD8-CF97-21B1-76B65EE0C6B6";
+createNode transform -n "LegFoot__instance_1_mirror:module_transform" -p "Group__Legs";
+	rename -uid "71F181B8-4A04-20B5-A056-80A14B265437";
 	addAttr -ci true -h true -sn "aal" -ln "attributeAliasList" -dt "attributeAlias";
-	setAttr ".t" -type "double3" 1.9999999999999998 0 0 ;
-	setAttr ".s" -type "double3" 0.29233710334467522 0.29233710334467522 0.29233710334467522 ;
-	setAttr ".aal" -type "attributeAlias" {"globalScale","scaleY"} ;
-createNode mesh -n "LegFoot__instance_1:module_transformShape" -p "LegFoot__instance_1:module_transform";
-	rename -uid "7EA2F7D7-421F-D3DE-5533-92AB9C94B2C5";
-	setAttr -k off ".v";
-	setAttr ".ovs" no;
-	setAttr ".ove" yes;
-	setAttr ".ovc" 4;
-	setAttr ".vir" yes;
-	setAttr ".vif" yes;
-	setAttr ".uvst[0].uvsn" -type "string" "map1";
-	setAttr -s 26 ".uvst[0].uvsp[0:25]" -type "float2" 0.375 0 0.625 0 0.375
-		 0.25 0.625 0.25 0.375 0.5 0.625 0.5 0.375 0.75 0.625 0.75 0.375 1 0.625 1 0.875 0
-		 0.875 0.25 0.125 0 0.125 0.25 0.375 0 0.625 0 0.625 0.25 0.375 0.25 0.375 0 0.625
-		 0 0.625 0.25 0.375 0.25 0.375 0 0.625 0 0.625 0.25 0.375 0.25;
-	setAttr ".cuvs" -type "string" "map1";
-	setAttr ".dcc" -type "string" "Ambient+Diffuse";
-	setAttr ".covm[0]"  0 1 1;
-	setAttr ".cdvm[0]"  0 1 1;
-	setAttr ".ugsdt" no;
-	setAttr ".bnr" 0;
-	setAttr -s 20 ".vt[0:19]"  -1 -1 1 1 -1 1 -1 1 1 1 1 1 -1 1 -1 1 1 -1
-		 -1 -1 -1 1 -1 -1 -4.3673398e-07 -1.48870528 0 4.3673398e-07 -1.48870528 0 -4.3673398e-07 1.48870528 0
-		 4.3673398e-07 1.48870528 0 1.48870528 -4.3673398e-07 0 1.48870528 4.3673398e-07 0
-		 -1.48870528 -4.3673398e-07 0 -1.48870528 4.3673398e-07 0 3.3055887e-16 -4.3673398e-07 -1.48870528
-		 3.3055905e-16 4.3673398e-07 -1.48870528 -3.3055905e-16 -4.3673398e-07 1.48870528
-		 -3.3055887e-16 4.3673398e-07 1.48870528;
-	setAttr -s 24 ".ed[0:23]"  0 1 0 2 3 0 4 5 0 6 7 0 0 2 0 1 3 0 2 4 0
-		 3 5 0 4 6 0 5 7 0 6 0 0 7 1 0 8 9 0 10 11 0 8 10 0 9 11 0 12 13 0 14 15 0 12 14 0
-		 13 15 0 16 17 0 18 19 0 16 18 0 17 19 0;
-	setAttr -s 9 -ch 36 ".fc[0:8]" -type "polyFaces" 
-		f 4 0 5 -2 -5
-		mu 0 4 0 1 3 2
-		f 4 1 7 -3 -7
-		mu 0 4 2 3 5 4
-		f 4 2 9 -4 -9
-		mu 0 4 4 5 7 6
-		f 4 3 11 -1 -11
-		mu 0 4 6 7 9 8
-		f 4 -12 -10 -8 -6
-		mu 0 4 1 10 11 3
-		f 4 10 4 6 8
-		mu 0 4 12 0 2 13
-		f 4 12 15 -14 -15
-		mu 0 4 14 15 16 17
-		f 4 16 19 -18 -19
-		mu 0 4 18 19 20 21
-		f 4 20 23 -22 -23
-		mu 0 4 22 23 24 25;
-	setAttr ".cd" -type "dataPolyComponent" Index_Data Edge 0 ;
-	setAttr ".cvd" -type "dataPolyComponent" Index_Data Vertex 0 ;
-	setAttr ".pd[0]" -type "dataPolyComponent" Index_Data UV 0 ;
-	setAttr ".hfd" -type "dataPolyComponent" Index_Data Face 0 ;
-	setAttr ".vnm" 0;
-createNode transform -n "LegFoot__instance_1:hip_joint_translation_control" -p "LegFoot__instance_1:module_transform";
-	rename -uid "55C88C63-4877-E255-28B1-7D9CC8018F15";
-	setAttr -l on -k off ".v";
-	setAttr -l on -k off ".rx";
-	setAttr -l on -k off ".ry";
-	setAttr -l on -k off ".rz";
-	setAttr -l on -k off ".sx";
-	setAttr -l on -k off ".sy";
-	setAttr -l on -k off ".sz";
-createNode nurbsSurface -n "LegFoot__instance_1:hip_joint_translation_controlShape" 
-		-p "LegFoot__instance_1:hip_joint_translation_control";
-	rename -uid "2DD3AB83-4F99-88CA-B591-B380025325D0";
-	setAttr -k off ".v";
-	setAttr ".vir" yes;
-	setAttr ".vif" yes;
-	setAttr ".covm[0]"  0 1 1;
-	setAttr ".cdvm[0]"  0 1 1;
-	setAttr ".dvu" 0;
-	setAttr ".dvv" 0;
-	setAttr ".cpr" 4;
-	setAttr ".cps" 4;
-	setAttr ".cc" -type "nurbsSurface" 
-		3 3 0 2 no 
-		9 0 0 0 1 2 3 4 4 4
-		13 -2 -1 0 1 2 3 4 5 6 7 8 9 10
-		
-		77
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		0.19991679083637254 -1 -0.19991679083637298
-		0.2827250369469036 -1 -6.2210285873682227e-17
-		0.1999167908363727 -1 0.19991679083637259
-		1.151601345627845e-16 -1 0.28272503694690354
-		-0.19991679083637259 -1 0.19991679083637273
-		-0.28272503694690365 -1 5.7191723447539755e-17
-		-0.19991679083637276 -1 -0.19991679083637259
-		-1.8508566094318079e-16 -1 -0.28272503694690365
-		0.19991679083637254 -1 -0.19991679083637298
-		0.2827250369469036 -1 -6.2210285873682227e-17
-		0.1999167908363727 -1 0.19991679083637259
-		0.61642997969058899 -0.78361162489122427 -0.61642997969058999
-		0.87176363753180319 -0.78361162489122427 1.0506190143399388e-16
-		0.61642997969058932 -0.78361162489122427 0.61642997969058932
-		1.9902882483877521e-16 -0.78361162489122427 0.87176363753180319
-		-0.61642997969058921 -0.78361162489122427 0.61642997969058955
-		-0.8717636375318033 -0.78361162489122427 1.6111055650702835e-16
-		-0.61642997969058944 -0.78361162489122427 -0.61642997969058899
-		-4.1463948278396632e-16 -0.78361162489122427 -0.87176363753180319
-		0.61642997969058899 -0.78361162489122427 -0.61642997969058999
-		0.87176363753180319 -0.78361162489122427 1.0506190143399388e-16
-		0.61642997969058932 -0.78361162489122427 0.61642997969058932
-		0.8672024474915413 6.5353909630129576e-17 -0.86720244749154252
-		1.2264094625656803 1.2253074553466144e-17 2.901104977298788e-16
-		0.86720244749154163 -4.0847760523197208e-17 0.86720244749154185
-		2.051909376318187e-16 -6.284284658528814e-17 1.2264094625656803
-		-0.86720244749154163 -4.0847760523197208e-17 0.86720244749154185
-		-1.2264094625656805 1.2253074553466149e-17 2.1934926354574312e-16
-		-0.86720244749154174 6.5353909630129502e-17 -0.8672024474915413
-		-5.0851507246572639e-16 8.7348995692220465e-17 -1.2264094625656803
-		0.8672024474915413 6.5353909630129576e-17 -0.86720244749154252
-		1.2264094625656803 1.2253074553466144e-17 2.901104977298788e-16
-		0.86720244749154163 -4.0847760523197208e-17 0.86720244749154185
-		0.61642997969058932 0.78361162489122449 -0.61642997969058999
-		0.87176363753180341 0.78361162489122449 3.0737422288956035e-16
-		0.61642997969058944 0.78361162489122449 0.61642997969058966
-		9.2681250202978354e-17 0.78361162489122449 0.87176363753180341
-		-0.61642997969058944 0.78361162489122449 0.61642997969058966
-		-0.87176363753180353 0.78361162489122449 1.507277286910009e-16
-		-0.61642997969058955 0.78361162489122449 -0.61642997969058932
-		-3.0829190814816951e-16 0.78361162489122449 -0.87176363753180341
-		0.61642997969058932 0.78361162489122449 -0.61642997969058999
-		0.87176363753180341 0.78361162489122449 3.0737422288956035e-16
-		0.61642997969058944 0.78361162489122449 0.61642997969058966
-		0.19991679083637276 0.99999999999999989 -0.19991679083637284
-		0.28272503694690371 0.99999999999999989 1.9596904050327137e-16
-		0.1999167908363727 0.99999999999999989 0.19991679083637293
-		-2.0554511899433756e-17 0.99999999999999989 0.28272503694690376
-		-0.19991679083637282 0.99999999999999989 0.19991679083637282
-		-0.28272503694690376 0.99999999999999989 4.3941756900056795e-17
-		-0.19991679083637273 0.99999999999999989 -0.1999167908363727
-		-4.9371014480962574e-17 0.99999999999999989 -0.28272503694690365
-		0.19991679083637276 0.99999999999999989 -0.19991679083637284
-		0.28272503694690371 0.99999999999999989 1.9596904050327137e-16
-		0.1999167908363727 0.99999999999999989 0.19991679083637293
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		
-		;
-	setAttr ".nufa" 4.5;
-	setAttr ".nvfa" 4.5;
-createNode transform -n "LegFoot__instance_1:knee_joint_translation_control" -p "LegFoot__instance_1:module_transform";
-	rename -uid "23C3B82A-4012-9ED1-95C4-29BECE02B133";
-	setAttr -l on -k off ".v";
-	setAttr ".t" -type "double3" 0 -4 1 ;
-	setAttr -l on -k off ".rx";
-	setAttr -l on -k off ".ry";
-	setAttr -l on -k off ".rz";
-	setAttr -l on -k off ".sx";
-	setAttr -l on -k off ".sy";
-	setAttr -l on -k off ".sz";
-createNode nurbsSurface -n "LegFoot__instance_1:knee_joint_translation_controlShape" 
-		-p "LegFoot__instance_1:knee_joint_translation_control";
-	rename -uid "32EA48E3-40E5-A935-6F29-57BA809FB1DD";
-	setAttr -k off ".v";
-	setAttr ".vir" yes;
-	setAttr ".vif" yes;
-	setAttr ".covm[0]"  0 1 1;
-	setAttr ".cdvm[0]"  0 1 1;
-	setAttr ".dvu" 0;
-	setAttr ".dvv" 0;
-	setAttr ".cpr" 4;
-	setAttr ".cps" 4;
-	setAttr ".cc" -type "nurbsSurface" 
-		3 3 0 2 no 
-		9 0 0 0 1 2 3 4 4 4
-		13 -2 -1 0 1 2 3 4 5 6 7 8 9 10
-		
-		77
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		0.19991679083637254 -1 -0.19991679083637298
-		0.2827250369469036 -1 -6.2210285873682227e-17
-		0.1999167908363727 -1 0.19991679083637259
-		1.151601345627845e-16 -1 0.28272503694690354
-		-0.19991679083637259 -1 0.19991679083637273
-		-0.28272503694690365 -1 5.7191723447539755e-17
-		-0.19991679083637276 -1 -0.19991679083637259
-		-1.8508566094318079e-16 -1 -0.28272503694690365
-		0.19991679083637254 -1 -0.19991679083637298
-		0.2827250369469036 -1 -6.2210285873682227e-17
-		0.1999167908363727 -1 0.19991679083637259
-		0.61642997969058899 -0.78361162489122427 -0.61642997969058999
-		0.87176363753180319 -0.78361162489122427 1.0506190143399388e-16
-		0.61642997969058932 -0.78361162489122427 0.61642997969058932
-		1.9902882483877521e-16 -0.78361162489122427 0.87176363753180319
-		-0.61642997969058921 -0.78361162489122427 0.61642997969058955
-		-0.8717636375318033 -0.78361162489122427 1.6111055650702835e-16
-		-0.61642997969058944 -0.78361162489122427 -0.61642997969058899
-		-4.1463948278396632e-16 -0.78361162489122427 -0.87176363753180319
-		0.61642997969058899 -0.78361162489122427 -0.61642997969058999
-		0.87176363753180319 -0.78361162489122427 1.0506190143399388e-16
-		0.61642997969058932 -0.78361162489122427 0.61642997969058932
-		0.8672024474915413 6.5353909630129576e-17 -0.86720244749154252
-		1.2264094625656803 1.2253074553466144e-17 2.901104977298788e-16
-		0.86720244749154163 -4.0847760523197208e-17 0.86720244749154185
-		2.051909376318187e-16 -6.284284658528814e-17 1.2264094625656803
-		-0.86720244749154163 -4.0847760523197208e-17 0.86720244749154185
-		-1.2264094625656805 1.2253074553466149e-17 2.1934926354574312e-16
-		-0.86720244749154174 6.5353909630129502e-17 -0.8672024474915413
-		-5.0851507246572639e-16 8.7348995692220465e-17 -1.2264094625656803
-		0.8672024474915413 6.5353909630129576e-17 -0.86720244749154252
-		1.2264094625656803 1.2253074553466144e-17 2.901104977298788e-16
-		0.86720244749154163 -4.0847760523197208e-17 0.86720244749154185
-		0.61642997969058932 0.78361162489122449 -0.61642997969058999
-		0.87176363753180341 0.78361162489122449 3.0737422288956035e-16
-		0.61642997969058944 0.78361162489122449 0.61642997969058966
-		9.2681250202978354e-17 0.78361162489122449 0.87176363753180341
-		-0.61642997969058944 0.78361162489122449 0.61642997969058966
-		-0.87176363753180353 0.78361162489122449 1.507277286910009e-16
-		-0.61642997969058955 0.78361162489122449 -0.61642997969058932
-		-3.0829190814816951e-16 0.78361162489122449 -0.87176363753180341
-		0.61642997969058932 0.78361162489122449 -0.61642997969058999
-		0.87176363753180341 0.78361162489122449 3.0737422288956035e-16
-		0.61642997969058944 0.78361162489122449 0.61642997969058966
-		0.19991679083637276 0.99999999999999989 -0.19991679083637284
-		0.28272503694690371 0.99999999999999989 1.9596904050327137e-16
-		0.1999167908363727 0.99999999999999989 0.19991679083637293
-		-2.0554511899433756e-17 0.99999999999999989 0.28272503694690376
-		-0.19991679083637282 0.99999999999999989 0.19991679083637282
-		-0.28272503694690376 0.99999999999999989 4.3941756900056795e-17
-		-0.19991679083637273 0.99999999999999989 -0.1999167908363727
-		-4.9371014480962574e-17 0.99999999999999989 -0.28272503694690365
-		0.19991679083637276 0.99999999999999989 -0.19991679083637284
-		0.28272503694690371 0.99999999999999989 1.9596904050327137e-16
-		0.1999167908363727 0.99999999999999989 0.19991679083637293
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		
-		;
-	setAttr ".nufa" 4.5;
-	setAttr ".nvfa" 4.5;
-createNode transform -n "LegFoot__instance_1:ankle_joint_translation_control" -p "LegFoot__instance_1:module_transform";
-	rename -uid "CBD9B7B7-4BD0-418E-E88B-8383EC640AD4";
-	setAttr -l on -k off ".v";
-	setAttr ".t" -type "double3" 0 -8 0 ;
-	setAttr -l on -k off ".rx";
-	setAttr -l on -k off ".ry";
-	setAttr -l on -k off ".rz";
-	setAttr -l on -k off ".sx";
-	setAttr -l on -k off ".sy";
-	setAttr -l on -k off ".sz";
-createNode nurbsSurface -n "LegFoot__instance_1:ankle_joint_translation_controlShape" 
-		-p "LegFoot__instance_1:ankle_joint_translation_control";
-	rename -uid "FDF76635-4399-662C-11C0-83B8B3AE800A";
-	setAttr -k off ".v";
-	setAttr ".vir" yes;
-	setAttr ".vif" yes;
-	setAttr ".covm[0]"  0 1 1;
-	setAttr ".cdvm[0]"  0 1 1;
-	setAttr ".dvu" 0;
-	setAttr ".dvv" 0;
-	setAttr ".cpr" 4;
-	setAttr ".cps" 4;
-	setAttr ".cc" -type "nurbsSurface" 
-		3 3 0 2 no 
-		9 0 0 0 1 2 3 4 4 4
-		13 -2 -1 0 1 2 3 4 5 6 7 8 9 10
-		
-		77
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		0.19991679083637254 -1 -0.19991679083637298
-		0.2827250369469036 -1 -6.2210285873682227e-17
-		0.1999167908363727 -1 0.19991679083637259
-		1.151601345627845e-16 -1 0.28272503694690354
-		-0.19991679083637259 -1 0.19991679083637273
-		-0.28272503694690365 -1 5.7191723447539755e-17
-		-0.19991679083637276 -1 -0.19991679083637259
-		-1.8508566094318079e-16 -1 -0.28272503694690365
-		0.19991679083637254 -1 -0.19991679083637298
-		0.2827250369469036 -1 -6.2210285873682227e-17
-		0.1999167908363727 -1 0.19991679083637259
-		0.61642997969058899 -0.78361162489122427 -0.61642997969058999
-		0.87176363753180319 -0.78361162489122427 1.0506190143399388e-16
-		0.61642997969058932 -0.78361162489122427 0.61642997969058932
-		1.9902882483877521e-16 -0.78361162489122427 0.87176363753180319
-		-0.61642997969058921 -0.78361162489122427 0.61642997969058955
-		-0.8717636375318033 -0.78361162489122427 1.6111055650702835e-16
-		-0.61642997969058944 -0.78361162489122427 -0.61642997969058899
-		-4.1463948278396632e-16 -0.78361162489122427 -0.87176363753180319
-		0.61642997969058899 -0.78361162489122427 -0.61642997969058999
-		0.87176363753180319 -0.78361162489122427 1.0506190143399388e-16
-		0.61642997969058932 -0.78361162489122427 0.61642997969058932
-		0.8672024474915413 6.5353909630129576e-17 -0.86720244749154252
-		1.2264094625656803 1.2253074553466144e-17 2.901104977298788e-16
-		0.86720244749154163 -4.0847760523197208e-17 0.86720244749154185
-		2.051909376318187e-16 -6.284284658528814e-17 1.2264094625656803
-		-0.86720244749154163 -4.0847760523197208e-17 0.86720244749154185
-		-1.2264094625656805 1.2253074553466149e-17 2.1934926354574312e-16
-		-0.86720244749154174 6.5353909630129502e-17 -0.8672024474915413
-		-5.0851507246572639e-16 8.7348995692220465e-17 -1.2264094625656803
-		0.8672024474915413 6.5353909630129576e-17 -0.86720244749154252
-		1.2264094625656803 1.2253074553466144e-17 2.901104977298788e-16
-		0.86720244749154163 -4.0847760523197208e-17 0.86720244749154185
-		0.61642997969058932 0.78361162489122449 -0.61642997969058999
-		0.87176363753180341 0.78361162489122449 3.0737422288956035e-16
-		0.61642997969058944 0.78361162489122449 0.61642997969058966
-		9.2681250202978354e-17 0.78361162489122449 0.87176363753180341
-		-0.61642997969058944 0.78361162489122449 0.61642997969058966
-		-0.87176363753180353 0.78361162489122449 1.507277286910009e-16
-		-0.61642997969058955 0.78361162489122449 -0.61642997969058932
-		-3.0829190814816951e-16 0.78361162489122449 -0.87176363753180341
-		0.61642997969058932 0.78361162489122449 -0.61642997969058999
-		0.87176363753180341 0.78361162489122449 3.0737422288956035e-16
-		0.61642997969058944 0.78361162489122449 0.61642997969058966
-		0.19991679083637276 0.99999999999999989 -0.19991679083637284
-		0.28272503694690371 0.99999999999999989 1.9596904050327137e-16
-		0.1999167908363727 0.99999999999999989 0.19991679083637293
-		-2.0554511899433756e-17 0.99999999999999989 0.28272503694690376
-		-0.19991679083637282 0.99999999999999989 0.19991679083637282
-		-0.28272503694690376 0.99999999999999989 4.3941756900056795e-17
-		-0.19991679083637273 0.99999999999999989 -0.1999167908363727
-		-4.9371014480962574e-17 0.99999999999999989 -0.28272503694690365
-		0.19991679083637276 0.99999999999999989 -0.19991679083637284
-		0.28272503694690371 0.99999999999999989 1.9596904050327137e-16
-		0.1999167908363727 0.99999999999999989 0.19991679083637293
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		
-		;
-	setAttr ".nufa" 4.5;
-	setAttr ".nvfa" 4.5;
-createNode transform -n "LegFoot__instance_1:ball_joint_translation_control" -p "LegFoot__instance_1:module_transform";
-	rename -uid "0CCDFDA8-44D1-B1AE-D12E-F194BE3BF564";
-	setAttr -l on -k off ".v";
-	setAttr ".t" -type "double3" 0 -9.0000000000000018 2.9999999999999991 ;
-	setAttr -l on -k off ".rx";
-	setAttr -l on -k off ".ry";
-	setAttr -l on -k off ".rz";
-	setAttr -l on -k off ".sx";
-	setAttr -l on -k off ".sy";
-	setAttr -l on -k off ".sz";
-createNode nurbsSurface -n "LegFoot__instance_1:ball_joint_translation_controlShape" 
-		-p "LegFoot__instance_1:ball_joint_translation_control";
-	rename -uid "91F995BA-429E-7D04-3926-14ACE164CA31";
-	setAttr -k off ".v";
-	setAttr ".vir" yes;
-	setAttr ".vif" yes;
-	setAttr ".covm[0]"  0 1 1;
-	setAttr ".cdvm[0]"  0 1 1;
-	setAttr ".dvu" 0;
-	setAttr ".dvv" 0;
-	setAttr ".cpr" 4;
-	setAttr ".cps" 4;
-	setAttr ".cc" -type "nurbsSurface" 
-		3 3 0 2 no 
-		9 0 0 0 1 2 3 4 4 4
-		13 -2 -1 0 1 2 3 4 5 6 7 8 9 10
-		
-		77
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		0.19991679083637254 -1 -0.19991679083637298
-		0.2827250369469036 -1 -6.2210285873682227e-17
-		0.1999167908363727 -1 0.19991679083637259
-		1.151601345627845e-16 -1 0.28272503694690354
-		-0.19991679083637259 -1 0.19991679083637273
-		-0.28272503694690365 -1 5.7191723447539755e-17
-		-0.19991679083637276 -1 -0.19991679083637259
-		-1.8508566094318079e-16 -1 -0.28272503694690365
-		0.19991679083637254 -1 -0.19991679083637298
-		0.2827250369469036 -1 -6.2210285873682227e-17
-		0.1999167908363727 -1 0.19991679083637259
-		0.61642997969058899 -0.78361162489122427 -0.61642997969058999
-		0.87176363753180319 -0.78361162489122427 1.0506190143399388e-16
-		0.61642997969058932 -0.78361162489122427 0.61642997969058932
-		1.9902882483877521e-16 -0.78361162489122427 0.87176363753180319
-		-0.61642997969058921 -0.78361162489122427 0.61642997969058955
-		-0.8717636375318033 -0.78361162489122427 1.6111055650702835e-16
-		-0.61642997969058944 -0.78361162489122427 -0.61642997969058899
-		-4.1463948278396632e-16 -0.78361162489122427 -0.87176363753180319
-		0.61642997969058899 -0.78361162489122427 -0.61642997969058999
-		0.87176363753180319 -0.78361162489122427 1.0506190143399388e-16
-		0.61642997969058932 -0.78361162489122427 0.61642997969058932
-		0.8672024474915413 6.5353909630129576e-17 -0.86720244749154252
-		1.2264094625656803 1.2253074553466144e-17 2.901104977298788e-16
-		0.86720244749154163 -4.0847760523197208e-17 0.86720244749154185
-		2.051909376318187e-16 -6.284284658528814e-17 1.2264094625656803
-		-0.86720244749154163 -4.0847760523197208e-17 0.86720244749154185
-		-1.2264094625656805 1.2253074553466149e-17 2.1934926354574312e-16
-		-0.86720244749154174 6.5353909630129502e-17 -0.8672024474915413
-		-5.0851507246572639e-16 8.7348995692220465e-17 -1.2264094625656803
-		0.8672024474915413 6.5353909630129576e-17 -0.86720244749154252
-		1.2264094625656803 1.2253074553466144e-17 2.901104977298788e-16
-		0.86720244749154163 -4.0847760523197208e-17 0.86720244749154185
-		0.61642997969058932 0.78361162489122449 -0.61642997969058999
-		0.87176363753180341 0.78361162489122449 3.0737422288956035e-16
-		0.61642997969058944 0.78361162489122449 0.61642997969058966
-		9.2681250202978354e-17 0.78361162489122449 0.87176363753180341
-		-0.61642997969058944 0.78361162489122449 0.61642997969058966
-		-0.87176363753180353 0.78361162489122449 1.507277286910009e-16
-		-0.61642997969058955 0.78361162489122449 -0.61642997969058932
-		-3.0829190814816951e-16 0.78361162489122449 -0.87176363753180341
-		0.61642997969058932 0.78361162489122449 -0.61642997969058999
-		0.87176363753180341 0.78361162489122449 3.0737422288956035e-16
-		0.61642997969058944 0.78361162489122449 0.61642997969058966
-		0.19991679083637276 0.99999999999999989 -0.19991679083637284
-		0.28272503694690371 0.99999999999999989 1.9596904050327137e-16
-		0.1999167908363727 0.99999999999999989 0.19991679083637293
-		-2.0554511899433756e-17 0.99999999999999989 0.28272503694690376
-		-0.19991679083637282 0.99999999999999989 0.19991679083637282
-		-0.28272503694690376 0.99999999999999989 4.3941756900056795e-17
-		-0.19991679083637273 0.99999999999999989 -0.1999167908363727
-		-4.9371014480962574e-17 0.99999999999999989 -0.28272503694690365
-		0.19991679083637276 0.99999999999999989 -0.19991679083637284
-		0.28272503694690371 0.99999999999999989 1.9596904050327137e-16
-		0.1999167908363727 0.99999999999999989 0.19991679083637293
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		
-		;
-	setAttr ".nufa" 4.5;
-	setAttr ".nvfa" 4.5;
-createNode transform -n "LegFoot__instance_1:toe_joint_translation_control" -p "LegFoot__instance_1:module_transform";
-	rename -uid "B2455D3F-425D-505F-8233-CA9204FCDDA4";
-	setAttr -l on -k off ".v";
-	setAttr ".t" -type "double3" 2.2186712959340957e-31 -9.0000000000000018 6 ;
-	setAttr -l on -k off ".rx";
-	setAttr -l on -k off ".ry";
-	setAttr -l on -k off ".rz";
-	setAttr -l on -k off ".sx";
-	setAttr -l on -k off ".sy";
-	setAttr -l on -k off ".sz";
-createNode nurbsSurface -n "LegFoot__instance_1:toe_joint_translation_controlShape" 
-		-p "LegFoot__instance_1:toe_joint_translation_control";
-	rename -uid "49BF307F-4659-FF3B-3504-C5996F3DD8E4";
-	setAttr -k off ".v";
-	setAttr ".vir" yes;
-	setAttr ".vif" yes;
-	setAttr ".covm[0]"  0 1 1;
-	setAttr ".cdvm[0]"  0 1 1;
-	setAttr ".dvu" 0;
-	setAttr ".dvv" 0;
-	setAttr ".cpr" 4;
-	setAttr ".cps" 4;
-	setAttr ".cc" -type "nurbsSurface" 
-		3 3 0 2 no 
-		9 0 0 0 1 2 3 4 4 4
-		13 -2 -1 0 1 2 3 4 5 6 7 8 9 10
-		
-		77
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		9.596474681976929e-17 -1 -2.5316183359690662e-16
-		0.19991679083637254 -1 -0.19991679083637298
-		0.2827250369469036 -1 -6.2210285873682227e-17
-		0.1999167908363727 -1 0.19991679083637259
-		1.151601345627845e-16 -1 0.28272503694690354
-		-0.19991679083637259 -1 0.19991679083637273
-		-0.28272503694690365 -1 5.7191723447539755e-17
-		-0.19991679083637276 -1 -0.19991679083637259
-		-1.8508566094318079e-16 -1 -0.28272503694690365
-		0.19991679083637254 -1 -0.19991679083637298
-		0.2827250369469036 -1 -6.2210285873682227e-17
-		0.1999167908363727 -1 0.19991679083637259
-		0.61642997969058899 -0.78361162489122427 -0.61642997969058999
-		0.87176363753180319 -0.78361162489122427 1.0506190143399388e-16
-		0.61642997969058932 -0.78361162489122427 0.61642997969058932
-		1.9902882483877521e-16 -0.78361162489122427 0.87176363753180319
-		-0.61642997969058921 -0.78361162489122427 0.61642997969058955
-		-0.8717636375318033 -0.78361162489122427 1.6111055650702835e-16
-		-0.61642997969058944 -0.78361162489122427 -0.61642997969058899
-		-4.1463948278396632e-16 -0.78361162489122427 -0.87176363753180319
-		0.61642997969058899 -0.78361162489122427 -0.61642997969058999
-		0.87176363753180319 -0.78361162489122427 1.0506190143399388e-16
-		0.61642997969058932 -0.78361162489122427 0.61642997969058932
-		0.8672024474915413 6.5353909630129576e-17 -0.86720244749154252
-		1.2264094625656803 1.2253074553466144e-17 2.901104977298788e-16
-		0.86720244749154163 -4.0847760523197208e-17 0.86720244749154185
-		2.051909376318187e-16 -6.284284658528814e-17 1.2264094625656803
-		-0.86720244749154163 -4.0847760523197208e-17 0.86720244749154185
-		-1.2264094625656805 1.2253074553466149e-17 2.1934926354574312e-16
-		-0.86720244749154174 6.5353909630129502e-17 -0.8672024474915413
-		-5.0851507246572639e-16 8.7348995692220465e-17 -1.2264094625656803
-		0.8672024474915413 6.5353909630129576e-17 -0.86720244749154252
-		1.2264094625656803 1.2253074553466144e-17 2.901104977298788e-16
-		0.86720244749154163 -4.0847760523197208e-17 0.86720244749154185
-		0.61642997969058932 0.78361162489122449 -0.61642997969058999
-		0.87176363753180341 0.78361162489122449 3.0737422288956035e-16
-		0.61642997969058944 0.78361162489122449 0.61642997969058966
-		9.2681250202978354e-17 0.78361162489122449 0.87176363753180341
-		-0.61642997969058944 0.78361162489122449 0.61642997969058966
-		-0.87176363753180353 0.78361162489122449 1.507277286910009e-16
-		-0.61642997969058955 0.78361162489122449 -0.61642997969058932
-		-3.0829190814816951e-16 0.78361162489122449 -0.87176363753180341
-		0.61642997969058932 0.78361162489122449 -0.61642997969058999
-		0.87176363753180341 0.78361162489122449 3.0737422288956035e-16
-		0.61642997969058944 0.78361162489122449 0.61642997969058966
-		0.19991679083637276 0.99999999999999989 -0.19991679083637284
-		0.28272503694690371 0.99999999999999989 1.9596904050327137e-16
-		0.1999167908363727 0.99999999999999989 0.19991679083637293
-		-2.0554511899433756e-17 0.99999999999999989 0.28272503694690376
-		-0.19991679083637282 0.99999999999999989 0.19991679083637282
-		-0.28272503694690376 0.99999999999999989 4.3941756900056795e-17
-		-0.19991679083637273 0.99999999999999989 -0.1999167908363727
-		-4.9371014480962574e-17 0.99999999999999989 -0.28272503694690365
-		0.19991679083637276 0.99999999999999989 -0.19991679083637284
-		0.28272503694690371 0.99999999999999989 1.9596904050327137e-16
-		0.1999167908363727 0.99999999999999989 0.19991679083637293
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		1.739967336636337e-16 1 -1.6799646886496759e-17
-		
-		;
-	setAttr ".nufa" 4.5;
-	setAttr ".nvfa" 4.5;
-createNode transform -n "LegFoot__instance_1_mirror:module_transform" -p "Group__legs";
-	rename -uid "06279B3A-4866-4958-09CD-758A984E0DE5";
-	addAttr -ci true -h true -sn "aal" -ln "attributeAliasList" -dt "attributeAlias";
-	setAttr ".t" -type "double3" -1.9999999999999998 0 0 ;
+	setAttr ".t" -type "double3" -4 0 0 ;
 	setAttr ".r" -type "double3" 180 0 0 ;
-	setAttr ".s" -type "double3" 0.29233710334467522 0.29233710334467522 0.29233710334467522 ;
 	setAttr ".aal" -type "attributeAlias" {"globalScale","scaleY"} ;
 createNode mesh -n "LegFoot__instance_1_mirror:module_transformShape" -p "LegFoot__instance_1_mirror:module_transform";
-	rename -uid "A7021468-4218-B71D-020F-38BBB389DC40";
+	rename -uid "3D16F440-4891-85A8-0CF2-7F9EF6F843D6";
 	setAttr -k off ".v";
 	setAttr ".ovs" no;
 	setAttr ".ove" yes;
@@ -8680,7 +8070,7 @@ createNode mesh -n "LegFoot__instance_1_mirror:module_transformShape" -p "LegFoo
 	setAttr ".vnm" 0;
 createNode transform -n "LegFoot__instance_1_mirror:hip_joint_translation_control" 
 		-p "LegFoot__instance_1_mirror:module_transform";
-	rename -uid "31CC6434-4B69-6BD8-0318-D5963E60AA4D";
+	rename -uid "C41614DC-4857-970D-2BD7-E49417BF8555";
 	setAttr -l on -k off ".v";
 	setAttr -l on -k off ".rx";
 	setAttr -l on -k off ".ry";
@@ -8690,7 +8080,7 @@ createNode transform -n "LegFoot__instance_1_mirror:hip_joint_translation_contro
 	setAttr -l on -k off ".sz";
 createNode nurbsSurface -n "LegFoot__instance_1_mirror:hip_joint_translation_controlShape" 
 		-p "LegFoot__instance_1_mirror:hip_joint_translation_control";
-	rename -uid "273207EE-4B19-7894-039A-759B8AFA504C";
+	rename -uid "59A2CC6D-4824-E3DD-B13B-2CA712B71C9F";
 	setAttr -k off ".v";
 	setAttr ".vir" yes;
 	setAttr ".vif" yes;
@@ -8789,7 +8179,7 @@ createNode nurbsSurface -n "LegFoot__instance_1_mirror:hip_joint_translation_con
 	setAttr ".nvfa" 4.5;
 createNode transform -n "LegFoot__instance_1_mirror:knee_joint_translation_control" 
 		-p "LegFoot__instance_1_mirror:module_transform";
-	rename -uid "2CDF9923-4A4E-12AB-8B44-7FA91C1FA9EF";
+	rename -uid "619CAFD6-4099-E17C-B3E1-818F81C7E350";
 	setAttr -l on -k off ".v";
 	setAttr ".t" -type "double3" 0 4 -0.99999999999999956 ;
 	setAttr -l on -k off ".rx";
@@ -8800,7 +8190,7 @@ createNode transform -n "LegFoot__instance_1_mirror:knee_joint_translation_contr
 	setAttr -l on -k off ".sz";
 createNode nurbsSurface -n "LegFoot__instance_1_mirror:knee_joint_translation_controlShape" 
 		-p "LegFoot__instance_1_mirror:knee_joint_translation_control";
-	rename -uid "BC54B7AC-4D16-52F4-6B0D-B786443F5C20";
+	rename -uid "FE36C161-4B08-AF62-3303-E18EAB5FFD8D";
 	setAttr -k off ".v";
 	setAttr ".vir" yes;
 	setAttr ".vif" yes;
@@ -8899,9 +8289,9 @@ createNode nurbsSurface -n "LegFoot__instance_1_mirror:knee_joint_translation_co
 	setAttr ".nvfa" 4.5;
 createNode transform -n "LegFoot__instance_1_mirror:ankle_joint_translation_control" 
 		-p "LegFoot__instance_1_mirror:module_transform";
-	rename -uid "2ED93B3F-47B5-786A-886E-58B44FF94B4D";
+	rename -uid "AEEE7886-4687-5E61-86A9-3B94E98A7B4C";
 	setAttr -l on -k off ".v";
-	setAttr ".t" -type "double3" 0 8 9.7971743931788276e-16 ;
+	setAttr ".t" -type "double3" 0 8 9.7971743931788257e-16 ;
 	setAttr -l on -k off ".rx";
 	setAttr -l on -k off ".ry";
 	setAttr -l on -k off ".rz";
@@ -8910,7 +8300,7 @@ createNode transform -n "LegFoot__instance_1_mirror:ankle_joint_translation_cont
 	setAttr -l on -k off ".sz";
 createNode nurbsSurface -n "LegFoot__instance_1_mirror:ankle_joint_translation_controlShape" 
 		-p "LegFoot__instance_1_mirror:ankle_joint_translation_control";
-	rename -uid "08309EE3-4601-8747-B21F-7BA5ED1D6864";
+	rename -uid "DED37174-441C-A03B-E495-878B78328FC8";
 	setAttr -k off ".v";
 	setAttr ".vir" yes;
 	setAttr ".vif" yes;
@@ -9009,9 +8399,9 @@ createNode nurbsSurface -n "LegFoot__instance_1_mirror:ankle_joint_translation_c
 	setAttr ".nvfa" 4.5;
 createNode transform -n "LegFoot__instance_1_mirror:ball_joint_translation_control" 
 		-p "LegFoot__instance_1_mirror:module_transform";
-	rename -uid "1AD63D6F-4C4D-11F1-9ABC-CDA4ED04BD15";
+	rename -uid "7B924FF4-40BF-8567-715D-87B1747FFBEC";
 	setAttr -l on -k off ".v";
-	setAttr ".t" -type "double3" 0 9.0000000000000018 -2.9999999999999987 ;
+	setAttr ".t" -type "double3" 0 9.0000000000000018 -2.9999999999999978 ;
 	setAttr -l on -k off ".rx";
 	setAttr -l on -k off ".ry";
 	setAttr -l on -k off ".rz";
@@ -9020,7 +8410,7 @@ createNode transform -n "LegFoot__instance_1_mirror:ball_joint_translation_contr
 	setAttr -l on -k off ".sz";
 createNode nurbsSurface -n "LegFoot__instance_1_mirror:ball_joint_translation_controlShape" 
 		-p "LegFoot__instance_1_mirror:ball_joint_translation_control";
-	rename -uid "D8313F13-4408-3CB8-ED06-F2A34990681F";
+	rename -uid "81CFCD11-4203-6A21-B8C1-E2B136C66999";
 	setAttr -k off ".v";
 	setAttr ".vir" yes;
 	setAttr ".vif" yes;
@@ -9119,7 +8509,7 @@ createNode nurbsSurface -n "LegFoot__instance_1_mirror:ball_joint_translation_co
 	setAttr ".nvfa" 4.5;
 createNode transform -n "LegFoot__instance_1_mirror:toe_joint_translation_control" 
 		-p "LegFoot__instance_1_mirror:module_transform";
-	rename -uid "4E5A043E-4E5F-6973-EA57-92925B23500D";
+	rename -uid "23048622-44BA-B77C-7AA4-52A5A07CF47A";
 	setAttr -l on -k off ".v";
 	setAttr ".t" -type "double3" 0 9.0000000000000018 -5.9999999999999991 ;
 	setAttr -l on -k off ".rx";
@@ -9130,7 +8520,608 @@ createNode transform -n "LegFoot__instance_1_mirror:toe_joint_translation_contro
 	setAttr -l on -k off ".sz";
 createNode nurbsSurface -n "LegFoot__instance_1_mirror:toe_joint_translation_controlShape" 
 		-p "LegFoot__instance_1_mirror:toe_joint_translation_control";
-	rename -uid "085C5773-461A-3491-1A5E-0C9FC70723F1";
+	rename -uid "FFDDBFFC-4159-0BF6-FC64-13B325FBA53A";
+	setAttr -k off ".v";
+	setAttr ".vir" yes;
+	setAttr ".vif" yes;
+	setAttr ".covm[0]"  0 1 1;
+	setAttr ".cdvm[0]"  0 1 1;
+	setAttr ".dvu" 0;
+	setAttr ".dvv" 0;
+	setAttr ".cpr" 4;
+	setAttr ".cps" 4;
+	setAttr ".cc" -type "nurbsSurface" 
+		3 3 0 2 no 
+		9 0 0 0 1 2 3 4 4 4
+		13 -2 -1 0 1 2 3 4 5 6 7 8 9 10
+		
+		77
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		0.19991679083637254 -1 -0.19991679083637298
+		0.2827250369469036 -1 -6.2210285873682227e-17
+		0.1999167908363727 -1 0.19991679083637259
+		1.151601345627845e-16 -1 0.28272503694690354
+		-0.19991679083637259 -1 0.19991679083637273
+		-0.28272503694690365 -1 5.7191723447539755e-17
+		-0.19991679083637276 -1 -0.19991679083637259
+		-1.8508566094318079e-16 -1 -0.28272503694690365
+		0.19991679083637254 -1 -0.19991679083637298
+		0.2827250369469036 -1 -6.2210285873682227e-17
+		0.1999167908363727 -1 0.19991679083637259
+		0.61642997969058899 -0.78361162489122427 -0.61642997969058999
+		0.87176363753180319 -0.78361162489122427 1.0506190143399388e-16
+		0.61642997969058932 -0.78361162489122427 0.61642997969058932
+		1.9902882483877521e-16 -0.78361162489122427 0.87176363753180319
+		-0.61642997969058921 -0.78361162489122427 0.61642997969058955
+		-0.8717636375318033 -0.78361162489122427 1.6111055650702835e-16
+		-0.61642997969058944 -0.78361162489122427 -0.61642997969058899
+		-4.1463948278396632e-16 -0.78361162489122427 -0.87176363753180319
+		0.61642997969058899 -0.78361162489122427 -0.61642997969058999
+		0.87176363753180319 -0.78361162489122427 1.0506190143399388e-16
+		0.61642997969058932 -0.78361162489122427 0.61642997969058932
+		0.8672024474915413 6.5353909630129576e-17 -0.86720244749154252
+		1.2264094625656803 1.2253074553466144e-17 2.901104977298788e-16
+		0.86720244749154163 -4.0847760523197208e-17 0.86720244749154185
+		2.051909376318187e-16 -6.284284658528814e-17 1.2264094625656803
+		-0.86720244749154163 -4.0847760523197208e-17 0.86720244749154185
+		-1.2264094625656805 1.2253074553466149e-17 2.1934926354574312e-16
+		-0.86720244749154174 6.5353909630129502e-17 -0.8672024474915413
+		-5.0851507246572639e-16 8.7348995692220465e-17 -1.2264094625656803
+		0.8672024474915413 6.5353909630129576e-17 -0.86720244749154252
+		1.2264094625656803 1.2253074553466144e-17 2.901104977298788e-16
+		0.86720244749154163 -4.0847760523197208e-17 0.86720244749154185
+		0.61642997969058932 0.78361162489122449 -0.61642997969058999
+		0.87176363753180341 0.78361162489122449 3.0737422288956035e-16
+		0.61642997969058944 0.78361162489122449 0.61642997969058966
+		9.2681250202978354e-17 0.78361162489122449 0.87176363753180341
+		-0.61642997969058944 0.78361162489122449 0.61642997969058966
+		-0.87176363753180353 0.78361162489122449 1.507277286910009e-16
+		-0.61642997969058955 0.78361162489122449 -0.61642997969058932
+		-3.0829190814816951e-16 0.78361162489122449 -0.87176363753180341
+		0.61642997969058932 0.78361162489122449 -0.61642997969058999
+		0.87176363753180341 0.78361162489122449 3.0737422288956035e-16
+		0.61642997969058944 0.78361162489122449 0.61642997969058966
+		0.19991679083637276 0.99999999999999989 -0.19991679083637284
+		0.28272503694690371 0.99999999999999989 1.9596904050327137e-16
+		0.1999167908363727 0.99999999999999989 0.19991679083637293
+		-2.0554511899433756e-17 0.99999999999999989 0.28272503694690376
+		-0.19991679083637282 0.99999999999999989 0.19991679083637282
+		-0.28272503694690376 0.99999999999999989 4.3941756900056795e-17
+		-0.19991679083637273 0.99999999999999989 -0.1999167908363727
+		-4.9371014480962574e-17 0.99999999999999989 -0.28272503694690365
+		0.19991679083637276 0.99999999999999989 -0.19991679083637284
+		0.28272503694690371 0.99999999999999989 1.9596904050327137e-16
+		0.1999167908363727 0.99999999999999989 0.19991679083637293
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		
+		;
+	setAttr ".nufa" 4.5;
+	setAttr ".nvfa" 4.5;
+createNode transform -n "LegFoot__instance_1:module_transform" -p "Group__Legs";
+	rename -uid "2AE51E0B-48B8-18AF-FB3E-8BB4BBDFD814";
+	addAttr -ci true -h true -sn "aal" -ln "attributeAliasList" -dt "attributeAlias";
+	setAttr ".t" -type "double3" 4 0 0 ;
+	setAttr ".aal" -type "attributeAlias" {"globalScale","scaleY"} ;
+createNode mesh -n "LegFoot__instance_1:module_transformShape" -p "LegFoot__instance_1:module_transform";
+	rename -uid "DC2172A4-4D53-99CE-9D72-EC8CB2ADA0CB";
+	setAttr -k off ".v";
+	setAttr ".ovs" no;
+	setAttr ".ove" yes;
+	setAttr ".ovc" 4;
+	setAttr ".vir" yes;
+	setAttr ".vif" yes;
+	setAttr ".uvst[0].uvsn" -type "string" "map1";
+	setAttr -s 26 ".uvst[0].uvsp[0:25]" -type "float2" 0.375 0 0.625 0 0.375
+		 0.25 0.625 0.25 0.375 0.5 0.625 0.5 0.375 0.75 0.625 0.75 0.375 1 0.625 1 0.875 0
+		 0.875 0.25 0.125 0 0.125 0.25 0.375 0 0.625 0 0.625 0.25 0.375 0.25 0.375 0 0.625
+		 0 0.625 0.25 0.375 0.25 0.375 0 0.625 0 0.625 0.25 0.375 0.25;
+	setAttr ".cuvs" -type "string" "map1";
+	setAttr ".dcc" -type "string" "Ambient+Diffuse";
+	setAttr ".covm[0]"  0 1 1;
+	setAttr ".cdvm[0]"  0 1 1;
+	setAttr ".ugsdt" no;
+	setAttr ".bnr" 0;
+	setAttr -s 20 ".vt[0:19]"  -1 -1 1 1 -1 1 -1 1 1 1 1 1 -1 1 -1 1 1 -1
+		 -1 -1 -1 1 -1 -1 -4.3673398e-07 -1.48870528 0 4.3673398e-07 -1.48870528 0 -4.3673398e-07 1.48870528 0
+		 4.3673398e-07 1.48870528 0 1.48870528 -4.3673398e-07 0 1.48870528 4.3673398e-07 0
+		 -1.48870528 -4.3673398e-07 0 -1.48870528 4.3673398e-07 0 3.3055887e-16 -4.3673398e-07 -1.48870528
+		 3.3055905e-16 4.3673398e-07 -1.48870528 -3.3055905e-16 -4.3673398e-07 1.48870528
+		 -3.3055887e-16 4.3673398e-07 1.48870528;
+	setAttr -s 24 ".ed[0:23]"  0 1 0 2 3 0 4 5 0 6 7 0 0 2 0 1 3 0 2 4 0
+		 3 5 0 4 6 0 5 7 0 6 0 0 7 1 0 8 9 0 10 11 0 8 10 0 9 11 0 12 13 0 14 15 0 12 14 0
+		 13 15 0 16 17 0 18 19 0 16 18 0 17 19 0;
+	setAttr -s 9 -ch 36 ".fc[0:8]" -type "polyFaces" 
+		f 4 0 5 -2 -5
+		mu 0 4 0 1 3 2
+		f 4 1 7 -3 -7
+		mu 0 4 2 3 5 4
+		f 4 2 9 -4 -9
+		mu 0 4 4 5 7 6
+		f 4 3 11 -1 -11
+		mu 0 4 6 7 9 8
+		f 4 -12 -10 -8 -6
+		mu 0 4 1 10 11 3
+		f 4 10 4 6 8
+		mu 0 4 12 0 2 13
+		f 4 12 15 -14 -15
+		mu 0 4 14 15 16 17
+		f 4 16 19 -18 -19
+		mu 0 4 18 19 20 21
+		f 4 20 23 -22 -23
+		mu 0 4 22 23 24 25;
+	setAttr ".cd" -type "dataPolyComponent" Index_Data Edge 0 ;
+	setAttr ".cvd" -type "dataPolyComponent" Index_Data Vertex 0 ;
+	setAttr ".pd[0]" -type "dataPolyComponent" Index_Data UV 0 ;
+	setAttr ".hfd" -type "dataPolyComponent" Index_Data Face 0 ;
+	setAttr ".vnm" 0;
+createNode transform -n "LegFoot__instance_1:hip_joint_translation_control" -p "LegFoot__instance_1:module_transform";
+	rename -uid "17EAE43E-4B1D-2677-C202-54936CBC39E6";
+	setAttr -l on -k off ".v";
+	setAttr -l on -k off ".rx";
+	setAttr -l on -k off ".ry";
+	setAttr -l on -k off ".rz";
+	setAttr -l on -k off ".sx";
+	setAttr -l on -k off ".sy";
+	setAttr -l on -k off ".sz";
+createNode nurbsSurface -n "LegFoot__instance_1:hip_joint_translation_controlShape" 
+		-p "LegFoot__instance_1:hip_joint_translation_control";
+	rename -uid "9297054C-45A4-F1C3-7455-5F899A649625";
+	setAttr -k off ".v";
+	setAttr ".vir" yes;
+	setAttr ".vif" yes;
+	setAttr ".covm[0]"  0 1 1;
+	setAttr ".cdvm[0]"  0 1 1;
+	setAttr ".dvu" 0;
+	setAttr ".dvv" 0;
+	setAttr ".cpr" 4;
+	setAttr ".cps" 4;
+	setAttr ".cc" -type "nurbsSurface" 
+		3 3 0 2 no 
+		9 0 0 0 1 2 3 4 4 4
+		13 -2 -1 0 1 2 3 4 5 6 7 8 9 10
+		
+		77
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		0.19991679083637254 -1 -0.19991679083637298
+		0.2827250369469036 -1 -6.2210285873682227e-17
+		0.1999167908363727 -1 0.19991679083637259
+		1.151601345627845e-16 -1 0.28272503694690354
+		-0.19991679083637259 -1 0.19991679083637273
+		-0.28272503694690365 -1 5.7191723447539755e-17
+		-0.19991679083637276 -1 -0.19991679083637259
+		-1.8508566094318079e-16 -1 -0.28272503694690365
+		0.19991679083637254 -1 -0.19991679083637298
+		0.2827250369469036 -1 -6.2210285873682227e-17
+		0.1999167908363727 -1 0.19991679083637259
+		0.61642997969058899 -0.78361162489122427 -0.61642997969058999
+		0.87176363753180319 -0.78361162489122427 1.0506190143399388e-16
+		0.61642997969058932 -0.78361162489122427 0.61642997969058932
+		1.9902882483877521e-16 -0.78361162489122427 0.87176363753180319
+		-0.61642997969058921 -0.78361162489122427 0.61642997969058955
+		-0.8717636375318033 -0.78361162489122427 1.6111055650702835e-16
+		-0.61642997969058944 -0.78361162489122427 -0.61642997969058899
+		-4.1463948278396632e-16 -0.78361162489122427 -0.87176363753180319
+		0.61642997969058899 -0.78361162489122427 -0.61642997969058999
+		0.87176363753180319 -0.78361162489122427 1.0506190143399388e-16
+		0.61642997969058932 -0.78361162489122427 0.61642997969058932
+		0.8672024474915413 6.5353909630129576e-17 -0.86720244749154252
+		1.2264094625656803 1.2253074553466144e-17 2.901104977298788e-16
+		0.86720244749154163 -4.0847760523197208e-17 0.86720244749154185
+		2.051909376318187e-16 -6.284284658528814e-17 1.2264094625656803
+		-0.86720244749154163 -4.0847760523197208e-17 0.86720244749154185
+		-1.2264094625656805 1.2253074553466149e-17 2.1934926354574312e-16
+		-0.86720244749154174 6.5353909630129502e-17 -0.8672024474915413
+		-5.0851507246572639e-16 8.7348995692220465e-17 -1.2264094625656803
+		0.8672024474915413 6.5353909630129576e-17 -0.86720244749154252
+		1.2264094625656803 1.2253074553466144e-17 2.901104977298788e-16
+		0.86720244749154163 -4.0847760523197208e-17 0.86720244749154185
+		0.61642997969058932 0.78361162489122449 -0.61642997969058999
+		0.87176363753180341 0.78361162489122449 3.0737422288956035e-16
+		0.61642997969058944 0.78361162489122449 0.61642997969058966
+		9.2681250202978354e-17 0.78361162489122449 0.87176363753180341
+		-0.61642997969058944 0.78361162489122449 0.61642997969058966
+		-0.87176363753180353 0.78361162489122449 1.507277286910009e-16
+		-0.61642997969058955 0.78361162489122449 -0.61642997969058932
+		-3.0829190814816951e-16 0.78361162489122449 -0.87176363753180341
+		0.61642997969058932 0.78361162489122449 -0.61642997969058999
+		0.87176363753180341 0.78361162489122449 3.0737422288956035e-16
+		0.61642997969058944 0.78361162489122449 0.61642997969058966
+		0.19991679083637276 0.99999999999999989 -0.19991679083637284
+		0.28272503694690371 0.99999999999999989 1.9596904050327137e-16
+		0.1999167908363727 0.99999999999999989 0.19991679083637293
+		-2.0554511899433756e-17 0.99999999999999989 0.28272503694690376
+		-0.19991679083637282 0.99999999999999989 0.19991679083637282
+		-0.28272503694690376 0.99999999999999989 4.3941756900056795e-17
+		-0.19991679083637273 0.99999999999999989 -0.1999167908363727
+		-4.9371014480962574e-17 0.99999999999999989 -0.28272503694690365
+		0.19991679083637276 0.99999999999999989 -0.19991679083637284
+		0.28272503694690371 0.99999999999999989 1.9596904050327137e-16
+		0.1999167908363727 0.99999999999999989 0.19991679083637293
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		
+		;
+	setAttr ".nufa" 4.5;
+	setAttr ".nvfa" 4.5;
+createNode transform -n "LegFoot__instance_1:knee_joint_translation_control" -p "LegFoot__instance_1:module_transform";
+	rename -uid "0F285372-44D5-867A-9D2A-6298500FBF88";
+	setAttr -l on -k off ".v";
+	setAttr ".t" -type "double3" 0 -4 1 ;
+	setAttr -l on -k off ".rx";
+	setAttr -l on -k off ".ry";
+	setAttr -l on -k off ".rz";
+	setAttr -l on -k off ".sx";
+	setAttr -l on -k off ".sy";
+	setAttr -l on -k off ".sz";
+createNode nurbsSurface -n "LegFoot__instance_1:knee_joint_translation_controlShape" 
+		-p "LegFoot__instance_1:knee_joint_translation_control";
+	rename -uid "F45DA968-4817-D2C4-D21E-BAA60865E700";
+	setAttr -k off ".v";
+	setAttr ".vir" yes;
+	setAttr ".vif" yes;
+	setAttr ".covm[0]"  0 1 1;
+	setAttr ".cdvm[0]"  0 1 1;
+	setAttr ".dvu" 0;
+	setAttr ".dvv" 0;
+	setAttr ".cpr" 4;
+	setAttr ".cps" 4;
+	setAttr ".cc" -type "nurbsSurface" 
+		3 3 0 2 no 
+		9 0 0 0 1 2 3 4 4 4
+		13 -2 -1 0 1 2 3 4 5 6 7 8 9 10
+		
+		77
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		0.19991679083637254 -1 -0.19991679083637298
+		0.2827250369469036 -1 -6.2210285873682227e-17
+		0.1999167908363727 -1 0.19991679083637259
+		1.151601345627845e-16 -1 0.28272503694690354
+		-0.19991679083637259 -1 0.19991679083637273
+		-0.28272503694690365 -1 5.7191723447539755e-17
+		-0.19991679083637276 -1 -0.19991679083637259
+		-1.8508566094318079e-16 -1 -0.28272503694690365
+		0.19991679083637254 -1 -0.19991679083637298
+		0.2827250369469036 -1 -6.2210285873682227e-17
+		0.1999167908363727 -1 0.19991679083637259
+		0.61642997969058899 -0.78361162489122427 -0.61642997969058999
+		0.87176363753180319 -0.78361162489122427 1.0506190143399388e-16
+		0.61642997969058932 -0.78361162489122427 0.61642997969058932
+		1.9902882483877521e-16 -0.78361162489122427 0.87176363753180319
+		-0.61642997969058921 -0.78361162489122427 0.61642997969058955
+		-0.8717636375318033 -0.78361162489122427 1.6111055650702835e-16
+		-0.61642997969058944 -0.78361162489122427 -0.61642997969058899
+		-4.1463948278396632e-16 -0.78361162489122427 -0.87176363753180319
+		0.61642997969058899 -0.78361162489122427 -0.61642997969058999
+		0.87176363753180319 -0.78361162489122427 1.0506190143399388e-16
+		0.61642997969058932 -0.78361162489122427 0.61642997969058932
+		0.8672024474915413 6.5353909630129576e-17 -0.86720244749154252
+		1.2264094625656803 1.2253074553466144e-17 2.901104977298788e-16
+		0.86720244749154163 -4.0847760523197208e-17 0.86720244749154185
+		2.051909376318187e-16 -6.284284658528814e-17 1.2264094625656803
+		-0.86720244749154163 -4.0847760523197208e-17 0.86720244749154185
+		-1.2264094625656805 1.2253074553466149e-17 2.1934926354574312e-16
+		-0.86720244749154174 6.5353909630129502e-17 -0.8672024474915413
+		-5.0851507246572639e-16 8.7348995692220465e-17 -1.2264094625656803
+		0.8672024474915413 6.5353909630129576e-17 -0.86720244749154252
+		1.2264094625656803 1.2253074553466144e-17 2.901104977298788e-16
+		0.86720244749154163 -4.0847760523197208e-17 0.86720244749154185
+		0.61642997969058932 0.78361162489122449 -0.61642997969058999
+		0.87176363753180341 0.78361162489122449 3.0737422288956035e-16
+		0.61642997969058944 0.78361162489122449 0.61642997969058966
+		9.2681250202978354e-17 0.78361162489122449 0.87176363753180341
+		-0.61642997969058944 0.78361162489122449 0.61642997969058966
+		-0.87176363753180353 0.78361162489122449 1.507277286910009e-16
+		-0.61642997969058955 0.78361162489122449 -0.61642997969058932
+		-3.0829190814816951e-16 0.78361162489122449 -0.87176363753180341
+		0.61642997969058932 0.78361162489122449 -0.61642997969058999
+		0.87176363753180341 0.78361162489122449 3.0737422288956035e-16
+		0.61642997969058944 0.78361162489122449 0.61642997969058966
+		0.19991679083637276 0.99999999999999989 -0.19991679083637284
+		0.28272503694690371 0.99999999999999989 1.9596904050327137e-16
+		0.1999167908363727 0.99999999999999989 0.19991679083637293
+		-2.0554511899433756e-17 0.99999999999999989 0.28272503694690376
+		-0.19991679083637282 0.99999999999999989 0.19991679083637282
+		-0.28272503694690376 0.99999999999999989 4.3941756900056795e-17
+		-0.19991679083637273 0.99999999999999989 -0.1999167908363727
+		-4.9371014480962574e-17 0.99999999999999989 -0.28272503694690365
+		0.19991679083637276 0.99999999999999989 -0.19991679083637284
+		0.28272503694690371 0.99999999999999989 1.9596904050327137e-16
+		0.1999167908363727 0.99999999999999989 0.19991679083637293
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		
+		;
+	setAttr ".nufa" 4.5;
+	setAttr ".nvfa" 4.5;
+createNode transform -n "LegFoot__instance_1:ankle_joint_translation_control" -p "LegFoot__instance_1:module_transform";
+	rename -uid "7B4FE64A-4549-10D0-6FE0-799067AC8657";
+	setAttr -l on -k off ".v";
+	setAttr ".t" -type "double3" 0 -8 0 ;
+	setAttr -l on -k off ".rx";
+	setAttr -l on -k off ".ry";
+	setAttr -l on -k off ".rz";
+	setAttr -l on -k off ".sx";
+	setAttr -l on -k off ".sy";
+	setAttr -l on -k off ".sz";
+createNode nurbsSurface -n "LegFoot__instance_1:ankle_joint_translation_controlShape" 
+		-p "LegFoot__instance_1:ankle_joint_translation_control";
+	rename -uid "73F57364-41DE-23F8-3F41-E0AE7457F8D6";
+	setAttr -k off ".v";
+	setAttr ".vir" yes;
+	setAttr ".vif" yes;
+	setAttr ".covm[0]"  0 1 1;
+	setAttr ".cdvm[0]"  0 1 1;
+	setAttr ".dvu" 0;
+	setAttr ".dvv" 0;
+	setAttr ".cpr" 4;
+	setAttr ".cps" 4;
+	setAttr ".cc" -type "nurbsSurface" 
+		3 3 0 2 no 
+		9 0 0 0 1 2 3 4 4 4
+		13 -2 -1 0 1 2 3 4 5 6 7 8 9 10
+		
+		77
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		0.19991679083637254 -1 -0.19991679083637298
+		0.2827250369469036 -1 -6.2210285873682227e-17
+		0.1999167908363727 -1 0.19991679083637259
+		1.151601345627845e-16 -1 0.28272503694690354
+		-0.19991679083637259 -1 0.19991679083637273
+		-0.28272503694690365 -1 5.7191723447539755e-17
+		-0.19991679083637276 -1 -0.19991679083637259
+		-1.8508566094318079e-16 -1 -0.28272503694690365
+		0.19991679083637254 -1 -0.19991679083637298
+		0.2827250369469036 -1 -6.2210285873682227e-17
+		0.1999167908363727 -1 0.19991679083637259
+		0.61642997969058899 -0.78361162489122427 -0.61642997969058999
+		0.87176363753180319 -0.78361162489122427 1.0506190143399388e-16
+		0.61642997969058932 -0.78361162489122427 0.61642997969058932
+		1.9902882483877521e-16 -0.78361162489122427 0.87176363753180319
+		-0.61642997969058921 -0.78361162489122427 0.61642997969058955
+		-0.8717636375318033 -0.78361162489122427 1.6111055650702835e-16
+		-0.61642997969058944 -0.78361162489122427 -0.61642997969058899
+		-4.1463948278396632e-16 -0.78361162489122427 -0.87176363753180319
+		0.61642997969058899 -0.78361162489122427 -0.61642997969058999
+		0.87176363753180319 -0.78361162489122427 1.0506190143399388e-16
+		0.61642997969058932 -0.78361162489122427 0.61642997969058932
+		0.8672024474915413 6.5353909630129576e-17 -0.86720244749154252
+		1.2264094625656803 1.2253074553466144e-17 2.901104977298788e-16
+		0.86720244749154163 -4.0847760523197208e-17 0.86720244749154185
+		2.051909376318187e-16 -6.284284658528814e-17 1.2264094625656803
+		-0.86720244749154163 -4.0847760523197208e-17 0.86720244749154185
+		-1.2264094625656805 1.2253074553466149e-17 2.1934926354574312e-16
+		-0.86720244749154174 6.5353909630129502e-17 -0.8672024474915413
+		-5.0851507246572639e-16 8.7348995692220465e-17 -1.2264094625656803
+		0.8672024474915413 6.5353909630129576e-17 -0.86720244749154252
+		1.2264094625656803 1.2253074553466144e-17 2.901104977298788e-16
+		0.86720244749154163 -4.0847760523197208e-17 0.86720244749154185
+		0.61642997969058932 0.78361162489122449 -0.61642997969058999
+		0.87176363753180341 0.78361162489122449 3.0737422288956035e-16
+		0.61642997969058944 0.78361162489122449 0.61642997969058966
+		9.2681250202978354e-17 0.78361162489122449 0.87176363753180341
+		-0.61642997969058944 0.78361162489122449 0.61642997969058966
+		-0.87176363753180353 0.78361162489122449 1.507277286910009e-16
+		-0.61642997969058955 0.78361162489122449 -0.61642997969058932
+		-3.0829190814816951e-16 0.78361162489122449 -0.87176363753180341
+		0.61642997969058932 0.78361162489122449 -0.61642997969058999
+		0.87176363753180341 0.78361162489122449 3.0737422288956035e-16
+		0.61642997969058944 0.78361162489122449 0.61642997969058966
+		0.19991679083637276 0.99999999999999989 -0.19991679083637284
+		0.28272503694690371 0.99999999999999989 1.9596904050327137e-16
+		0.1999167908363727 0.99999999999999989 0.19991679083637293
+		-2.0554511899433756e-17 0.99999999999999989 0.28272503694690376
+		-0.19991679083637282 0.99999999999999989 0.19991679083637282
+		-0.28272503694690376 0.99999999999999989 4.3941756900056795e-17
+		-0.19991679083637273 0.99999999999999989 -0.1999167908363727
+		-4.9371014480962574e-17 0.99999999999999989 -0.28272503694690365
+		0.19991679083637276 0.99999999999999989 -0.19991679083637284
+		0.28272503694690371 0.99999999999999989 1.9596904050327137e-16
+		0.1999167908363727 0.99999999999999989 0.19991679083637293
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		
+		;
+	setAttr ".nufa" 4.5;
+	setAttr ".nvfa" 4.5;
+createNode transform -n "LegFoot__instance_1:ball_joint_translation_control" -p "LegFoot__instance_1:module_transform";
+	rename -uid "0B4B620E-46F1-CAEF-4413-DE97478F4CF5";
+	setAttr -l on -k off ".v";
+	setAttr ".t" -type "double3" 0 -9.0000000000000018 2.9999999999999991 ;
+	setAttr -l on -k off ".rx";
+	setAttr -l on -k off ".ry";
+	setAttr -l on -k off ".rz";
+	setAttr -l on -k off ".sx";
+	setAttr -l on -k off ".sy";
+	setAttr -l on -k off ".sz";
+createNode nurbsSurface -n "LegFoot__instance_1:ball_joint_translation_controlShape" 
+		-p "LegFoot__instance_1:ball_joint_translation_control";
+	rename -uid "5314FA84-4DFF-1F67-1D3F-85B7429501FF";
+	setAttr -k off ".v";
+	setAttr ".vir" yes;
+	setAttr ".vif" yes;
+	setAttr ".covm[0]"  0 1 1;
+	setAttr ".cdvm[0]"  0 1 1;
+	setAttr ".dvu" 0;
+	setAttr ".dvv" 0;
+	setAttr ".cpr" 4;
+	setAttr ".cps" 4;
+	setAttr ".cc" -type "nurbsSurface" 
+		3 3 0 2 no 
+		9 0 0 0 1 2 3 4 4 4
+		13 -2 -1 0 1 2 3 4 5 6 7 8 9 10
+		
+		77
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		9.596474681976929e-17 -1 -2.5316183359690662e-16
+		0.19991679083637254 -1 -0.19991679083637298
+		0.2827250369469036 -1 -6.2210285873682227e-17
+		0.1999167908363727 -1 0.19991679083637259
+		1.151601345627845e-16 -1 0.28272503694690354
+		-0.19991679083637259 -1 0.19991679083637273
+		-0.28272503694690365 -1 5.7191723447539755e-17
+		-0.19991679083637276 -1 -0.19991679083637259
+		-1.8508566094318079e-16 -1 -0.28272503694690365
+		0.19991679083637254 -1 -0.19991679083637298
+		0.2827250369469036 -1 -6.2210285873682227e-17
+		0.1999167908363727 -1 0.19991679083637259
+		0.61642997969058899 -0.78361162489122427 -0.61642997969058999
+		0.87176363753180319 -0.78361162489122427 1.0506190143399388e-16
+		0.61642997969058932 -0.78361162489122427 0.61642997969058932
+		1.9902882483877521e-16 -0.78361162489122427 0.87176363753180319
+		-0.61642997969058921 -0.78361162489122427 0.61642997969058955
+		-0.8717636375318033 -0.78361162489122427 1.6111055650702835e-16
+		-0.61642997969058944 -0.78361162489122427 -0.61642997969058899
+		-4.1463948278396632e-16 -0.78361162489122427 -0.87176363753180319
+		0.61642997969058899 -0.78361162489122427 -0.61642997969058999
+		0.87176363753180319 -0.78361162489122427 1.0506190143399388e-16
+		0.61642997969058932 -0.78361162489122427 0.61642997969058932
+		0.8672024474915413 6.5353909630129576e-17 -0.86720244749154252
+		1.2264094625656803 1.2253074553466144e-17 2.901104977298788e-16
+		0.86720244749154163 -4.0847760523197208e-17 0.86720244749154185
+		2.051909376318187e-16 -6.284284658528814e-17 1.2264094625656803
+		-0.86720244749154163 -4.0847760523197208e-17 0.86720244749154185
+		-1.2264094625656805 1.2253074553466149e-17 2.1934926354574312e-16
+		-0.86720244749154174 6.5353909630129502e-17 -0.8672024474915413
+		-5.0851507246572639e-16 8.7348995692220465e-17 -1.2264094625656803
+		0.8672024474915413 6.5353909630129576e-17 -0.86720244749154252
+		1.2264094625656803 1.2253074553466144e-17 2.901104977298788e-16
+		0.86720244749154163 -4.0847760523197208e-17 0.86720244749154185
+		0.61642997969058932 0.78361162489122449 -0.61642997969058999
+		0.87176363753180341 0.78361162489122449 3.0737422288956035e-16
+		0.61642997969058944 0.78361162489122449 0.61642997969058966
+		9.2681250202978354e-17 0.78361162489122449 0.87176363753180341
+		-0.61642997969058944 0.78361162489122449 0.61642997969058966
+		-0.87176363753180353 0.78361162489122449 1.507277286910009e-16
+		-0.61642997969058955 0.78361162489122449 -0.61642997969058932
+		-3.0829190814816951e-16 0.78361162489122449 -0.87176363753180341
+		0.61642997969058932 0.78361162489122449 -0.61642997969058999
+		0.87176363753180341 0.78361162489122449 3.0737422288956035e-16
+		0.61642997969058944 0.78361162489122449 0.61642997969058966
+		0.19991679083637276 0.99999999999999989 -0.19991679083637284
+		0.28272503694690371 0.99999999999999989 1.9596904050327137e-16
+		0.1999167908363727 0.99999999999999989 0.19991679083637293
+		-2.0554511899433756e-17 0.99999999999999989 0.28272503694690376
+		-0.19991679083637282 0.99999999999999989 0.19991679083637282
+		-0.28272503694690376 0.99999999999999989 4.3941756900056795e-17
+		-0.19991679083637273 0.99999999999999989 -0.1999167908363727
+		-4.9371014480962574e-17 0.99999999999999989 -0.28272503694690365
+		0.19991679083637276 0.99999999999999989 -0.19991679083637284
+		0.28272503694690371 0.99999999999999989 1.9596904050327137e-16
+		0.1999167908363727 0.99999999999999989 0.19991679083637293
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		1.739967336636337e-16 1 -1.6799646886496759e-17
+		
+		;
+	setAttr ".nufa" 4.5;
+	setAttr ".nvfa" 4.5;
+createNode transform -n "LegFoot__instance_1:toe_joint_translation_control" -p "LegFoot__instance_1:module_transform";
+	rename -uid "E6E58AD9-471B-10F3-487B-B88170DB9EE6";
+	setAttr -l on -k off ".v";
+	setAttr ".t" -type "double3" 2.2186712959340957e-31 -9.0000000000000018 6 ;
+	setAttr -l on -k off ".rx";
+	setAttr -l on -k off ".ry";
+	setAttr -l on -k off ".rz";
+	setAttr -l on -k off ".sx";
+	setAttr -l on -k off ".sy";
+	setAttr -l on -k off ".sz";
+createNode nurbsSurface -n "LegFoot__instance_1:toe_joint_translation_controlShape" 
+		-p "LegFoot__instance_1:toe_joint_translation_control";
+	rename -uid "DA69E58C-484A-0681-AE18-B09E72348D5F";
 	setAttr -k off ".v";
 	setAttr ".vir" yes;
 	setAttr ".vif" yes;
@@ -9228,18 +9219,18 @@ createNode nurbsSurface -n "LegFoot__instance_1_mirror:toe_joint_translation_con
 	setAttr ".nufa" 4.5;
 	setAttr ".nvfa" 4.5;
 createNode container -n "Group_container";
-	rename -uid "FBBFC464-420E-D8AE-FAFD-D78D6983EB62";
+	rename -uid "5C74F5AC-4280-14A2-DB0E-E5918350E606";
 	addAttr -ci true -h true -sn "aal" -ln "attributeAliasList" -dt "attributeAlias";
 	setAttr ".isc" yes;
 	setAttr -s 9 ".boc";
 	setAttr ".ctor" -type "string" "micma";
-	setAttr ".cdat" -type "string" "2024/12/11 19:29:31";
-	setAttr ".aal" -type "attributeAlias" {"legs_t","borderConnections[0]","legs_tX"
-		,"borderConnections[1]","legs_tY","borderConnections[2]","legs_tZ","borderConnections[3]"
-		,"legs_r","borderConnections[4]","legs_rX","borderConnections[5]","legs_rY","borderConnections[6]"
-		,"legs_rZ","borderConnections[7]","legs_globalScale","borderConnections[8]"} ;
+	setAttr ".cdat" -type "string" "2025/12/08 16:31:43";
+	setAttr ".aal" -type "attributeAlias" {"Legs_t","borderConnections[0]","Legs_tX"
+		,"borderConnections[1]","Legs_tY","borderConnections[2]","Legs_tZ","borderConnections[3]"
+		,"Legs_r","borderConnections[4]","Legs_rX","borderConnections[5]","Legs_rY","borderConnections[6]"
+		,"Legs_rZ","borderConnections[7]","Legs_globalScale","borderConnections[8]"} ;
 createNode container -n "LegFoot__instance_1:module_container";
-	rename -uid "C2A27AE6-4D66-D848-D547-CC86DA627D24";
+	rename -uid "E425064E-4E2C-00A3-0129-7A8D6382A365";
 	addAttr -ci true -h true -sn "aal" -ln "attributeAliasList" -dt "attributeAlias";
 	setAttr ".isc" yes;
 	setAttr -s 77 ".boc";
@@ -9268,7 +9259,7 @@ createNode container -n "LegFoot__instance_1:module_container";
 	setAttr ".ish[75]" yes;
 	setAttr ".ish[76]" yes;
 	setAttr ".ctor" -type "string" "micma";
-	setAttr ".cdat" -type "string" "2024/12/11 19:28:48";
+	setAttr ".cdat" -type "string" "2025/12/08 16:29:20";
 	setAttr ".aal" -type "attributeAlias" {"hip_joint_R","borderConnections[0]","ankle_joint_R"
 		,"borderConnections[10]","ankle_joint_RX","borderConnections[11]","ankle_joint_RY"
 		,"borderConnections[12]","ankle_joint_RZ","borderConnections[13]","ankle_jointrotateOrder"
@@ -9306,7 +9297,7 @@ createNode container -n "LegFoot__instance_1:module_container";
 		,"borderConnections[76]","knee_joint_RY","borderConnections[7]","knee_joint_RZ","borderConnections[8]"
 		,"knee_jointrotateOrder","borderConnections[9]"} ;
 createNode container -n "LegFoot__instance_1_mirror:module_container";
-	rename -uid "E2A9FEA3-4AF3-3CD0-0F9E-4D822A63AF83";
+	rename -uid "E2E87EA6-4913-9BDA-8815-A9B981F6F540";
 	addAttr -ci true -h true -sn "aal" -ln "attributeAliasList" -dt "attributeAlias";
 	setAttr ".isc" yes;
 	setAttr -s 44 ".boc";
@@ -9335,7 +9326,7 @@ createNode container -n "LegFoot__instance_1_mirror:module_container";
 	setAttr ".ish[67]" yes;
 	setAttr ".ish[68]" yes;
 	setAttr ".ctor" -type "string" "micma";
-	setAttr ".cdat" -type "string" "2024/12/11 19:29:08";
+	setAttr ".cdat" -type "string" "2025/12/08 16:31:22";
 	setAttr ".aal" -type "attributeAlias" {"hip_joint_R","borderConnections[0]","ankle_joint_R"
 		,"borderConnections[10]","ankle_joint_RX","borderConnections[11]","ankle_joint_RY"
 		,"borderConnections[12]","ankle_joint_RZ","borderConnections[13]","ankle_jointrotateOrder"
@@ -9369,11 +9360,20 @@ createNode container -n "LegFoot__instance_1_mirror:module_container";
 		,"knee_joint_RX","borderConnections[6]","knee_joint_RY","borderConnections[7]","knee_joint_RZ"
 		,"borderConnections[8]","knee_jointrotateOrder","borderConnections[9]"} ;
 createNode hyperLayout -n "hyperLayout31";
-	rename -uid "50E5378F-44C6-0117-82EA-B682768D977D";
+	rename -uid "CD5CD925-4169-0E70-0FC1-D38E8567E2E8";
 	setAttr ".ihi" 0;
 	setAttr -s 2 ".hyp";
+createNode multiplyDivide -n "LegFoot__instance_1:distBetween_IK_hip_joint_positionLocator_IK_knee_joint_positionLocator_translationValue";
+	rename -uid "864B798D-4165-230B-5AFB-23B16B775C49";
+	setAttr ".i1" -type "float3" 4.1231055 0 0 ;
+createNode distanceBetween -n "LegFoot__instance_1:distBetween_ankle_joint_rootPosLocator_ball_joint_endPosLocator";
+	rename -uid "552838A4-4D1B-822F-3647-B78BED558842";
+createNode blendColors -n "LegFoot__instance_1:ankle_joint_ikHandle_lockBlend";
+	rename -uid "26BF4EDF-4783-CFDB-5853-DEA385487490";
+	setAttr ".b" 1;
+	setAttr ".c2" -type "float3" 1 0 1 ;
 createNode container -n "LegFoot__instance_1:knee_joint_translation_control_container";
-	rename -uid "7CFE7C9D-4690-3327-B163-F6B3E8D7B1FE";
+	rename -uid "C362DC45-409B-7524-E92A-EC960DEAAB1C";
 	addAttr -ci true -h true -sn "aal" -ln "attributeAliasList" -dt "attributeAlias";
 	setAttr -s 4 ".boc";
 	setAttr ".ctor" -type "string" "Administrator";
@@ -9381,17 +9381,8 @@ createNode container -n "LegFoot__instance_1:knee_joint_translation_control_cont
 	setAttr ".aal" -type "attributeAlias" {"knee_joint_T","borderConnections[0]","knee_joint_TX"
 		,"borderConnections[1]","knee_joint_TY","borderConnections[2]","knee_joint_TZ","borderConnections[3]"
 		} ;
-createNode container -n "LegFoot__instance_1:ankle_joint_translation_control_container";
-	rename -uid "29C19471-4BDE-8A38-0691-AD9B621F71D9";
-	addAttr -ci true -h true -sn "aal" -ln "attributeAliasList" -dt "attributeAlias";
-	setAttr -s 4 ".boc";
-	setAttr ".ctor" -type "string" "Administrator";
-	setAttr ".cdat" -type "string" "2009/08/05 11:57:53";
-	setAttr ".aal" -type "attributeAlias" {"ankle_joint_T","borderConnections[0]","ankle_joint_TX"
-		,"borderConnections[1]","ankle_joint_TY","borderConnections[2]","ankle_joint_TZ","borderConnections[3]"
-		} ;
 createNode container -n "LegFoot__instance_1:hip_joint_translation_control_container";
-	rename -uid "A9267463-42CE-A783-4BBD-A6A5CA419B45";
+	rename -uid "AF855A7B-4EAA-123F-0EF7-358C3DD33312";
 	addAttr -ci true -h true -sn "aal" -ln "attributeAliasList" -dt "attributeAlias";
 	setAttr -s 4 ".boc";
 	setAttr ".ctor" -type "string" "Administrator";
@@ -9399,16 +9390,78 @@ createNode container -n "LegFoot__instance_1:hip_joint_translation_control_conta
 	setAttr ".aal" -type "attributeAlias" {"hip_joint_T","borderConnections[0]","hip_joint_TX"
 		,"borderConnections[1]","hip_joint_TY","borderConnections[2]","hip_joint_TZ","borderConnections[3]"
 		} ;
-createNode distanceBetween -n "LegFoot__instance_1:distBetween_IK_hip_joint_positionLocator_IK_knee_joint_positionLocator";
-	rename -uid "1D8D0956-4E67-6D75-ECF1-26A7CCB59CBB";
-createNode distanceBetween -n "LegFoot__instance_1:distBetween_ankle_joint_rootPosLocator_ball_joint_endPosLocator";
-	rename -uid "EDD32AE9-43CA-C3DB-7F54-0E87208C3DCC";
-createNode distanceBetween -n "LegFoot__instance_1:distBetween_ball_joint_rootPosLocator_toe_joint_endPosLocator";
-	rename -uid "0EC2D756-44CD-C916-1047-868923818068";
-createNode distanceBetween -n "LegFoot__instance_1:distBetween_IK_knee_joint_positionLocator_IK_hip_joint_ikHandle_positionLocator";
-	rename -uid "9EFE9D6B-48B7-7161-4A36-E1A06D19CF50";
+createNode multiplyDivide -n "LegFoot__instance_1:distBetween_IK_hip_joint_positionLocator_IK_knee_joint_positionLocator_scaleFactor";
+	rename -uid "FA7FA1EC-478E-F08D-3626-44B52DD64A24";
+	setAttr ".op" 2;
+	setAttr ".i2" -type "float3" 4.1231055 1 1 ;
+createNode multiplyDivide -n "LegFoot__instance_1:ball_joint_ikHandle_scaleFactor";
+	rename -uid "63185A64-419B-9767-751C-1E9059B42F30";
+	setAttr ".op" 2;
+	setAttr ".i2" -type "float3" 3 1 1 ;
+createNode multiplyDivide -n "LegFoot__instance_1:ball_joint_scaleMultiply";
+	rename -uid "F5F39446-40AE-7061-4858-D2A790A3D52C";
+	setAttr ".i1" -type "float3" 12.409674 0 0 ;
+createNode multiplyDivide -n "LegFoot__instance_1:ankle_joint_scaleMultiply";
+	rename -uid "14405659-4DF4-B433-DE50-EF82646932E0";
+	setAttr ".i1" -type "float3" 4.1231055 0 0 ;
+createNode multiplyDivide -n "LegFoot__instance_1:knee_joint_ikHandle_scaleFactor";
+	rename -uid "DE3B4119-474E-4B9F-CB39-31BC4B3BE379";
+	setAttr ".op" 2;
+	setAttr ".i2" -type "float3" 4.1231055 1 1 ;
+createNode multiplyDivide -n "LegFoot__instance_1:knee_joint_scaleMultiply";
+	rename -uid "C5E2055A-480D-11A5-9703-4CB886644461";
+	setAttr ".i1" -type "float3" 4.1231055 0 0 ;
+createNode multiplyDivide -n "LegFoot__instance_1:ankle_joint_ikHandle_scaleFactor";
+	rename -uid "AE12730D-4744-8368-AB02-F1A8C05E515E";
+	setAttr ".op" 2;
+	setAttr ".i2" -type "float3" 12.409674 1 1 ;
+createNode multiplyDivide -n "LegFoot__instance_1:toe_joint_scaleMultiply";
+	rename -uid "3671D0F5-46C0-F6E3-86F8-1DAAFA3DA86C";
+	setAttr ".i1" -type "float3" 3 0 0 ;
+createNode multiplyDivide -n "LegFoot__instance_1:hip_joint_ikHandle_scaleFactor";
+	rename -uid "11FE0270-4306-6CDA-57C7-1BA831D07A49";
+	setAttr ".op" 2;
+	setAttr ".i2" -type "float3" 4.1231055 1 1 ;
+createNode distanceBetween -n "LegFoot__instance_1:distBetween_hip_joint_rootPosLocator_knee_joint_endPosLocator";
+	rename -uid "7C6D57D6-465E-9622-67A0-FB917F96DD45";
+createNode blendColors -n "LegFoot__instance_1:hip_joint_ikHandle_lockBlend";
+	rename -uid "FC2EA6C5-4B4A-8081-7E6A-1184EAF0FF67";
+	setAttr ".b" 1;
+	setAttr ".c2" -type "float3" 1 0 1 ;
+createNode multiplyDivide -n "LegFoot__instance_1:distBetween_IK_knee_joint_positionLocator_IK_hip_joint_ikHandle_positionLocator_scaleFactor";
+	rename -uid "EE1CD472-40CE-3374-A9C7-C58717C3A950";
+	setAttr ".op" 2;
+	setAttr ".i2" -type "float3" 4.1231055 1 1 ;
+createNode container -n "LegFoot__instance_1:ankle_joint_orientation_control_container";
+	rename -uid "ECC9B9D6-435E-08FC-F349-059FBCD5450C";
+	addAttr -ci true -h true -sn "aal" -ln "attributeAliasList" -dt "attributeAlias";
+	setAttr ".ctor" -type "string" "Administrator";
+	setAttr ".cdat" -type "string" "2009/07/28 18:25:27";
+	setAttr ".aal" -type "attributeAlias" {"ankle_joint_orientation","borderConnections[0]"
+		} ;
+createNode container -n "LegFoot__instance_1:ball_joint_orientation_control_container";
+	rename -uid "085E89FB-4435-03F9-BE33-2280AF38F48B";
+	addAttr -ci true -h true -sn "aal" -ln "attributeAliasList" -dt "attributeAlias";
+	setAttr ".ctor" -type "string" "Administrator";
+	setAttr ".cdat" -type "string" "2009/07/28 18:25:27";
+	setAttr ".aal" -type "attributeAlias" {"ball_joint_orientation","borderConnections[0]"
+		} ;
+createNode container -n "LegFoot__instance_1:hip_joint_hierarchy_representation_container";
+	rename -uid "CEDA5AB5-46BA-15EB-1CC4-F8960082191D";
+	setAttr ".ctor" -type "string" "Administrator";
+	setAttr ".cdat" -type "string" "2009/07/28 18:18:37";
+createNode container -n "LegFoot__instance_1:knee_joint_hierarchy_representation_container";
+	rename -uid "5F0F536B-430B-7C36-ED3E-179110C76217";
+	setAttr ".ctor" -type "string" "Administrator";
+	setAttr ".cdat" -type "string" "2009/07/28 18:18:37";
+createNode container -n "LegFoot__instance_1:IK_knee_joint_preferredAngle_representation_container";
+	rename -uid "D6CE58E8-43B9-D41A-FB41-E0B2EFA8C5F1";
+	addAttr -ci true -h true -sn "aal" -ln "attributeAliasList" -dt "attributeAlias";
+	setAttr ".ctor" -type "string" "Administrator";
+	setAttr ".cdat" -type "string" "2009/08/21 21:13:27";
+	setAttr ".aal" -type "attributeAlias" {"axis","borderConnections[0]"} ;
 createNode container -n "LegFoot__instance_1:toe_joint_translation_control_container";
-	rename -uid "1D751306-4184-BB13-3996-1194624D8AAE";
+	rename -uid "87CC5145-42CF-A5AF-D77A-299FE9AF9F90";
 	addAttr -ci true -h true -sn "aal" -ln "attributeAliasList" -dt "attributeAlias";
 	setAttr -s 4 ".boc";
 	setAttr ".ctor" -type "string" "Administrator";
@@ -9416,18 +9469,29 @@ createNode container -n "LegFoot__instance_1:toe_joint_translation_control_conta
 	setAttr ".aal" -type "attributeAlias" {"toe_joint_T","borderConnections[0]","toe_joint_TX"
 		,"borderConnections[1]","toe_joint_TY","borderConnections[2]","toe_joint_TZ","borderConnections[3]"
 		} ;
-createNode container -n "LegFoot__instance_1:hip_joint_hierarchy_representation_container";
-	rename -uid "167C5117-4A10-8999-66D7-70A081DEB5BA";
-	setAttr ".ctor" -type "string" "Administrator";
-	setAttr ".cdat" -type "string" "2009/07/28 18:18:37";
-createNode container -n "LegFoot__instance_1:IK_knee_joint_preferredAngle_representation_container";
-	rename -uid "60613498-4DE0-FAD8-BE7E-88B7A36F6C93";
+createNode container -n "LegFoot__instance_1:hook_container";
+	rename -uid "56319BDF-48AE-7660-15C5-3B91E947535F";
 	addAttr -ci true -h true -sn "aal" -ln "attributeAliasList" -dt "attributeAlias";
+	setAttr ".isc" yes;
+	setAttr -s 8 ".boc";
+	setAttr ".ctor" -type "string" "micma";
+	setAttr ".cdat" -type "string" "2025/12/08 16:29:20";
+	setAttr ".aal" -type "attributeAlias" {"hook_root_joint_R","borderConnections[0]"
+		,"hook_root_joint_RX","borderConnections[1]","hook_root_joint_RY","borderConnections[2]"
+		,"hook_root_joint_RZ","borderConnections[3]","hook_target_joint_R","borderConnections[4]"
+		,"hook_target_joint_RX","borderConnections[5]","hook_target_joint_RY","borderConnections[6]"
+		,"hook_target_joint_RZ","borderConnections[7]"} ;
+createNode container -n "LegFoot__instance_1:ankle_joint_translation_control_container";
+	rename -uid "5CDB0CCF-48B9-F110-C4C9-B48AE21998CE";
+	addAttr -ci true -h true -sn "aal" -ln "attributeAliasList" -dt "attributeAlias";
+	setAttr -s 4 ".boc";
 	setAttr ".ctor" -type "string" "Administrator";
-	setAttr ".cdat" -type "string" "2009/08/21 21:13:27";
-	setAttr ".aal" -type "attributeAlias" {"axis","borderConnections[0]"} ;
+	setAttr ".cdat" -type "string" "2009/08/05 11:57:53";
+	setAttr ".aal" -type "attributeAlias" {"ankle_joint_T","borderConnections[0]","ankle_joint_TX"
+		,"borderConnections[1]","ankle_joint_TY","borderConnections[2]","ankle_joint_TZ","borderConnections[3]"
+		} ;
 createNode container -n "LegFoot__instance_1:ball_joint_translation_control_container";
-	rename -uid "12532988-404A-1237-A7B8-85AF8AC1086B";
+	rename -uid "C6A6B781-40C2-1CF2-C9E6-3A8BE23B4B2C";
 	addAttr -ci true -h true -sn "aal" -ln "attributeAliasList" -dt "attributeAlias";
 	setAttr -s 4 ".boc";
 	setAttr ".ctor" -type "string" "Administrator";
@@ -9435,116 +9499,41 @@ createNode container -n "LegFoot__instance_1:ball_joint_translation_control_cont
 	setAttr ".aal" -type "attributeAlias" {"ball_joint_T","borderConnections[0]","ball_joint_TX"
 		,"borderConnections[1]","ball_joint_TY","borderConnections[2]","ball_joint_TZ","borderConnections[3]"
 		} ;
-createNode container -n "LegFoot__instance_1:knee_joint_hierarchy_representation_container";
-	rename -uid "F956C5AC-431B-64C4-0A98-53926133CEE0";
-	setAttr ".ctor" -type "string" "Administrator";
-	setAttr ".cdat" -type "string" "2009/07/28 18:18:37";
-createNode container -n "LegFoot__instance_1:hook_container";
-	rename -uid "D85808A5-40DF-92EA-5F64-13960CB36F69";
-	addAttr -ci true -h true -sn "aal" -ln "attributeAliasList" -dt "attributeAlias";
-	setAttr ".isc" yes;
-	setAttr -s 8 ".boc";
-	setAttr ".ctor" -type "string" "micma";
-	setAttr ".cdat" -type "string" "2024/12/11 19:28:48";
-	setAttr ".aal" -type "attributeAlias" {"hook_root_joint_R","borderConnections[0]"
-		,"hook_root_joint_RX","borderConnections[1]","hook_root_joint_RY","borderConnections[2]"
-		,"hook_root_joint_RZ","borderConnections[3]","hook_target_joint_R","borderConnections[4]"
-		,"hook_target_joint_RX","borderConnections[5]","hook_target_joint_RY","borderConnections[6]"
-		,"hook_target_joint_RZ","borderConnections[7]"} ;
-createNode container -n "LegFoot__instance_1:ankle_joint_orientation_control_container";
-	rename -uid "826F20C2-4808-DCD0-66E8-8BB9C6D062F7";
-	addAttr -ci true -h true -sn "aal" -ln "attributeAliasList" -dt "attributeAlias";
-	setAttr ".ctor" -type "string" "Administrator";
-	setAttr ".cdat" -type "string" "2009/07/28 18:25:27";
-	setAttr ".aal" -type "attributeAlias" {"ankle_joint_orientation","borderConnections[0]"
-		} ;
-createNode container -n "LegFoot__instance_1:ball_joint_orientation_control_container";
-	rename -uid "8057086D-4274-351B-023C-329332E8C9E2";
-	addAttr -ci true -h true -sn "aal" -ln "attributeAliasList" -dt "attributeAlias";
-	setAttr ".ctor" -type "string" "Administrator";
-	setAttr ".cdat" -type "string" "2009/07/28 18:25:27";
-	setAttr ".aal" -type "attributeAlias" {"ball_joint_orientation","borderConnections[0]"
-		} ;
-createNode distanceBetween -n "LegFoot__instance_1:distBetween_knee_joint_rootPosLocator_ankle_joint_endPosLocator";
-	rename -uid "EB09F6CC-4859-5963-48E7-3CBBF555E3B3";
-createNode distanceBetween -n "LegFoot__instance_1:distBetween_hip_joint_rootPosLocator_knee_joint_endPosLocator";
-	rename -uid "EEEA60A1-4C00-74DC-DB87-0AB0F6B084D9";
 createNode hyperLayout -n "hyperLayout1";
-	rename -uid "C45889B4-48BF-E8F6-A029-66BF9D73FD64";
+	rename -uid "D1296C82-46CE-9B1E-636C-39B765020D44";
 	setAttr ".ihi" 0;
-	setAttr -s 118 ".hyp";
-createNode multiplyDivide -n "LegFoot__instance_1:ankle_joint_scaleMultiply";
-	rename -uid "97C9809D-440C-442E-3A5A-E49AEEC9F652";
-	setAttr ".i1" -type "float3" 4.1231055 0 0 ;
-createNode multiplyDivide -n "LegFoot__instance_1:hip_joint_ikHandle_scaleFactor";
-	rename -uid "E30F9E07-4260-8130-41AB-B690FC69D205";
-	setAttr ".op" 2;
-	setAttr ".i2" -type "float3" 4.1231055 1 1 ;
-createNode multiplyDivide -n "LegFoot__instance_1:knee_joint_scaleMultiply";
-	rename -uid "144319FA-48D9-178B-8314-51952D20227F";
-	setAttr ".i1" -type "float3" 4.1231055 0 0 ;
-createNode multiplyDivide -n "LegFoot__instance_1:knee_joint_ikHandle_scaleFactor";
-	rename -uid "476533CC-4D9D-197F-1272-98A0B52A08D8";
-	setAttr ".op" 2;
-	setAttr ".i2" -type "float3" 4.1231055 1 1 ;
+	setAttr -s 122 ".hyp";
+createNode distanceBetween -n "LegFoot__instance_1:distBetween_knee_joint_rootPosLocator_ankle_joint_endPosLocator";
+	rename -uid "9BDC2329-40DA-9077-C3AD-39B5577A16E0";
+createNode blendColors -n "LegFoot__instance_1:knee_joint_ikHandle_lockBlend";
+	rename -uid "5C9E711B-4DDE-C685-1467-D6963E69CC45";
+	setAttr ".b" 1;
+	setAttr ".c2" -type "float3" 1 0 1 ;
+createNode distanceBetween -n "LegFoot__instance_1:distBetween_ball_joint_rootPosLocator_toe_joint_endPosLocator";
+	rename -uid "9A05583F-462A-DD56-4D91-74A55EB6DA0D";
+createNode blendColors -n "LegFoot__instance_1:ball_joint_ikHandle_lockBlend";
+	rename -uid "17C5A9A5-496E-BC3C-1B1B-7FB0CFAD6FAF";
+	setAttr ".b" 1;
+	setAttr ".c2" -type "float3" 1 0 1 ;
+createNode distanceBetween -n "LegFoot__instance_1:distBetween_IK_hip_joint_positionLocator_IK_knee_joint_positionLocator";
+	rename -uid "26173A84-47E9-578E-B65F-23AC5C67738F";
+createNode distanceBetween -n "LegFoot__instance_1:distBetween_IK_knee_joint_positionLocator_IK_hip_joint_ikHandle_positionLocator";
+	rename -uid "C910B1A4-4B3E-3A6B-5187-EA89621C56D5";
 createNode multiplyDivide -n "LegFoot__instance_1:distBetween_IK_knee_joint_positionLocator_IK_hip_joint_ikHandle_positionLocator_translationValue";
-	rename -uid "CBEED79B-44F8-52E5-7EC9-749184C9D0D6";
+	rename -uid "01A7FF80-4FCA-E741-9B39-B9A3D66D4E80";
 	setAttr ".i1" -type "float3" 4.1231055 0 0 ;
-createNode multiplyDivide -n "LegFoot__instance_1:distBetween_IK_hip_joint_positionLocator_IK_knee_joint_positionLocator_translationValue";
-	rename -uid "6DC384D6-4838-1E50-90E8-5C82E40ADC1D";
-	setAttr ".i1" -type "float3" 4.1231055 0 0 ;
-createNode multiplyDivide -n "LegFoot__instance_1:distBetween_IK_hip_joint_positionLocator_IK_knee_joint_positionLocator_scaleFactor";
-	rename -uid "C989740C-47EC-F10F-036D-2A822826A5CE";
-	setAttr ".op" 2;
-	setAttr ".i2" -type "float3" 4.1231055 1 1 ;
-createNode multiplyDivide -n "LegFoot__instance_1:ball_joint_ikHandle_scaleFactor";
-	rename -uid "EBC5F3F9-4DDE-A4DB-3770-6C95A0F98D9C";
-	setAttr ".op" 2;
-	setAttr ".i2" -type "float3" 3 1 1 ;
-createNode multiplyDivide -n "LegFoot__instance_1:ball_joint_scaleMultiply";
-	rename -uid "583EAAC5-424D-B354-7759-ABB88DED13C6";
-	setAttr ".i1" -type "float3" 12.409674 0 0 ;
-createNode multiplyDivide -n "LegFoot__instance_1:ankle_joint_ikHandle_scaleFactor";
-	rename -uid "6C8F8BF5-4E18-7F9B-8C31-1491252BBB32";
-	setAttr ".op" 2;
-	setAttr ".i2" -type "float3" 12.409674 1 1 ;
-createNode multiplyDivide -n "LegFoot__instance_1:toe_joint_scaleMultiply";
-	rename -uid "1B1C46DA-4E61-F22F-F36C-73BD6475E344";
-	setAttr ".i1" -type "float3" 3 0 0 ;
-createNode multiplyDivide -n "LegFoot__instance_1:distBetween_IK_knee_joint_positionLocator_IK_hip_joint_ikHandle_positionLocator_scaleFactor";
-	rename -uid "A826BBD1-4677-7597-B2C9-1EB04655366C";
-	setAttr ".op" 2;
-	setAttr ".i2" -type "float3" 4.1231055 1 1 ;
-createNode materialInfo -n "materialInfo3";
-	rename -uid "7603F10E-49DF-2886-3828-DBA42F79F0EE";
-createNode shadingEngine -n "LegFoot__instance_1:ankle_joint_m_translation_control_SG";
-	rename -uid "8C0F8E61-4238-8D40-D987-00B222C0E490";
-	setAttr ".ro" yes;
-createNode lambert -n "LegFoot__instance_1:ankle_joint_m_translation_control";
-	rename -uid "A787C974-4BDE-7FDB-B091-14981192D2D4";
-	setAttr ".dc" 0;
-	setAttr ".c" -type "float3" 0.97250003 0.66659999 0.149 ;
-	setAttr ".ambc" -type "float3" 1 1 1 ;
 createNode materialInfo -n "materialInfo1";
-	rename -uid "C8C080C2-4C07-DBFD-ECD6-9090284F9B64";
+	rename -uid "9C7AB4D3-4716-1E1A-89FC-2DB8ACAF9427";
 createNode shadingEngine -n "LegFoot__instance_1:hip_joint_m_translation_control_SG";
-	rename -uid "0609B950-46A7-F534-E08F-29AB17554094";
+	rename -uid "3832AB8F-4642-6CA5-81C3-2B956E9D6468";
 	setAttr ".ro" yes;
 createNode lambert -n "LegFoot__instance_1:hip_joint_m_translation_control";
-	rename -uid "19062868-4AB0-5B1F-51FF-14942506AAF9";
+	rename -uid "F396E9B7-4948-E280-B913-D680D80460CC";
 	setAttr ".dc" 0;
 	setAttr ".c" -type "float3" 0.97250003 0.66659999 0.149 ;
 	setAttr ".ambc" -type "float3" 1 1 1 ;
-createNode lambert -n "LegFoot__instance_1:knee_joint_m_translation_control";
-	rename -uid "7D9518D3-4695-2047-9A89-539480DF52FC";
-	setAttr ".dc" 0;
-	setAttr ".c" -type "float3" 0.97250003 0.66659999 0.149 ;
-	setAttr ".ambc" -type "float3" 1 1 1 ;
-createNode shadingEngine -n "LegFoot__instance_1:knee_joint_m_translation_control_SG";
-	rename -uid "06C752D3-470E-89DF-1F38-35828F71ABBE";
-	setAttr ".ro" yes;
 createNode hyperLayout -n "hyperLayout3";
-	rename -uid "88EF4AF6-462B-C92A-2E70-CC8C30920689";
+	rename -uid "4FF7BFE1-48C0-6AE2-5293-FFA9511C504F";
 	setAttr ".ihi" 0;
 	setAttr -s 4 ".hyp";
 	setAttr ".hyp[0].x" 71;
@@ -9560,27 +9549,18 @@ createNode hyperLayout -n "hyperLayout3";
 	setAttr ".hyp[3].y" 309;
 	setAttr ".hyp[3].isf" yes;
 	setAttr ".anf" yes;
+createNode shadingEngine -n "LegFoot__instance_1:knee_joint_m_translation_control_SG";
+	rename -uid "DDE6FEBD-4203-AA68-87B2-9A9A8132C7BB";
+	setAttr ".ro" yes;
+createNode lambert -n "LegFoot__instance_1:knee_joint_m_translation_control";
+	rename -uid "9A5C1F4D-45D4-1E41-6BD1-FE861AD33A90";
+	setAttr ".dc" 0;
+	setAttr ".c" -type "float3" 0.97250003 0.66659999 0.149 ;
+	setAttr ".ambc" -type "float3" 1 1 1 ;
 createNode materialInfo -n "materialInfo2";
-	rename -uid "F2F2D57C-4A97-ED12-6C35-D699A2F79E75";
-createNode hyperLayout -n "hyperLayout4";
-	rename -uid "23671B86-4A7C-570E-3013-878C1FA048EF";
-	setAttr ".ihi" 0;
-	setAttr -s 4 ".hyp";
-	setAttr ".hyp[0].x" 71;
-	setAttr ".hyp[0].y" 93;
-	setAttr ".hyp[0].isf" yes;
-	setAttr ".hyp[1].x" 409;
-	setAttr ".hyp[1].y" 309;
-	setAttr ".hyp[1].isf" yes;
-	setAttr ".hyp[2].x" 240;
-	setAttr ".hyp[2].y" 309;
-	setAttr ".hyp[2].isf" yes;
-	setAttr ".hyp[3].x" 71;
-	setAttr ".hyp[3].y" 309;
-	setAttr ".hyp[3].isf" yes;
-	setAttr ".anf" yes;
+	rename -uid "B2B73884-4A83-0051-BAF3-CA96C4B7C881";
 createNode hyperLayout -n "hyperLayout2";
-	rename -uid "8318EFBE-431E-1407-FED4-B89BE7ACE697";
+	rename -uid "FCB175C0-4510-A25A-1B8A-ACA1481FF47E";
 	setAttr ".ihi" 0;
 	setAttr -s 4 ".hyp";
 	setAttr ".hyp[0].x" 71;
@@ -9596,45 +9576,126 @@ createNode hyperLayout -n "hyperLayout2";
 	setAttr ".hyp[3].y" 309;
 	setAttr ".hyp[3].isf" yes;
 	setAttr ".anf" yes;
-createNode materialInfo -n "materialInfo4";
-	rename -uid "0A241A7C-4276-1CB0-7BC0-2982013DED37";
-createNode shadingEngine -n "LegFoot__instance_1:ball_joint_m_translation_control_SG";
-	rename -uid "F4C9F35E-46E1-E759-8DED-E4856927F2E5";
-	setAttr ".ro" yes;
-createNode lambert -n "LegFoot__instance_1:ball_joint_m_translation_control";
-	rename -uid "99E76E3F-48C4-FADB-477F-95B8D50D32BD";
-	setAttr ".dc" 0;
-	setAttr ".c" -type "float3" 0.97250003 0.66659999 0.149 ;
-	setAttr ".ambc" -type "float3" 1 1 1 ;
-createNode hyperLayout -n "hyperLayout6";
-	rename -uid "D5FE1F1D-46DA-AC2D-E85C-C0A6447E7172";
+createNode hyperLayout -n "hyperLayout14";
+	rename -uid "B0F7046E-42B1-7870-6924-C69541C3B138";
 	setAttr ".ihi" 0;
-	setAttr -s 4 ".hyp";
-	setAttr ".hyp[0].x" 71;
-	setAttr ".hyp[0].y" 93;
+	setAttr -s 9 ".hyp";
+	setAttr ".hyp[0].x" 286;
+	setAttr ".hyp[0].y" 613;
 	setAttr ".hyp[0].isf" yes;
-	setAttr ".hyp[1].x" 409;
-	setAttr ".hyp[1].y" 309;
+	setAttr ".hyp[1].x" 286;
+	setAttr ".hyp[1].y" 93;
 	setAttr ".hyp[1].isf" yes;
-	setAttr ".hyp[2].x" 240;
-	setAttr ".hyp[2].y" 309;
-	setAttr ".hyp[2].isf" yes;
-	setAttr ".hyp[3].x" 71;
-	setAttr ".hyp[3].y" 309;
+	setAttr ".hyp[3].x" 497;
+	setAttr ".hyp[3].y" 487;
 	setAttr ".hyp[3].isf" yes;
+	setAttr ".hyp[4].x" 474;
+	setAttr ".hyp[4].y" 223;
+	setAttr ".hyp[4].isf" yes;
+	setAttr ".hyp[5].x" 148;
+	setAttr ".hyp[5].y" 353;
+	setAttr ".hyp[5].isf" yes;
+	setAttr ".hyp[6].x" 148;
+	setAttr ".hyp[6].y" 353;
+	setAttr ".hyp[6].isf" yes;
 	setAttr ".anf" yes;
-createNode lambert -n "LegFoot__instance_1:toe_joint_m_translation_control";
-	rename -uid "F7579C64-4E7B-6DB4-A528-11AE305AE2A7";
-	setAttr ".dc" 0;
-	setAttr ".c" -type "float3" 0.97250003 0.66659999 0.149 ;
-	setAttr ".ambc" -type "float3" 1 1 1 ;
-createNode shadingEngine -n "LegFoot__instance_1:toe_joint_m_translation_control_SG";
-	rename -uid "A23AD98B-4584-12C4-DA83-72A934DA8A14";
+createNode shadingEngine -n "LegFoot__instance_1:ankle_joint_m_yAxisBlockSG";
+	rename -uid "28D9F006-4D8F-93BA-FA99-32BF14AD02B6";
+	setAttr ".ihi" 0;
 	setAttr ".ro" yes;
-createNode materialInfo -n "materialInfo5";
-	rename -uid "E4BC8597-4682-24FB-A85A-B4BE6D8F63F9";
+createNode shadingEngine -n "LegFoot__instance_1:ankle_joint_m_zAxisBlockSG";
+	rename -uid "39B1316A-4464-37D6-D3ED-828378EE136B";
+	setAttr ".ihi" 0;
+	setAttr ".ro" yes;
+createNode lambert -n "LegFoot__instance_1:ankle_joint_m_zAxisBlock";
+	rename -uid "3AB478C2-436D-538D-8FD6-B3A4955E297D";
+	setAttr ".dc" 0;
+	setAttr ".c" -type "float3" 0 0.1882 0.34110001 ;
+	setAttr ".ambc" -type "float3" 1 1 1 ;
+createNode lambert -n "LegFoot__instance_1:ankle_joint_m_yAxisBlock";
+	rename -uid "271E1AAB-4A63-DEB5-C086-B2B0DA3E28F9";
+	setAttr ".dc" 0;
+	setAttr ".c" -type "float3" 0.32859999 0.69620001 0.1762 ;
+	setAttr ".ambc" -type "float3" 1 1 1 ;
+createNode groupId -n "groupId19";
+	rename -uid "E951533C-454F-FBA3-9CD8-5083FD11C5F4";
+	setAttr ".ihi" 0;
+createNode groupId -n "groupId20";
+	rename -uid "E2B2D81D-4527-C2F8-13F0-88B0081F08F7";
+	setAttr ".ihi" 0;
+createNode groupId -n "groupId18";
+	rename -uid "514D9599-4F78-6CA1-93CB-2F92BA2A5FC1";
+	setAttr ".ihi" 0;
+createNode materialInfo -n "materialInfo13";
+	rename -uid "AC7BCBFD-4ADB-F867-5834-10AABDC36DAE";
+createNode materialInfo -n "materialInfo12";
+	rename -uid "B41DA52C-4BF3-A005-5D25-BBA47D6CDD1F";
+createNode hyperLayout -n "hyperLayout15";
+	rename -uid "29B1F802-46FE-AD48-A897-3092C93E5A5C";
+	setAttr ".ihi" 0;
+	setAttr -s 9 ".hyp";
+	setAttr ".hyp[0].x" 286;
+	setAttr ".hyp[0].y" 613;
+	setAttr ".hyp[0].isf" yes;
+	setAttr ".hyp[1].x" 286;
+	setAttr ".hyp[1].y" 93;
+	setAttr ".hyp[1].isf" yes;
+	setAttr ".hyp[3].x" 497;
+	setAttr ".hyp[3].y" 487;
+	setAttr ".hyp[3].isf" yes;
+	setAttr ".hyp[4].x" 474;
+	setAttr ".hyp[4].y" 223;
+	setAttr ".hyp[4].isf" yes;
+	setAttr ".hyp[5].x" 148;
+	setAttr ".hyp[5].y" 353;
+	setAttr ".hyp[5].isf" yes;
+	setAttr ".hyp[6].x" 148;
+	setAttr ".hyp[6].y" 353;
+	setAttr ".hyp[6].isf" yes;
+	setAttr ".anf" yes;
+createNode shadingEngine -n "LegFoot__instance_1:ball_joint_m_yAxisBlockSG";
+	rename -uid "3250A23B-4072-D579-452E-9FA89E81C498";
+	setAttr ".ihi" 0;
+	setAttr ".ro" yes;
+createNode shadingEngine -n "LegFoot__instance_1:ball_joint_m_zAxisBlockSG";
+	rename -uid "F5DD9FBE-4E93-37E0-E2B4-E88DE9DCEE62";
+	setAttr ".ihi" 0;
+	setAttr ".ro" yes;
+createNode lambert -n "LegFoot__instance_1:ball_joint_m_zAxisBlock";
+	rename -uid "85045B37-4A6A-E57F-7788-AE9E98FFCA77";
+	setAttr ".dc" 0;
+	setAttr ".c" -type "float3" 0 0.1882 0.34110001 ;
+	setAttr ".ambc" -type "float3" 1 1 1 ;
+createNode lambert -n "LegFoot__instance_1:ball_joint_m_yAxisBlock";
+	rename -uid "39A6C4B4-486C-1003-4DBC-80B3CBF2906E";
+	setAttr ".dc" 0;
+	setAttr ".c" -type "float3" 0.32859999 0.69620001 0.1762 ;
+	setAttr ".ambc" -type "float3" 1 1 1 ;
+createNode groupId -n "groupId22";
+	rename -uid "F233961E-4682-E224-D009-D2B700ABE085";
+	setAttr ".ihi" 0;
+createNode groupId -n "groupId23";
+	rename -uid "B13A9816-4852-1FC1-0B65-849C7AEFD0FA";
+	setAttr ".ihi" 0;
+createNode groupId -n "groupId21";
+	rename -uid "DE8DA463-4344-EE7D-A50E-BC8E7F86BDB0";
+	setAttr ".ihi" 0;
+createNode materialInfo -n "materialInfo15";
+	rename -uid "9051AEAF-472D-4148-8678-619F76F35756";
+createNode materialInfo -n "materialInfo14";
+	rename -uid "2DDAEDAF-4D74-D628-3A78-279426D62474";
+createNode shadingEngine -n "LegFoot__instance_1:hip_joint_m_hookRepresentation_SG";
+	rename -uid "CD513644-4F2D-B677-B370-8883C45FA82C";
+	setAttr ".ihi" 0;
+	setAttr -s 2 ".dsm";
+	setAttr ".ro" yes;
+createNode lambert -n "LegFoot__instance_1:hip_joint_m_hierarchyRepresentation";
+	rename -uid "7DEE121D-4424-713C-A591-29808571DA64";
+	setAttr ".dc" 0;
+	setAttr ".c" -type "float3" 0 0.1882 0.34110001 ;
+	setAttr ".ambc" -type "float3" 1 1 1 ;
 createNode hyperLayout -n "hyperLayout9";
-	rename -uid "3AFA6D45-48DD-87CD-0D79-26B7DF2CC077";
+	rename -uid "89C7BEBF-48E1-BCD2-01A3-0DB6F8B60719";
 	setAttr ".ihi" 0;
 	setAttr -s 9 ".hyp";
 	setAttr ".hyp[1].x" 71;
@@ -9644,25 +9705,38 @@ createNode hyperLayout -n "hyperLayout9";
 	setAttr ".hyp[3].y" 93;
 	setAttr ".hyp[3].isf" yes;
 	setAttr ".anf" yes;
-createNode lambert -n "LegFoot__instance_1:hip_joint_m_hierarchyRepresentation";
-	rename -uid "37CB55AA-4152-5F2F-ADC1-89825BF6FF31";
-	setAttr ".dc" 0;
-	setAttr ".c" -type "float3" 0 0.1882 0.34110001 ;
-	setAttr ".ambc" -type "float3" 1 1 1 ;
-createNode shadingEngine -n "LegFoot__instance_1:hip_joint_m_hookRepresentation_SG";
-	rename -uid "E03F5109-476F-D0AE-932A-21855C3DB8CD";
+createNode materialInfo -n "materialInfo7";
+	rename -uid "F637122C-49E7-5D0F-F983-83B9A9ECD5DA";
+createNode shadingEngine -n "LegFoot__instance_1:knee_joint_m_hookRepresentation_SG";
+	rename -uid "AA9E4E75-4836-DF2D-8BE5-04B327B6FBE7";
 	setAttr ".ihi" 0;
 	setAttr -s 2 ".dsm";
 	setAttr ".ro" yes;
-createNode materialInfo -n "materialInfo7";
-	rename -uid "0F8A736B-4B70-B31D-8443-E684CC686700";
+createNode lambert -n "LegFoot__instance_1:knee_joint_m_hierarchyRepresentation";
+	rename -uid "25DCDE5B-4C38-F669-1801-39966C0CBF39";
+	setAttr ".dc" 0;
+	setAttr ".c" -type "float3" 0 0.1882 0.34110001 ;
+	setAttr ".ambc" -type "float3" 1 1 1 ;
+createNode hyperLayout -n "hyperLayout10";
+	rename -uid "DD1B727B-4B96-0209-2F4D-B2915DBE51CF";
+	setAttr ".ihi" 0;
+	setAttr -s 9 ".hyp";
+	setAttr ".hyp[1].x" 71;
+	setAttr ".hyp[1].y" 93;
+	setAttr ".hyp[1].isf" yes;
+	setAttr ".hyp[3].x" 259;
+	setAttr ".hyp[3].y" 93;
+	setAttr ".hyp[3].isf" yes;
+	setAttr ".anf" yes;
+createNode materialInfo -n "materialInfo8";
+	rename -uid "DE2311BB-44D8-62AB-D430-3F9B390DAC16";
 createNode animCurveUA -n "LegFoot__instance_1:IK_knee_joint_preferredAngle_representation_rotateX";
-	rename -uid "B1310ACF-46A0-14BB-B10C-BB8CEF97B33B";
+	rename -uid "75900A29-49C9-03C6-8D17-B6AD5135461D";
 	setAttr ".tan" 10;
 	setAttr ".wgt" no;
 	setAttr -s 4 ".ktv[0:3]"  0 0 1 180 2 90 3 -90;
 createNode hyperLayout -n "hyperLayout13";
-	rename -uid "054BC141-44A7-1952-E77F-B69C422637EA";
+	rename -uid "70D97F62-40DA-5630-6805-B0856A948F7B";
 	setAttr ".ihi" 0;
 	setAttr -s 8 ".hyp";
 	setAttr ".hyp[0].x" 583;
@@ -9682,18 +9756,20 @@ createNode hyperLayout -n "hyperLayout13";
 	setAttr ".hyp[4].isf" yes;
 	setAttr ".anf" yes;
 createNode shadingEngine -n "LegFoot__instance_1:IK_knee_joint_preferredAngle_representation_SG";
-	rename -uid "B4C8FD0B-47FD-29F5-4F6D-1B8C919770ED";
+	rename -uid "C79976EB-4FEA-073C-CDA0-FB95F6D47AE6";
 	setAttr ".ihi" 0;
 	setAttr ".ro" yes;
 createNode lambert -n "LegFoot__instance_1:IK_knee_joint_m_preferredAngle_representation";
-	rename -uid "CD7AD8C7-4AEE-E453-89F2-77BD9139A7B4";
+	rename -uid "B5D1E01F-4180-EC71-BE1B-AB87161458E5";
 	setAttr ".dc" 0;
 	setAttr ".c" -type "float3" 0.90200001 0.79193944 0.094710015 ;
 	setAttr ".ambc" -type "float3" 1 1 1 ;
 createNode materialInfo -n "materialInfo11";
-	rename -uid "2C3191A8-44A1-A5CC-322A-B89E5C5AB38E";
-createNode hyperLayout -n "hyperLayout5";
-	rename -uid "F13D89F9-4487-65BF-A37B-CFB5DE0B2B48";
+	rename -uid "F9895D9B-47C1-8809-966A-79A1760C1ECC";
+createNode ikRPsolver -n "ikRPsolver";
+	rename -uid "A50FC04E-4BD1-6E84-BC64-9699576FA942";
+createNode hyperLayout -n "hyperLayout6";
+	rename -uid "60DBE05E-463C-8D4B-FC73-E7ABA882E1F5";
 	setAttr ".ihi" 0;
 	setAttr -s 4 ".hyp";
 	setAttr ".hyp[0].x" 71;
@@ -9709,48 +9785,48 @@ createNode hyperLayout -n "hyperLayout5";
 	setAttr ".hyp[3].y" 309;
 	setAttr ".hyp[3].isf" yes;
 	setAttr ".anf" yes;
-createNode hyperLayout -n "hyperLayout10";
-	rename -uid "2366CB0D-4053-8A06-6517-E69A8E3E063C";
-	setAttr ".ihi" 0;
-	setAttr -s 9 ".hyp";
-	setAttr ".hyp[1].x" 71;
-	setAttr ".hyp[1].y" 93;
-	setAttr ".hyp[1].isf" yes;
-	setAttr ".hyp[3].x" 259;
-	setAttr ".hyp[3].y" 93;
-	setAttr ".hyp[3].isf" yes;
-	setAttr ".anf" yes;
-createNode lambert -n "LegFoot__instance_1:knee_joint_m_hierarchyRepresentation";
-	rename -uid "4344A46A-4E58-5F6D-85CE-F29E4CC08EE9";
-	setAttr ".dc" 0;
-	setAttr ".c" -type "float3" 0 0.1882 0.34110001 ;
-	setAttr ".ambc" -type "float3" 1 1 1 ;
-createNode shadingEngine -n "LegFoot__instance_1:knee_joint_m_hookRepresentation_SG";
-	rename -uid "3B86B77E-49DF-04CB-C558-F3BD50034200";
-	setAttr ".ihi" 0;
-	setAttr -s 2 ".dsm";
+createNode shadingEngine -n "LegFoot__instance_1:toe_joint_m_translation_control_SG";
+	rename -uid "BA7CC11B-4E1C-C5D5-F5AB-33AF03E842DE";
 	setAttr ".ro" yes;
-createNode materialInfo -n "materialInfo8";
-	rename -uid "FA99180A-40EB-8263-FA85-BEB8B3AFF8B3";
+createNode lambert -n "LegFoot__instance_1:toe_joint_m_translation_control";
+	rename -uid "1F21F9DE-438C-39F6-6DAE-3785CBDE133C";
+	setAttr ".dc" 0;
+	setAttr ".c" -type "float3" 0.97250003 0.66659999 0.149 ;
+	setAttr ".ambc" -type "float3" 1 1 1 ;
+createNode materialInfo -n "materialInfo5";
+	rename -uid "063461E9-4EE4-07E2-EE50-3DB6A1E5FEED";
+createNode multiplyDivide -n "LegFoot__instance_1:hook_target_joint_scaleMultiply";
+	rename -uid "801F4A8A-4DBE-F00E-5001-76B410C296A5";
+	setAttr ".i1" -type "float3" 0.001 0 0 ;
+createNode multiplyDivide -n "LegFoot__instance_1:hook_root_joint_ikHandle_scaleFactor";
+	rename -uid "422A8D27-4A82-0E08-2918-63A9B50FC73C";
+	setAttr ".op" 2;
+	setAttr ".i2" -type "float3" 0.001 1 1 ;
 createNode container -n "LegFoot__instance_1:hook_root_joint_hook_representation_container";
-	rename -uid "827FE619-4EB2-40E4-485A-CCB3C7CD1B56";
+	rename -uid "CC771D2F-4A8A-16D3-15ED-C28BF204743F";
 	setAttr ".ctor" -type "string" "Administrator";
 	setAttr ".cdat" -type "string" "2009/07/28 18:18:37";
 createNode hyperLayout -n "hyperLayout7";
-	rename -uid "2DBE890A-4A27-0EBD-A676-A9A5B0F1BAD5";
+	rename -uid "AC98BABC-455E-B08D-FCB2-A780280854AF";
 	setAttr ".ihi" 0;
-	setAttr -s 23 ".hyp";
+	setAttr -s 24 ".hyp";
 createNode distanceBetween -n "LegFoot__instance_1:distBetween_hook_root_joint_rootPosLocator_hook_target_joint_endPosLocator";
-	rename -uid "F37ADA26-413F-E4D7-7DF1-168B5AA54639";
-createNode multiplyDivide -n "LegFoot__instance_1:hook_root_joint_ikHandle_scaleFactor";
-	rename -uid "ADE6DCAE-4E2A-A456-9185-16A66A066F71";
-	setAttr ".op" 2;
-	setAttr ".i2" -type "float3" 0.001 1 1 ;
-createNode multiplyDivide -n "LegFoot__instance_1:hook_target_joint_scaleMultiply";
-	rename -uid "F13C813A-47ED-79AC-2DE2-859E13AAFCA2";
-	setAttr ".i1" -type "float3" 0.001 0 0 ;
+	rename -uid "A6E18BE9-4E69-E056-D3BE-B4A92B725DCB";
+createNode blendColors -n "LegFoot__instance_1:hook_root_joint_ikHandle_lockBlend";
+	rename -uid "A47A49CE-4F14-75E5-0778-9DB6F17D0EBF";
+	setAttr ".b" 1;
+	setAttr ".c2" -type "float3" 1 0 1 ;
+createNode shadingEngine -n "LegFoot__instance_1:hook_root_joint_m_hookRepresentation_SG";
+	rename -uid "9F325FC1-488A-6CCE-0B8E-D9ADD22D2147";
+	setAttr ".ihi" 0;
+	setAttr ".ro" yes;
+createNode lambert -n "LegFoot__instance_1:hook_root_joint_m_hookRepresentation";
+	rename -uid "10F56F8A-4C1C-1F3A-CDE7-2497ECF3ACDA";
+	setAttr ".dc" 0;
+	setAttr ".c" -type "float3" 0.56099999 0.56099999 0.56099999 ;
+	setAttr ".ambc" -type "float3" 1 1 1 ;
 createNode hyperLayout -n "hyperLayout8";
-	rename -uid "49853E8D-42CB-FB5C-CBF2-9CAD1E1EE546";
+	rename -uid "7C0922CE-4B70-138B-D445-8680B5CCA3B3";
 	setAttr ".ihi" 0;
 	setAttr -s 7 ".hyp";
 	setAttr ".hyp[1].x" 71;
@@ -9760,196 +9836,70 @@ createNode hyperLayout -n "hyperLayout8";
 	setAttr ".hyp[3].y" 93;
 	setAttr ".hyp[3].isf" yes;
 	setAttr ".anf" yes;
-createNode lambert -n "LegFoot__instance_1:hook_root_joint_m_hookRepresentation";
-	rename -uid "95775BDF-4866-9E53-547E-1B996F9ED616";
-	setAttr ".dc" 0;
-	setAttr ".c" -type "float3" 0.56099999 0.56099999 0.56099999 ;
-	setAttr ".ambc" -type "float3" 1 1 1 ;
-createNode shadingEngine -n "LegFoot__instance_1:hook_root_joint_m_hookRepresentation_SG";
-	rename -uid "06B2D887-4D21-9222-DF42-D2A33A91FABF";
-	setAttr ".ihi" 0;
-	setAttr ".ro" yes;
 createNode materialInfo -n "materialInfo6";
-	rename -uid "66D2D032-4E5A-27D1-BB2C-0BAFBFF6B4DA";
-createNode ikRPsolver -n "ikRPsolver";
-	rename -uid "BB46CF88-4D5F-F6FA-1911-B18247B3EAAD";
-createNode hyperLayout -n "hyperLayout14";
-	rename -uid "88ED14D4-4C61-AE05-8A1D-A3A556046FE7";
+	rename -uid "20E6418C-407F-C740-BC16-BBAEAB00F04E";
+createNode hyperLayout -n "hyperLayout4";
+	rename -uid "1232F992-4996-5EEC-FCCE-68877D4B06F6";
 	setAttr ".ihi" 0;
-	setAttr -s 9 ".hyp";
-	setAttr ".hyp[0].x" 286;
-	setAttr ".hyp[0].y" 613;
+	setAttr -s 4 ".hyp";
+	setAttr ".hyp[0].x" 71;
+	setAttr ".hyp[0].y" 93;
 	setAttr ".hyp[0].isf" yes;
-	setAttr ".hyp[1].x" 286;
-	setAttr ".hyp[1].y" 93;
+	setAttr ".hyp[1].x" 409;
+	setAttr ".hyp[1].y" 309;
 	setAttr ".hyp[1].isf" yes;
-	setAttr ".hyp[3].x" 497;
-	setAttr ".hyp[3].y" 487;
+	setAttr ".hyp[2].x" 240;
+	setAttr ".hyp[2].y" 309;
+	setAttr ".hyp[2].isf" yes;
+	setAttr ".hyp[3].x" 71;
+	setAttr ".hyp[3].y" 309;
 	setAttr ".hyp[3].isf" yes;
-	setAttr ".hyp[4].x" 474;
-	setAttr ".hyp[4].y" 223;
-	setAttr ".hyp[4].isf" yes;
-	setAttr ".hyp[5].x" 148;
-	setAttr ".hyp[5].y" 353;
-	setAttr ".hyp[5].isf" yes;
-	setAttr ".hyp[6].x" 148;
-	setAttr ".hyp[6].y" 353;
-	setAttr ".hyp[6].isf" yes;
 	setAttr ".anf" yes;
-createNode lambert -n "LegFoot__instance_1:ankle_joint_m_zAxisBlock";
-	rename -uid "2BE3E102-422F-D5C4-2A06-F29D7FFFBD34";
-	setAttr ".dc" 0;
-	setAttr ".c" -type "float3" 0 0.1882 0.34110001 ;
-	setAttr ".ambc" -type "float3" 1 1 1 ;
-createNode lambert -n "LegFoot__instance_1:ankle_joint_m_yAxisBlock";
-	rename -uid "8355F22F-4B28-8896-8342-F0ABBD923A5B";
-	setAttr ".dc" 0;
-	setAttr ".c" -type "float3" 0.32859999 0.69620001 0.1762 ;
-	setAttr ".ambc" -type "float3" 1 1 1 ;
-createNode shadingEngine -n "LegFoot__instance_1:ankle_joint_m_zAxisBlockSG";
-	rename -uid "2FD6068F-464B-6F49-FE08-B2AB2D89D359";
-	setAttr ".ihi" 0;
+createNode shadingEngine -n "LegFoot__instance_1:ankle_joint_m_translation_control_SG";
+	rename -uid "3DB4D6F1-48B7-BFA4-2328-BDA5FE62D713";
 	setAttr ".ro" yes;
-createNode shadingEngine -n "LegFoot__instance_1:ankle_joint_m_yAxisBlockSG";
-	rename -uid "D1B4958F-4E47-4089-E0BD-13B9EA835BDD";
+createNode lambert -n "LegFoot__instance_1:ankle_joint_m_translation_control";
+	rename -uid "8F9EBE80-4E10-0CE3-1B25-E08062B0F2A2";
+	setAttr ".dc" 0;
+	setAttr ".c" -type "float3" 0.97250003 0.66659999 0.149 ;
+	setAttr ".ambc" -type "float3" 1 1 1 ;
+createNode materialInfo -n "materialInfo3";
+	rename -uid "77A11881-4E0F-32DD-70A2-51BE2D4B54AC";
+createNode hyperLayout -n "hyperLayout5";
+	rename -uid "2B5DEC52-4753-123B-2F6B-A99DA6395824";
 	setAttr ".ihi" 0;
-	setAttr ".ro" yes;
-createNode groupId -n "groupId19";
-	rename -uid "2EDDAEB0-41DB-B114-7C6E-76878D98CE83";
-	setAttr ".ihi" 0;
-createNode groupId -n "groupId20";
-	rename -uid "8DDFEF62-4FD9-F153-6B2C-6EAB4DA2CE3B";
-	setAttr ".ihi" 0;
-createNode groupId -n "groupId18";
-	rename -uid "58513347-4B70-4035-C49A-D89180ADB4A9";
-	setAttr ".ihi" 0;
-createNode materialInfo -n "materialInfo12";
-	rename -uid "261C1A96-49E1-B0F5-F1A5-84910EEF168E";
-createNode materialInfo -n "materialInfo13";
-	rename -uid "5B282A9B-47ED-449E-02F3-618E7B69CCC3";
-createNode hyperLayout -n "hyperLayout15";
-	rename -uid "867EE942-4BEF-3205-4C2C-3CA30B2A9997";
-	setAttr ".ihi" 0;
-	setAttr -s 9 ".hyp";
-	setAttr ".hyp[0].x" 286;
-	setAttr ".hyp[0].y" 613;
+	setAttr -s 4 ".hyp";
+	setAttr ".hyp[0].x" 71;
+	setAttr ".hyp[0].y" 93;
 	setAttr ".hyp[0].isf" yes;
-	setAttr ".hyp[1].x" 286;
-	setAttr ".hyp[1].y" 93;
+	setAttr ".hyp[1].x" 409;
+	setAttr ".hyp[1].y" 309;
 	setAttr ".hyp[1].isf" yes;
-	setAttr ".hyp[3].x" 497;
-	setAttr ".hyp[3].y" 487;
+	setAttr ".hyp[2].x" 240;
+	setAttr ".hyp[2].y" 309;
+	setAttr ".hyp[2].isf" yes;
+	setAttr ".hyp[3].x" 71;
+	setAttr ".hyp[3].y" 309;
 	setAttr ".hyp[3].isf" yes;
-	setAttr ".hyp[4].x" 474;
-	setAttr ".hyp[4].y" 223;
-	setAttr ".hyp[4].isf" yes;
-	setAttr ".hyp[5].x" 148;
-	setAttr ".hyp[5].y" 353;
-	setAttr ".hyp[5].isf" yes;
-	setAttr ".hyp[6].x" 148;
-	setAttr ".hyp[6].y" 353;
-	setAttr ".hyp[6].isf" yes;
 	setAttr ".anf" yes;
-createNode lambert -n "LegFoot__instance_1:ball_joint_m_yAxisBlock";
-	rename -uid "0652FF75-4BC9-FD25-F881-18984BE3F049";
-	setAttr ".dc" 0;
-	setAttr ".c" -type "float3" 0.32859999 0.69620001 0.1762 ;
-	setAttr ".ambc" -type "float3" 1 1 1 ;
-createNode lambert -n "LegFoot__instance_1:ball_joint_m_zAxisBlock";
-	rename -uid "D5B42B89-466D-7048-9949-25B0FAB7A74D";
-	setAttr ".dc" 0;
-	setAttr ".c" -type "float3" 0 0.1882 0.34110001 ;
-	setAttr ".ambc" -type "float3" 1 1 1 ;
-createNode shadingEngine -n "LegFoot__instance_1:ball_joint_m_yAxisBlockSG";
-	rename -uid "0B7B6B51-44B7-3BA1-B670-3E9FD57C8D7F";
-	setAttr ".ihi" 0;
+createNode shadingEngine -n "LegFoot__instance_1:ball_joint_m_translation_control_SG";
+	rename -uid "F0EFD566-4DA3-9E54-22D7-608080B4939D";
 	setAttr ".ro" yes;
-createNode shadingEngine -n "LegFoot__instance_1:ball_joint_m_zAxisBlockSG";
-	rename -uid "E56429D7-430D-75C7-7A09-00BF778F864A";
-	setAttr ".ihi" 0;
-	setAttr ".ro" yes;
-createNode groupId -n "groupId22";
-	rename -uid "B31E3A78-464B-909A-584D-93A2F0A99C7A";
-	setAttr ".ihi" 0;
-createNode groupId -n "groupId23";
-	rename -uid "CDF9FD4B-4AC0-3C77-18F2-4685A980FAB8";
-	setAttr ".ihi" 0;
-createNode groupId -n "groupId21";
-	rename -uid "C5683288-427D-6470-BE00-71A02BA424C9";
-	setAttr ".ihi" 0;
-createNode materialInfo -n "materialInfo15";
-	rename -uid "8A6D4211-448E-2E5A-490A-F490595B1FD1";
-createNode materialInfo -n "materialInfo14";
-	rename -uid "F3C5D6FB-45CF-F840-A880-EBA24ECE87A6";
-createNode container -n "LegFoot__instance_1_mirror:hip_joint_hierarchy_representation_container";
-	rename -uid "770A401D-4886-01D5-A15B-7F8EA854F6D0";
-	setAttr ".ctor" -type "string" "Administrator";
-	setAttr ".cdat" -type "string" "2009/07/28 18:18:37";
-createNode container -n "LegFoot__instance_1_mirror:knee_joint_hierarchy_representation_container";
-	rename -uid "58BA28BC-43A6-9BCA-41D3-529D8660BE6F";
-	setAttr ".ctor" -type "string" "Administrator";
-	setAttr ".cdat" -type "string" "2009/07/28 18:18:37";
-createNode container -n "LegFoot__instance_1_mirror:IK_knee_joint_preferredAngle_representation_container";
-	rename -uid "7F63854F-44DF-2BFC-0ACE-7C9FCCA3D9E6";
-	addAttr -ci true -h true -sn "aal" -ln "attributeAliasList" -dt "attributeAlias";
-	setAttr ".ctor" -type "string" "Administrator";
-	setAttr ".cdat" -type "string" "2009/08/21 21:13:27";
-	setAttr ".aal" -type "attributeAlias" {"axis","borderConnections[0]"} ;
-createNode container -n "LegFoot__instance_1_mirror:ankle_joint_orientation_control_container";
-	rename -uid "2818B959-4A7B-88B1-1112-BE8655551B58";
-	addAttr -ci true -h true -sn "aal" -ln "attributeAliasList" -dt "attributeAlias";
-	setAttr ".ctor" -type "string" "Administrator";
-	setAttr ".cdat" -type "string" "2009/07/28 18:25:27";
-	setAttr ".aal" -type "attributeAlias" {"ankle_joint_orientation","borderConnections[0]"
-		} ;
-createNode container -n "LegFoot__instance_1_mirror:ball_joint_orientation_control_container";
-	rename -uid "6F8FDE3B-40FC-BE96-F15A-959F3476C8E0";
-	addAttr -ci true -h true -sn "aal" -ln "attributeAliasList" -dt "attributeAlias";
-	setAttr ".ctor" -type "string" "Administrator";
-	setAttr ".cdat" -type "string" "2009/07/28 18:25:27";
-	setAttr ".aal" -type "attributeAlias" {"ball_joint_orientation","borderConnections[0]"
-		} ;
-createNode container -n "LegFoot__instance_1_mirror:hip_joint_translation_control_container";
-	rename -uid "B9C707FB-41EB-7128-18A1-ADAB58378579";
-	addAttr -ci true -h true -sn "aal" -ln "attributeAliasList" -dt "attributeAlias";
-	setAttr -s 4 ".boc";
-	setAttr ".ctor" -type "string" "Administrator";
-	setAttr ".cdat" -type "string" "2009/08/05 11:57:53";
-	setAttr ".aal" -type "attributeAlias" {"hip_joint_T","borderConnections[0]","hip_joint_TX"
-		,"borderConnections[1]","hip_joint_TY","borderConnections[2]","hip_joint_TZ","borderConnections[3]"
-		} ;
-createNode container -n "LegFoot__instance_1_mirror:ball_joint_translation_control_container";
-	rename -uid "36CC1BE4-4187-B65F-ACE5-44BAC35757CA";
-	addAttr -ci true -h true -sn "aal" -ln "attributeAliasList" -dt "attributeAlias";
-	setAttr -s 4 ".boc";
-	setAttr ".ctor" -type "string" "Administrator";
-	setAttr ".cdat" -type "string" "2009/08/05 11:57:53";
-	setAttr ".aal" -type "attributeAlias" {"ball_joint_T","borderConnections[0]","ball_joint_TX"
-		,"borderConnections[1]","ball_joint_TY","borderConnections[2]","ball_joint_TZ","borderConnections[3]"
-		} ;
-createNode container -n "LegFoot__instance_1_mirror:toe_joint_translation_control_container";
-	rename -uid "BB0D178F-48DE-5C33-B365-A2A863A13B48";
-	addAttr -ci true -h true -sn "aal" -ln "attributeAliasList" -dt "attributeAlias";
-	setAttr -s 4 ".boc";
-	setAttr ".ctor" -type "string" "Administrator";
-	setAttr ".cdat" -type "string" "2009/08/05 11:57:53";
-	setAttr ".aal" -type "attributeAlias" {"toe_joint_T","borderConnections[0]","toe_joint_TX"
-		,"borderConnections[1]","toe_joint_TY","borderConnections[2]","toe_joint_TZ","borderConnections[3]"
-		} ;
-createNode container -n "LegFoot__instance_1_mirror:hook_container";
-	rename -uid "71B23F51-4C0A-CB4D-06E4-CDACFB06ECA2";
-	addAttr -ci true -h true -sn "aal" -ln "attributeAliasList" -dt "attributeAlias";
-	setAttr ".isc" yes;
-	setAttr -s 8 ".boc";
-	setAttr ".ctor" -type "string" "micma";
-	setAttr ".cdat" -type "string" "2024/12/11 19:29:08";
-	setAttr ".aal" -type "attributeAlias" {"hook_root_joint_R","borderConnections[0]"
-		,"hook_root_joint_RX","borderConnections[1]","hook_root_joint_RY","borderConnections[2]"
-		,"hook_root_joint_RZ","borderConnections[3]","hook_target_joint_R","borderConnections[4]"
-		,"hook_target_joint_RX","borderConnections[5]","hook_target_joint_RY","borderConnections[6]"
-		,"hook_target_joint_RZ","borderConnections[7]"} ;
+createNode lambert -n "LegFoot__instance_1:ball_joint_m_translation_control";
+	rename -uid "7B4AF84C-44C8-6122-3F19-74B1A1B677C4";
+	setAttr ".dc" 0;
+	setAttr ".c" -type "float3" 0.97250003 0.66659999 0.149 ;
+	setAttr ".ambc" -type "float3" 1 1 1 ;
+createNode materialInfo -n "materialInfo4";
+	rename -uid "7B31AA53-4774-7418-4FE0-61A036E0C469";
+createNode distanceBetween -n "LegFoot__instance_1_mirror:distBetween_ankle_joint_rootPosLocator_ball_joint_endPosLocator";
+	rename -uid "39AD7988-40C9-5D2B-FFA6-2381D6256B03";
+createNode blendColors -n "LegFoot__instance_1_mirror:ankle_joint_ikHandle_lockBlend";
+	rename -uid "4C097EE2-43DD-4C66-A2AB-4D9F74C26768";
+	setAttr ".b" 1;
+	setAttr ".c2" -type "float3" 1 0 1 ;
 createNode container -n "LegFoot__instance_1_mirror:knee_joint_translation_control_container";
-	rename -uid "3E3BFE33-4CAA-F08C-892E-C5928852CD34";
+	rename -uid "A113E2AA-4457-D4A4-B30B-A4A626FAE3EB";
 	addAttr -ci true -h true -sn "aal" -ln "attributeAliasList" -dt "attributeAlias";
 	setAttr -s 4 ".boc";
 	setAttr ".ctor" -type "string" "Administrator";
@@ -9957,8 +9907,26 @@ createNode container -n "LegFoot__instance_1_mirror:knee_joint_translation_contr
 	setAttr ".aal" -type "attributeAlias" {"knee_joint_T","borderConnections[0]","knee_joint_TX"
 		,"borderConnections[1]","knee_joint_TY","borderConnections[2]","knee_joint_TZ","borderConnections[3]"
 		} ;
+createNode container -n "LegFoot__instance_1_mirror:ball_joint_translation_control_container";
+	rename -uid "8AD1E56D-4DEE-A76A-37A7-58AF9CCA8C9C";
+	addAttr -ci true -h true -sn "aal" -ln "attributeAliasList" -dt "attributeAlias";
+	setAttr -s 4 ".boc";
+	setAttr ".ctor" -type "string" "Administrator";
+	setAttr ".cdat" -type "string" "2009/08/05 11:57:53";
+	setAttr ".aal" -type "attributeAlias" {"ball_joint_T","borderConnections[0]","ball_joint_TX"
+		,"borderConnections[1]","ball_joint_TY","borderConnections[2]","ball_joint_TZ","borderConnections[3]"
+		} ;
+createNode container -n "LegFoot__instance_1_mirror:hip_joint_translation_control_container";
+	rename -uid "3BAF6FE5-4E84-EC0A-871A-7BBC46CE2BCB";
+	addAttr -ci true -h true -sn "aal" -ln "attributeAliasList" -dt "attributeAlias";
+	setAttr -s 4 ".boc";
+	setAttr ".ctor" -type "string" "Administrator";
+	setAttr ".cdat" -type "string" "2009/08/05 11:57:53";
+	setAttr ".aal" -type "attributeAlias" {"hip_joint_T","borderConnections[0]","hip_joint_TX"
+		,"borderConnections[1]","hip_joint_TY","borderConnections[2]","hip_joint_TZ","borderConnections[3]"
+		} ;
 createNode container -n "LegFoot__instance_1_mirror:ankle_joint_translation_control_container";
-	rename -uid "D670DA5D-43E4-B7B9-7708-22A84CCDEBE4";
+	rename -uid "7CDD748C-46C2-BB93-7838-0E956D58C600";
 	addAttr -ci true -h true -sn "aal" -ln "attributeAliasList" -dt "attributeAlias";
 	setAttr -s 4 ".boc";
 	setAttr ".ctor" -type "string" "Administrator";
@@ -9966,126 +9934,237 @@ createNode container -n "LegFoot__instance_1_mirror:ankle_joint_translation_cont
 	setAttr ".aal" -type "attributeAlias" {"ankle_joint_T","borderConnections[0]","ankle_joint_TX"
 		,"borderConnections[1]","ankle_joint_TY","borderConnections[2]","ankle_joint_TZ","borderConnections[3]"
 		} ;
-createNode hyperLayout -n "hyperLayout16";
-	rename -uid "3D1FBA82-47C9-D59D-A5A9-00B9E54907AA";
-	setAttr ".ihi" 0;
-	setAttr -s 118 ".hyp";
-createNode multiplyDivide -n "LegFoot__instance_1_mirror:ankle_joint_scaleMultiply";
-	rename -uid "24FA572F-4B5E-46D7-1436-51AF6B5457D3";
-	setAttr ".i1" -type "float3" -4.1231055 0 0 ;
-createNode multiplyDivide -n "LegFoot__instance_1_mirror:ball_joint_scaleMultiply";
-	rename -uid "571FDD1D-4817-BDEF-BA93-F7BEAACDCD35";
-	setAttr ".i1" -type "float3" -12.409674 0 0 ;
-createNode multiplyDivide -n "LegFoot__instance_1_mirror:hip_joint_ikHandle_scaleFactor";
-	rename -uid "F4A13870-45EB-01DE-E6C9-ED843699F1B3";
-	setAttr ".op" 2;
-	setAttr ".i2" -type "float3" 4.1231055 1 1 ;
-createNode multiplyDivide -n "LegFoot__instance_1_mirror:distBetween_IK_knee_joint_positionLocator_IK_hip_joint_ikHandle_positionLocator_scaleFactor";
-	rename -uid "6595EE24-4FCE-57C3-D3B6-529CF396EF06";
-	setAttr ".op" 2;
-	setAttr ".i2" -type "float3" -1.2053387 1 1 ;
-createNode multiplyDivide -n "LegFoot__instance_1_mirror:distBetween_IK_hip_joint_positionLocator_IK_knee_joint_positionLocator_translationValue";
-	rename -uid "C0C9B16C-4B33-DD8C-146B-CAA8D7C69F73";
-	setAttr ".i1" -type "float3" 1.2053387 0 0 ;
-createNode multiplyDivide -n "LegFoot__instance_1_mirror:knee_joint_scaleMultiply";
-	rename -uid "00781E11-49D2-11C3-4FFB-AAA9943854CA";
-	setAttr ".i1" -type "float3" -4.1231055 0 0 ;
-createNode multiplyDivide -n "LegFoot__instance_1_mirror:distBetween_IK_knee_joint_positionLocator_IK_hip_joint_ikHandle_positionLocator_translationValue";
-	rename -uid "DBB94C1E-47DE-D6B6-B9BF-7780BE374E0E";
-	setAttr ".i1" -type "float3" 1.2053387 0 0 ;
+createNode container -n "LegFoot__instance_1_mirror:IK_knee_joint_preferredAngle_representation_container";
+	rename -uid "5AE6D078-4748-5C13-AA9A-AD815B449DAA";
+	addAttr -ci true -h true -sn "aal" -ln "attributeAliasList" -dt "attributeAlias";
+	setAttr ".ctor" -type "string" "Administrator";
+	setAttr ".cdat" -type "string" "2009/08/21 21:13:27";
+	setAttr ".aal" -type "attributeAlias" {"axis","borderConnections[0]"} ;
+createNode container -n "LegFoot__instance_1_mirror:toe_joint_translation_control_container";
+	rename -uid "D4DABBC0-4531-7B0E-B2B1-F79434BB48BF";
+	addAttr -ci true -h true -sn "aal" -ln "attributeAliasList" -dt "attributeAlias";
+	setAttr -s 4 ".boc";
+	setAttr ".ctor" -type "string" "Administrator";
+	setAttr ".cdat" -type "string" "2009/08/05 11:57:53";
+	setAttr ".aal" -type "attributeAlias" {"toe_joint_T","borderConnections[0]","toe_joint_TX"
+		,"borderConnections[1]","toe_joint_TY","borderConnections[2]","toe_joint_TZ","borderConnections[3]"
+		} ;
+createNode container -n "LegFoot__instance_1_mirror:hip_joint_hierarchy_representation_container";
+	rename -uid "FB5830A7-4570-7E9F-03FA-75A2590C3BF5";
+	setAttr ".ctor" -type "string" "Administrator";
+	setAttr ".cdat" -type "string" "2009/07/28 18:18:37";
+createNode container -n "LegFoot__instance_1_mirror:knee_joint_hierarchy_representation_container";
+	rename -uid "58C253EB-4829-2175-4D4A-E0A8178482DA";
+	setAttr ".ctor" -type "string" "Administrator";
+	setAttr ".cdat" -type "string" "2009/07/28 18:18:37";
+createNode container -n "LegFoot__instance_1_mirror:ankle_joint_orientation_control_container";
+	rename -uid "B42702D6-40E3-2568-7149-88A7AEEFA0EF";
+	addAttr -ci true -h true -sn "aal" -ln "attributeAliasList" -dt "attributeAlias";
+	setAttr ".ctor" -type "string" "Administrator";
+	setAttr ".cdat" -type "string" "2009/07/28 18:25:27";
+	setAttr ".aal" -type "attributeAlias" {"ankle_joint_orientation","borderConnections[0]"
+		} ;
+createNode container -n "LegFoot__instance_1_mirror:ball_joint_orientation_control_container";
+	rename -uid "D4E0EDE5-49CE-7213-CE8D-6C8D1F63735B";
+	addAttr -ci true -h true -sn "aal" -ln "attributeAliasList" -dt "attributeAlias";
+	setAttr ".ctor" -type "string" "Administrator";
+	setAttr ".cdat" -type "string" "2009/07/28 18:25:27";
+	setAttr ".aal" -type "attributeAlias" {"ball_joint_orientation","borderConnections[0]"
+		} ;
+createNode container -n "LegFoot__instance_1_mirror:hook_container";
+	rename -uid "E93A8CD0-4484-7C92-BB18-18984EF89208";
+	addAttr -ci true -h true -sn "aal" -ln "attributeAliasList" -dt "attributeAlias";
+	setAttr ".isc" yes;
+	setAttr -s 8 ".boc";
+	setAttr ".ctor" -type "string" "micma";
+	setAttr ".cdat" -type "string" "2025/12/08 16:31:22";
+	setAttr ".aal" -type "attributeAlias" {"hook_root_joint_R","borderConnections[0]"
+		,"hook_root_joint_RX","borderConnections[1]","hook_root_joint_RY","borderConnections[2]"
+		,"hook_root_joint_RZ","borderConnections[3]","hook_target_joint_R","borderConnections[4]"
+		,"hook_target_joint_RX","borderConnections[5]","hook_target_joint_RY","borderConnections[6]"
+		,"hook_target_joint_RZ","borderConnections[7]"} ;
+createNode distanceBetween -n "LegFoot__instance_1_mirror:distBetween_IK_knee_joint_positionLocator_IK_hip_joint_ikHandle_positionLocator";
+	rename -uid "A8B3B92E-4AB0-08A9-1026-4A8A08F4333A";
+createNode distanceBetween -n "LegFoot__instance_1_mirror:distBetween_IK_hip_joint_positionLocator_IK_knee_joint_positionLocator";
+	rename -uid "E98CB1EA-4616-C89A-1480-3D986C4DD019";
+createNode distanceBetween -n "LegFoot__instance_1_mirror:distBetween_knee_joint_rootPosLocator_ankle_joint_endPosLocator";
+	rename -uid "299F5020-47F2-6222-865B-93B73B6EAA56";
+createNode blendColors -n "LegFoot__instance_1_mirror:knee_joint_ikHandle_lockBlend";
+	rename -uid "8823B6BD-424E-C103-31D7-1CBFB59B9C1C";
+	setAttr ".b" 1;
+	setAttr ".c2" -type "float3" 1 0 1 ;
+createNode multiplyDivide -n "LegFoot__instance_1_mirror:toe_joint_scaleMultiply";
+	rename -uid "D02BD5A6-49CF-4321-8094-8685DF21B8D5";
+	setAttr ".i1" -type "float3" 3 0 0 ;
 createNode multiplyDivide -n "LegFoot__instance_1_mirror:distBetween_IK_hip_joint_positionLocator_IK_knee_joint_positionLocator_scaleFactor";
-	rename -uid "609DD841-44E9-3DB0-AD59-8DAF55ED5DF2";
+	rename -uid "6CE67E99-4D42-2A65-604C-85917F6C708D";
 	setAttr ".op" 2;
-	setAttr ".i2" -type "float3" -1.2053387 1 1 ;
+	setAttr ".i2" -type "float3" -4.1230984 1 1 ;
+createNode multiplyDivide -n "LegFoot__instance_1_mirror:distBetween_IK_knee_joint_positionLocator_IK_hip_joint_ikHandle_positionLocator_scaleFactor";
+	rename -uid "B599E7D7-49EF-3136-6A73-D88EAD6BD138";
+	setAttr ".op" 2;
+	setAttr ".i2" -type "float3" -4.1231079 1 1 ;
+createNode multiplyDivide -n "LegFoot__instance_1_mirror:distBetween_IK_hip_joint_positionLocator_IK_knee_joint_positionLocator_translationValue";
+	rename -uid "847707C3-41D5-1BE8-FAE0-F3A730472711";
+	setAttr ".i1" -type "float3" 4.1230984 0 0 ;
+createNode multiplyDivide -n "LegFoot__instance_1_mirror:distBetween_IK_knee_joint_positionLocator_IK_hip_joint_ikHandle_positionLocator_translationValue";
+	rename -uid "9EFE9825-46C9-714F-5DA9-6A9640A13CDB";
+	setAttr ".i1" -type "float3" 4.1231079 0 0 ;
+createNode multiplyDivide -n "LegFoot__instance_1_mirror:ball_joint_scaleMultiply";
+	rename -uid "E716A4F2-441F-EC31-6742-A1BCD18CC610";
+	setAttr ".i1" -type "float3" 2.0951397 0 0 ;
+createNode multiplyDivide -n "LegFoot__instance_1_mirror:hip_joint_ikHandle_scaleFactor";
+	rename -uid "168088FA-4F0D-235F-8D9D-DEA981CD135A";
+	setAttr ".op" 2;
+	setAttr ".i2" -type "float3" 3.6380343 1 1 ;
 createNode multiplyDivide -n "LegFoot__instance_1_mirror:knee_joint_ikHandle_scaleFactor";
-	rename -uid "5986EEB6-4A1E-DAD5-A9F1-369885ED7ED5";
+	rename -uid "EC8B51E5-4D65-B4F0-75EB-988693A113AC";
 	setAttr ".op" 2;
-	setAttr ".i2" -type "float3" 4.1231055 1 1 ;
+	setAttr ".i2" -type "float3" 3.6380343 1 1 ;
+createNode multiplyDivide -n "LegFoot__instance_1_mirror:ankle_joint_ikHandle_scaleFactor";
+	rename -uid "890F18E9-492E-757E-C35C-75B046CF74B0";
+	setAttr ".op" 2;
+	setAttr ".i2" -type "float3" 2.0951397 1 1 ;
+createNode multiplyDivide -n "LegFoot__instance_1_mirror:knee_joint_scaleMultiply";
+	rename -uid "AE12799B-404B-F335-77AE-E5A01F22F6AD";
+	setAttr ".i1" -type "float3" -3.6380343 0 0 ;
+createNode multiplyDivide -n "LegFoot__instance_1_mirror:ankle_joint_scaleMultiply";
+	rename -uid "442702AD-4B72-6449-7B56-6F9989ABC92A";
+	setAttr ".i1" -type "float3" -3.6380343 0 0 ;
+createNode hyperLayout -n "hyperLayout16";
+	rename -uid "B2C98231-4B9D-7CC3-7C8F-1F87D2365C13";
+	setAttr ".ihi" 0;
+	setAttr -s 122 ".hyp";
+createNode blendColors -n "LegFoot__instance_1_mirror:hip_joint_ikHandle_lockBlend";
+	rename -uid "C278C0C7-43F1-81B8-7807-78817F93ED2A";
+	setAttr ".b" 1;
+	setAttr ".c2" -type "float3" 1 0 1 ;
+createNode blendColors -n "LegFoot__instance_1_mirror:ball_joint_ikHandle_lockBlend";
+	rename -uid "85E2760A-480A-D973-216A-8DB6740E0CC5";
+	setAttr ".b" 1;
+	setAttr ".c2" -type "float3" 1 0 1 ;
+createNode distanceBetween -n "LegFoot__instance_1_mirror:distBetween_ball_joint_rootPosLocator_toe_joint_endPosLocator";
+	rename -uid "B7387C85-42DD-E419-48C2-709AF554F002";
+createNode distanceBetween -n "LegFoot__instance_1_mirror:distBetween_hip_joint_rootPosLocator_knee_joint_endPosLocator";
+	rename -uid "DE0AEF46-4770-049E-3637-57A8CC619561";
 createNode multiplyDivide -n "LegFoot__instance_1_mirror:ball_joint_ikHandle_scaleFactor";
-	rename -uid "1E69E907-449B-F5C1-2B52-E69638D1FF2C";
+	rename -uid "61C3A317-426E-E79D-6C64-28A43A8DDD81";
 	setAttr ".op" 2;
 	setAttr ".i2" -type "float3" 3 1 1 ;
-createNode multiplyDivide -n "LegFoot__instance_1_mirror:ankle_joint_ikHandle_scaleFactor";
-	rename -uid "DF7FFB74-4021-C25F-24A5-9592584639FC";
-	setAttr ".op" 2;
-	setAttr ".i2" -type "float3" 12.409674 1 1 ;
-createNode multiplyDivide -n "LegFoot__instance_1_mirror:toe_joint_scaleMultiply";
-	rename -uid "9C3A57EF-488A-2E47-B682-76B2DADB860B";
-	setAttr ".i1" -type "float3" -3 0 0 ;
-createNode distanceBetween -n "LegFoot__instance_1_mirror:distBetween_IK_hip_joint_positionLocator_IK_knee_joint_positionLocator";
-	rename -uid "BE40B03D-41D3-DBE7-64E9-5F8B975DE8F4";
-createNode distanceBetween -n "LegFoot__instance_1_mirror:distBetween_ankle_joint_rootPosLocator_ball_joint_endPosLocator";
-	rename -uid "F2D68A57-4450-4AFF-1A54-CB89110D5F17";
-createNode distanceBetween -n "LegFoot__instance_1_mirror:distBetween_ball_joint_rootPosLocator_toe_joint_endPosLocator";
-	rename -uid "91B00E13-4350-3D39-AFF6-FE893B426B26";
-createNode distanceBetween -n "LegFoot__instance_1_mirror:distBetween_knee_joint_rootPosLocator_ankle_joint_endPosLocator";
-	rename -uid "77C8D305-4F10-E89B-F4EA-109B3E78E569";
-createNode distanceBetween -n "LegFoot__instance_1_mirror:distBetween_IK_knee_joint_positionLocator_IK_hip_joint_ikHandle_positionLocator";
-	rename -uid "84381B34-48E5-59C6-C128-299CD8B81C38";
-createNode distanceBetween -n "LegFoot__instance_1_mirror:distBetween_hip_joint_rootPosLocator_knee_joint_endPosLocator";
-	rename -uid "4FB50684-4929-BAC1-225D-F2B85644DA33";
-createNode lambert -n "LegFoot__instance_1_mirror:hip_joint_m_hierarchyRepresentation";
-	rename -uid "7608820F-4447-4FFB-9FE2-F3A6CF73F885";
+createNode materialInfo -n "materialInfo16";
+	rename -uid "0D2CBABD-40C3-8F17-AD7F-A2AD533CAF0B";
+createNode shadingEngine -n "LegFoot__instance_1_mirror:hip_joint_m_translation_control_SG";
+	rename -uid "9AEF1FD5-434D-D706-8270-958CAEC0929B";
+	setAttr ".ro" yes;
+createNode lambert -n "LegFoot__instance_1_mirror:hip_joint_m_translation_control";
+	rename -uid "31E7C013-436F-B28E-13C7-25903375B6C0";
 	setAttr ".dc" 0;
-	setAttr ".c" -type "float3" 0 0.1882 0.34110001 ;
+	setAttr ".c" -type "float3" 0.97250003 0.66659999 0.149 ;
 	setAttr ".ambc" -type "float3" 1 1 1 ;
-createNode hyperLayout -n "hyperLayout24";
-	rename -uid "DF994B8F-4DE0-9DAA-777E-F49B6C6DE1FC";
+createNode hyperLayout -n "hyperLayout18";
+	rename -uid "8EBDBB52-4B1A-0A0B-3662-2DB6CAC79AF6";
 	setAttr ".ihi" 0;
-	setAttr -s 9 ".hyp";
-	setAttr ".hyp[1].x" 71;
-	setAttr ".hyp[1].y" 93;
+	setAttr -s 4 ".hyp";
+	setAttr ".hyp[0].x" 71;
+	setAttr ".hyp[0].y" 93;
+	setAttr ".hyp[0].isf" yes;
+	setAttr ".hyp[1].x" 409;
+	setAttr ".hyp[1].y" 309;
 	setAttr ".hyp[1].isf" yes;
-	setAttr ".hyp[3].x" 259;
-	setAttr ".hyp[3].y" 93;
+	setAttr ".hyp[2].x" 240;
+	setAttr ".hyp[2].y" 309;
+	setAttr ".hyp[2].isf" yes;
+	setAttr ".hyp[3].x" 71;
+	setAttr ".hyp[3].y" 309;
 	setAttr ".hyp[3].isf" yes;
 	setAttr ".anf" yes;
-createNode shadingEngine -n "LegFoot__instance_1_mirror:hip_joint_m_hookRepresentation_SG";
-	rename -uid "22E80B59-44B3-E1BB-8479-7596E55D9375";
-	setAttr ".ihi" 0;
-	setAttr -s 2 ".dsm";
+createNode shadingEngine -n "LegFoot__instance_1_mirror:knee_joint_m_translation_control_SG";
+	rename -uid "26245B5F-4142-0199-F6E7-149B22425041";
 	setAttr ".ro" yes;
-createNode materialInfo -n "materialInfo22";
-	rename -uid "4F24AE5B-4C4D-884B-CCB4-27AE33AE9837";
-createNode lambert -n "LegFoot__instance_1_mirror:knee_joint_m_hierarchyRepresentation";
-	rename -uid "290BA248-4FC6-4ED4-2F50-C5BC5A98AD03";
+createNode lambert -n "LegFoot__instance_1_mirror:knee_joint_m_translation_control";
+	rename -uid "A82A8C37-4424-618A-6DA0-5F8E970DCBBB";
 	setAttr ".dc" 0;
-	setAttr ".c" -type "float3" 0 0.1882 0.34110001 ;
+	setAttr ".c" -type "float3" 0.97250003 0.66659999 0.149 ;
 	setAttr ".ambc" -type "float3" 1 1 1 ;
-createNode hyperLayout -n "hyperLayout25";
-	rename -uid "45C275C7-4F5B-C3BF-B770-DC9A789585E4";
+createNode materialInfo -n "materialInfo17";
+	rename -uid "363E95D7-4876-F5B0-7DA8-13ADA2ED8CB7";
+createNode lambert -n "LegFoot__instance_1_mirror:ball_joint_m_translation_control";
+	rename -uid "1E872DD3-4DD2-26DF-7A7F-E0AFE1234B2B";
+	setAttr ".dc" 0;
+	setAttr ".c" -type "float3" 0.97250003 0.66659999 0.149 ;
+	setAttr ".ambc" -type "float3" 1 1 1 ;
+createNode hyperLayout -n "hyperLayout20";
+	rename -uid "4F9EA8CE-4D3F-AFF5-1027-2FBE23FFBCE5";
 	setAttr ".ihi" 0;
-	setAttr -s 9 ".hyp";
-	setAttr ".hyp[1].x" 71;
-	setAttr ".hyp[1].y" 93;
+	setAttr -s 4 ".hyp";
+	setAttr ".hyp[0].x" 71;
+	setAttr ".hyp[0].y" 93;
+	setAttr ".hyp[0].isf" yes;
+	setAttr ".hyp[1].x" 409;
+	setAttr ".hyp[1].y" 309;
 	setAttr ".hyp[1].isf" yes;
-	setAttr ".hyp[3].x" 259;
-	setAttr ".hyp[3].y" 93;
+	setAttr ".hyp[2].x" 240;
+	setAttr ".hyp[2].y" 309;
+	setAttr ".hyp[2].isf" yes;
+	setAttr ".hyp[3].x" 71;
+	setAttr ".hyp[3].y" 309;
 	setAttr ".hyp[3].isf" yes;
 	setAttr ".anf" yes;
-createNode shadingEngine -n "LegFoot__instance_1_mirror:knee_joint_m_hookRepresentation_SG";
-	rename -uid "378C924A-4932-C69F-4838-9F9858F871C4";
-	setAttr ".ihi" 0;
-	setAttr -s 2 ".dsm";
+createNode shadingEngine -n "LegFoot__instance_1_mirror:ball_joint_m_translation_control_SG";
+	rename -uid "BCF4263A-4762-77A3-66BB-C0A62C93FC95";
 	setAttr ".ro" yes;
-createNode materialInfo -n "materialInfo23";
-	rename -uid "198BB09D-4B88-3A56-DABB-2086A4AA0BFB";
-createNode animCurveUA -n "LegFoot__instance_1_mirror:IK_knee_joint_preferredAngle_representation_rotateX";
-	rename -uid "F439539D-4F3A-B277-2075-EFBD51337182";
-	setAttr ".tan" 10;
-	setAttr ".wgt" no;
-	setAttr -s 4 ".ktv[0:3]"  0 0 1 180 2 90 3 -90;
-createNode lambert -n "LegFoot__instance_1_mirror:IK_knee_joint_m_preferredAngle_representation";
-	rename -uid "FBA1D3D0-489C-18BA-F7F2-DE81120D922E";
+createNode materialInfo -n "materialInfo19";
+	rename -uid "8E1589E4-4CDB-BF22-F2C5-E7AB19CDD277";
+createNode hyperLayout -n "hyperLayout17";
+	rename -uid "BD831CDC-48D3-11FF-8DE0-D681E7FC6E7C";
+	setAttr ".ihi" 0;
+	setAttr -s 4 ".hyp";
+	setAttr ".hyp[0].x" 71;
+	setAttr ".hyp[0].y" 93;
+	setAttr ".hyp[0].isf" yes;
+	setAttr ".hyp[1].x" 409;
+	setAttr ".hyp[1].y" 309;
+	setAttr ".hyp[1].isf" yes;
+	setAttr ".hyp[2].x" 240;
+	setAttr ".hyp[2].y" 309;
+	setAttr ".hyp[2].isf" yes;
+	setAttr ".hyp[3].x" 71;
+	setAttr ".hyp[3].y" 309;
+	setAttr ".hyp[3].isf" yes;
+	setAttr ".anf" yes;
+createNode hyperLayout -n "hyperLayout19";
+	rename -uid "D0D73AA9-4B0F-6A46-11B4-E19EB8EFBEAD";
+	setAttr ".ihi" 0;
+	setAttr -s 4 ".hyp";
+	setAttr ".hyp[0].x" 71;
+	setAttr ".hyp[0].y" 93;
+	setAttr ".hyp[0].isf" yes;
+	setAttr ".hyp[1].x" 409;
+	setAttr ".hyp[1].y" 309;
+	setAttr ".hyp[1].isf" yes;
+	setAttr ".hyp[2].x" 240;
+	setAttr ".hyp[2].y" 309;
+	setAttr ".hyp[2].isf" yes;
+	setAttr ".hyp[3].x" 71;
+	setAttr ".hyp[3].y" 309;
+	setAttr ".hyp[3].isf" yes;
+	setAttr ".anf" yes;
+createNode shadingEngine -n "LegFoot__instance_1_mirror:ankle_joint_m_translation_control_SG";
+	rename -uid "BB00E374-46CC-DFB8-3450-B7913205ABED";
+	setAttr ".ro" yes;
+createNode lambert -n "LegFoot__instance_1_mirror:ankle_joint_m_translation_control";
+	rename -uid "85347884-472F-BAF3-3F56-4185DE2D2475";
 	setAttr ".dc" 0;
-	setAttr ".c" -type "float3" 0.90200001 0.79193944 0.094710015 ;
+	setAttr ".c" -type "float3" 0.97250003 0.66659999 0.149 ;
 	setAttr ".ambc" -type "float3" 1 1 1 ;
+createNode materialInfo -n "materialInfo18";
+	rename -uid "E632D6CC-490C-731E-5E59-D4B064EC7FEF";
 createNode shadingEngine -n "LegFoot__instance_1_mirror:IK_knee_joint_preferredAngle_representation_SG";
-	rename -uid "2CF9D750-436B-691A-BDFE-ACBDC70FDCF4";
+	rename -uid "7ADCEEBF-4F05-811E-182B-3D8C22F72A12";
 	setAttr ".ihi" 0;
 	setAttr ".ro" yes;
 createNode hyperLayout -n "hyperLayout28";
-	rename -uid "8CC01061-4324-8CE7-3954-0C9DA3D4359B";
+	rename -uid "507BDE87-4649-CCD0-EBF3-DB80E56E0ECD";
 	setAttr ".ihi" 0;
 	setAttr -s 8 ".hyp";
 	setAttr ".hyp[0].x" 583;
@@ -10104,38 +10183,101 @@ createNode hyperLayout -n "hyperLayout28";
 	setAttr ".hyp[4].y" -463;
 	setAttr ".hyp[4].isf" yes;
 	setAttr ".anf" yes;
-createNode materialInfo -n "materialInfo17";
-	rename -uid "79E3D129-4A49-5EBE-027A-E18A6198711B";
-createNode shadingEngine -n "LegFoot__instance_1_mirror:knee_joint_m_translation_control_SG";
-	rename -uid "DA229651-4D70-2799-8C96-BC8E403ABA43";
-	setAttr ".ro" yes;
-createNode lambert -n "LegFoot__instance_1_mirror:knee_joint_m_translation_control";
-	rename -uid "4F6D5E55-413A-213E-EC07-3F8198337BAF";
+createNode animCurveUA -n "LegFoot__instance_1_mirror:IK_knee_joint_preferredAngle_representation_rotateX";
+	rename -uid "F2DEEE96-481F-DDDA-256D-4D900602A067";
+	setAttr ".tan" 10;
+	setAttr ".wgt" no;
+	setAttr -s 4 ".ktv[0:3]"  0 0 1 180 2 90 3 -90;
+createNode lambert -n "LegFoot__instance_1_mirror:IK_knee_joint_m_preferredAngle_representation";
+	rename -uid "8930DABC-480C-58AA-B70F-63BE0808D8DC";
+	setAttr ".dc" 0;
+	setAttr ".c" -type "float3" 0.90200001 0.79193944 0.094710015 ;
+	setAttr ".ambc" -type "float3" 1 1 1 ;
+createNode materialInfo -n "materialInfo26";
+	rename -uid "6867A33E-4EBE-5D81-BB80-E78629E84473";
+createNode lambert -n "LegFoot__instance_1_mirror:toe_joint_m_translation_control";
+	rename -uid "4B98A446-4A90-EC16-8D6F-82B43FBF2E4B";
 	setAttr ".dc" 0;
 	setAttr ".c" -type "float3" 0.97250003 0.66659999 0.149 ;
 	setAttr ".ambc" -type "float3" 1 1 1 ;
-createNode materialInfo -n "materialInfo26";
-	rename -uid "A860E8BD-4A4B-F025-57D0-48B64A06021B";
-createNode lambert -n "LegFoot__instance_1_mirror:ankle_joint_m_yAxisBlock";
-	rename -uid "D805F971-4F3B-0C93-8310-82AF998CFE20";
-	setAttr ".dc" 0;
-	setAttr ".c" -type "float3" 0.32859999 0.69620001 0.1762 ;
-	setAttr ".ambc" -type "float3" 1 1 1 ;
-createNode lambert -n "LegFoot__instance_1_mirror:ankle_joint_m_zAxisBlock";
-	rename -uid "DFDC38AC-41AF-7E15-959F-8B8788A81928";
+createNode hyperLayout -n "hyperLayout21";
+	rename -uid "B0C4BEF9-407F-E4D7-145F-558A44C71968";
+	setAttr ".ihi" 0;
+	setAttr -s 4 ".hyp";
+	setAttr ".hyp[0].x" 71;
+	setAttr ".hyp[0].y" 93;
+	setAttr ".hyp[0].isf" yes;
+	setAttr ".hyp[1].x" 409;
+	setAttr ".hyp[1].y" 309;
+	setAttr ".hyp[1].isf" yes;
+	setAttr ".hyp[2].x" 240;
+	setAttr ".hyp[2].y" 309;
+	setAttr ".hyp[2].isf" yes;
+	setAttr ".hyp[3].x" 71;
+	setAttr ".hyp[3].y" 309;
+	setAttr ".hyp[3].isf" yes;
+	setAttr ".anf" yes;
+createNode shadingEngine -n "LegFoot__instance_1_mirror:toe_joint_m_translation_control_SG";
+	rename -uid "7866BFE2-4B2D-6077-2EC2-FCA370206031";
+	setAttr ".ro" yes;
+createNode materialInfo -n "materialInfo20";
+	rename -uid "B1D84D80-4F9D-0A6A-2127-49BD18A37C3D";
+createNode lambert -n "LegFoot__instance_1_mirror:hip_joint_m_hierarchyRepresentation";
+	rename -uid "87D1C274-4522-7857-9411-25BB0C0E2470";
 	setAttr ".dc" 0;
 	setAttr ".c" -type "float3" 0 0.1882 0.34110001 ;
 	setAttr ".ambc" -type "float3" 1 1 1 ;
-createNode shadingEngine -n "LegFoot__instance_1_mirror:ankle_joint_m_yAxisBlockSG";
-	rename -uid "034D7320-4EDA-1259-D984-0185722395B2";
+createNode hyperLayout -n "hyperLayout24";
+	rename -uid "3CDB7513-44D1-A92B-C942-A98B5DA4E65F";
+	setAttr ".ihi" 0;
+	setAttr -s 9 ".hyp";
+	setAttr ".hyp[1].x" 71;
+	setAttr ".hyp[1].y" 93;
+	setAttr ".hyp[1].isf" yes;
+	setAttr ".hyp[3].x" 259;
+	setAttr ".hyp[3].y" 93;
+	setAttr ".hyp[3].isf" yes;
+	setAttr ".anf" yes;
+createNode shadingEngine -n "LegFoot__instance_1_mirror:hip_joint_m_hookRepresentation_SG";
+	rename -uid "4257BC68-4DC7-2EBA-4D3D-42926234B127";
+	setAttr ".ihi" 0;
+	setAttr -s 2 ".dsm";
+	setAttr ".ro" yes;
+createNode materialInfo -n "materialInfo22";
+	rename -uid "E1BEA9AA-47C0-214D-13D1-4B8BF9E5051C";
+createNode lambert -n "LegFoot__instance_1_mirror:knee_joint_m_hierarchyRepresentation";
+	rename -uid "CB68A966-475D-0B39-412E-F0ABF0BD2499";
+	setAttr ".dc" 0;
+	setAttr ".c" -type "float3" 0 0.1882 0.34110001 ;
+	setAttr ".ambc" -type "float3" 1 1 1 ;
+createNode hyperLayout -n "hyperLayout25";
+	rename -uid "5FAB3EB4-4AAF-2D83-2832-5D89810C4690";
+	setAttr ".ihi" 0;
+	setAttr -s 9 ".hyp";
+	setAttr ".hyp[1].x" 71;
+	setAttr ".hyp[1].y" 93;
+	setAttr ".hyp[1].isf" yes;
+	setAttr ".hyp[3].x" 259;
+	setAttr ".hyp[3].y" 93;
+	setAttr ".hyp[3].isf" yes;
+	setAttr ".anf" yes;
+createNode shadingEngine -n "LegFoot__instance_1_mirror:knee_joint_m_hookRepresentation_SG";
+	rename -uid "DCDD63C1-44F0-6F98-6C08-0080DC84B4C9";
+	setAttr ".ihi" 0;
+	setAttr -s 2 ".dsm";
+	setAttr ".ro" yes;
+createNode materialInfo -n "materialInfo23";
+	rename -uid "D15EAE9E-4B09-3588-8E00-1689D218AC45";
+createNode shadingEngine -n "LegFoot__instance_1_mirror:ankle_joint_m_zAxisBlockSG";
+	rename -uid "78356A0B-49BC-C6C9-214A-0C96B884466E";
 	setAttr ".ihi" 0;
 	setAttr ".ro" yes;
-createNode shadingEngine -n "LegFoot__instance_1_mirror:ankle_joint_m_zAxisBlockSG";
-	rename -uid "C2268F6B-4F84-A835-44E4-EE90DAE2CFA3";
+createNode shadingEngine -n "LegFoot__instance_1_mirror:ankle_joint_m_yAxisBlockSG";
+	rename -uid "27A6DCFA-426F-2490-77F0-948408773288";
 	setAttr ".ihi" 0;
 	setAttr ".ro" yes;
 createNode hyperLayout -n "hyperLayout29";
-	rename -uid "875FB882-4474-BEA5-C90B-9A876B65C56A";
+	rename -uid "FB51E1EA-417B-EB21-03A6-C198452459D2";
 	setAttr ".ihi" 0;
 	setAttr -s 9 ".hyp";
 	setAttr ".hyp[0].x" 286;
@@ -10157,35 +10299,41 @@ createNode hyperLayout -n "hyperLayout29";
 	setAttr ".hyp[6].y" 353;
 	setAttr ".hyp[6].isf" yes;
 	setAttr ".anf" yes;
-createNode groupId -n "groupId25";
-	rename -uid "CDD6F593-498F-77A0-D0FC-BD9A44B20C1D";
-	setAttr ".ihi" 0;
-createNode groupId -n "groupId26";
-	rename -uid "7E7DBAF8-4F1A-B2D9-1C9F-47B5CAE002F9";
-	setAttr ".ihi" 0;
-createNode groupId -n "groupId24";
-	rename -uid "F62BA79F-41D1-2A50-2723-5D9B9E6D141F";
-	setAttr ".ihi" 0;
-createNode materialInfo -n "materialInfo28";
-	rename -uid "A2A57271-4FAF-487B-9E74-A4B4B9996736";
-createNode materialInfo -n "materialInfo27";
-	rename -uid "B2C4EBBF-4208-D477-00D1-9495642032A4";
-createNode lambert -n "LegFoot__instance_1_mirror:ball_joint_m_yAxisBlock";
-	rename -uid "68366A93-46B8-E4AA-955B-B0B336EBF6DF";
-	setAttr ".dc" 0;
-	setAttr ".c" -type "float3" 0.32859999 0.69620001 0.1762 ;
-	setAttr ".ambc" -type "float3" 1 1 1 ;
-createNode lambert -n "LegFoot__instance_1_mirror:ball_joint_m_zAxisBlock";
-	rename -uid "4764BCC7-4E3A-5D10-7607-76828323BAF8";
+createNode lambert -n "LegFoot__instance_1_mirror:ankle_joint_m_zAxisBlock";
+	rename -uid "AAB3F3F7-484C-A6D4-8FC5-8E982664C0DF";
 	setAttr ".dc" 0;
 	setAttr ".c" -type "float3" 0 0.1882 0.34110001 ;
 	setAttr ".ambc" -type "float3" 1 1 1 ;
-createNode shadingEngine -n "LegFoot__instance_1_mirror:ball_joint_m_zAxisBlockSG";
-	rename -uid "D2F2A894-44B9-2034-FE03-BBBE71F52F86";
+createNode lambert -n "LegFoot__instance_1_mirror:ankle_joint_m_yAxisBlock";
+	rename -uid "F583AB78-40AE-798B-A181-A080E4374D80";
+	setAttr ".dc" 0;
+	setAttr ".c" -type "float3" 0.32859999 0.69620001 0.1762 ;
+	setAttr ".ambc" -type "float3" 1 1 1 ;
+createNode materialInfo -n "materialInfo27";
+	rename -uid "2A609BA5-4339-9A4F-7DE5-049AF98D1A41";
+createNode materialInfo -n "materialInfo28";
+	rename -uid "B649CAFD-466C-1A3F-20E2-54A36D4C386B";
+createNode groupId -n "groupId25";
+	rename -uid "D669DCBD-42E4-3D38-4769-81955E963CD2";
 	setAttr ".ihi" 0;
-	setAttr ".ro" yes;
+createNode groupId -n "groupId26";
+	rename -uid "B585DE0E-4B6D-705F-8AF8-5989CE8746C1";
+	setAttr ".ihi" 0;
+createNode groupId -n "groupId24";
+	rename -uid "BB8CCE5B-4C49-BC21-3F68-30A1478EF403";
+	setAttr ".ihi" 0;
+createNode lambert -n "LegFoot__instance_1_mirror:ball_joint_m_zAxisBlock";
+	rename -uid "CEA79423-490B-3B33-01AA-2EAFD9D03FBB";
+	setAttr ".dc" 0;
+	setAttr ".c" -type "float3" 0 0.1882 0.34110001 ;
+	setAttr ".ambc" -type "float3" 1 1 1 ;
+createNode lambert -n "LegFoot__instance_1_mirror:ball_joint_m_yAxisBlock";
+	rename -uid "95709A1C-4E93-0C5E-D97C-C38C09D55BC7";
+	setAttr ".dc" 0;
+	setAttr ".c" -type "float3" 0.32859999 0.69620001 0.1762 ;
+	setAttr ".ambc" -type "float3" 1 1 1 ;
 createNode hyperLayout -n "hyperLayout30";
-	rename -uid "509CCF72-4E9E-31CC-DAB8-089C98E9D834";
+	rename -uid "FAB8CDFC-42D1-CFA1-8067-1EBD9984F0DD";
 	setAttr ".ihi" 0;
 	setAttr -s 9 ".hyp";
 	setAttr ".hyp[0].x" 286;
@@ -10207,132 +10355,55 @@ createNode hyperLayout -n "hyperLayout30";
 	setAttr ".hyp[6].y" 353;
 	setAttr ".hyp[6].isf" yes;
 	setAttr ".anf" yes;
+createNode shadingEngine -n "LegFoot__instance_1_mirror:ball_joint_m_zAxisBlockSG";
+	rename -uid "DF57AFA1-47C6-E71A-C12E-D8ADC1504740";
+	setAttr ".ihi" 0;
+	setAttr ".ro" yes;
 createNode shadingEngine -n "LegFoot__instance_1_mirror:ball_joint_m_yAxisBlockSG";
-	rename -uid "07E0AE5D-4B60-57B7-7C2F-D394700D52BD";
+	rename -uid "FB8DAE31-4DB9-9EB8-D910-15BEE820E0C3";
 	setAttr ".ihi" 0;
 	setAttr ".ro" yes;
 createNode groupId -n "groupId28";
-	rename -uid "1C404752-4253-DB80-6564-6B9A2309229D";
+	rename -uid "5076AA48-475A-87FB-D7E0-049AD0755081";
 	setAttr ".ihi" 0;
 createNode groupId -n "groupId29";
-	rename -uid "DED55E9F-409A-104F-6B27-BFA9404F79A2";
+	rename -uid "73348BFE-49E6-ECFE-07D1-CC9449F335F1";
 	setAttr ".ihi" 0;
 createNode groupId -n "groupId27";
-	rename -uid "6526E365-4B58-B7BC-9853-2F85D69256AB";
+	rename -uid "68C9E10D-4392-148E-4C9D-079C1FD55EA0";
 	setAttr ".ihi" 0;
 createNode materialInfo -n "materialInfo29";
-	rename -uid "D079CE36-4453-2AF3-10F3-CD97AA55B578";
+	rename -uid "3489E6AD-43E6-4674-9540-F78D97B47BDF";
 createNode materialInfo -n "materialInfo30";
-	rename -uid "6B898E99-4566-3A94-2CC0-4F845F82DCA5";
-createNode hyperLayout -n "hyperLayout17";
-	rename -uid "93A0BA33-4131-5283-934A-B5BD2653DAC7";
-	setAttr ".ihi" 0;
-	setAttr -s 4 ".hyp";
-	setAttr ".hyp[0].x" 71;
-	setAttr ".hyp[0].y" 93;
-	setAttr ".hyp[0].isf" yes;
-	setAttr ".hyp[1].x" 409;
-	setAttr ".hyp[1].y" 309;
-	setAttr ".hyp[1].isf" yes;
-	setAttr ".hyp[2].x" 240;
-	setAttr ".hyp[2].y" 309;
-	setAttr ".hyp[2].isf" yes;
-	setAttr ".hyp[3].x" 71;
-	setAttr ".hyp[3].y" 309;
-	setAttr ".hyp[3].isf" yes;
-	setAttr ".anf" yes;
-createNode lambert -n "LegFoot__instance_1_mirror:hip_joint_m_translation_control";
-	rename -uid "6CA65EAD-4ACF-3EC2-2E5A-98AB83573614";
-	setAttr ".dc" 0;
-	setAttr ".c" -type "float3" 0.97250003 0.66659999 0.149 ;
-	setAttr ".ambc" -type "float3" 1 1 1 ;
-createNode shadingEngine -n "LegFoot__instance_1_mirror:hip_joint_m_translation_control_SG";
-	rename -uid "C31D7314-4E75-D318-479C-D4BE80BBCF83";
-	setAttr ".ro" yes;
-createNode materialInfo -n "materialInfo16";
-	rename -uid "64F0E2F1-4339-3A05-85BA-A3A720D05B29";
-createNode shadingEngine -n "LegFoot__instance_1_mirror:ball_joint_m_translation_control_SG";
-	rename -uid "CC6DB139-444B-AE45-27F2-CB89ED772DE1";
-	setAttr ".ro" yes;
-createNode hyperLayout -n "hyperLayout20";
-	rename -uid "5E29CF46-46C8-15DF-65D5-08AAAF5D2B3D";
-	setAttr ".ihi" 0;
-	setAttr -s 4 ".hyp";
-	setAttr ".hyp[0].x" 71;
-	setAttr ".hyp[0].y" 93;
-	setAttr ".hyp[0].isf" yes;
-	setAttr ".hyp[1].x" 409;
-	setAttr ".hyp[1].y" 309;
-	setAttr ".hyp[1].isf" yes;
-	setAttr ".hyp[2].x" 240;
-	setAttr ".hyp[2].y" 309;
-	setAttr ".hyp[2].isf" yes;
-	setAttr ".hyp[3].x" 71;
-	setAttr ".hyp[3].y" 309;
-	setAttr ".hyp[3].isf" yes;
-	setAttr ".anf" yes;
-createNode lambert -n "LegFoot__instance_1_mirror:ball_joint_m_translation_control";
-	rename -uid "93F40E92-4153-2A6A-38AD-AA82C6B997E8";
-	setAttr ".dc" 0;
-	setAttr ".c" -type "float3" 0.97250003 0.66659999 0.149 ;
-	setAttr ".ambc" -type "float3" 1 1 1 ;
-createNode materialInfo -n "materialInfo19";
-	rename -uid "A18ED307-47C0-24AA-70FC-0BBDC6BBE48B";
-createNode lambert -n "LegFoot__instance_1_mirror:toe_joint_m_translation_control";
-	rename -uid "55C93AEF-4ADD-3777-B8D5-629DBC2DAAEE";
-	setAttr ".dc" 0;
-	setAttr ".c" -type "float3" 0.97250003 0.66659999 0.149 ;
-	setAttr ".ambc" -type "float3" 1 1 1 ;
-createNode shadingEngine -n "LegFoot__instance_1_mirror:toe_joint_m_translation_control_SG";
-	rename -uid "D0DBA03D-4458-FB3F-2542-838D2AAEEDA9";
-	setAttr ".ro" yes;
-createNode hyperLayout -n "hyperLayout21";
-	rename -uid "D6C370F9-449F-4F69-E044-549C9E3F6E7B";
-	setAttr ".ihi" 0;
-	setAttr -s 4 ".hyp";
-	setAttr ".hyp[0].x" 71;
-	setAttr ".hyp[0].y" 93;
-	setAttr ".hyp[0].isf" yes;
-	setAttr ".hyp[1].x" 409;
-	setAttr ".hyp[1].y" 309;
-	setAttr ".hyp[1].isf" yes;
-	setAttr ".hyp[2].x" 240;
-	setAttr ".hyp[2].y" 309;
-	setAttr ".hyp[2].isf" yes;
-	setAttr ".hyp[3].x" 71;
-	setAttr ".hyp[3].y" 309;
-	setAttr ".hyp[3].isf" yes;
-	setAttr ".anf" yes;
-createNode materialInfo -n "materialInfo20";
-	rename -uid "75564F83-4D0A-0587-FB9F-6D98FA15D2B7";
+	rename -uid "60176C88-471E-60B5-289D-A99178077A5A";
 createNode container -n "LegFoot__instance_1_mirror:hook_root_joint_hook_representation_container";
-	rename -uid "5A7DC327-4FBA-9165-AEA5-94B6E6A15880";
+	rename -uid "CEE63036-455C-D8B0-E8A5-8D9F4C8D07C9";
 	setAttr ".ctor" -type "string" "Administrator";
 	setAttr ".cdat" -type "string" "2009/07/28 18:18:37";
 createNode multiplyDivide -n "LegFoot__instance_1_mirror:hook_target_joint_scaleMultiply";
-	rename -uid "0C3B4CD7-4F42-47DD-C622-089AA73B5DC6";
+	rename -uid "8C6AD007-4F2F-CBF6-C1EC-2CA8214C4C20";
 	setAttr ".i1" -type "float3" 0.001 0 0 ;
 createNode multiplyDivide -n "LegFoot__instance_1_mirror:hook_root_joint_ikHandle_scaleFactor";
-	rename -uid "84E975B5-46C0-4B09-7E8B-21B90D133749";
+	rename -uid "924D9C90-4D5A-BD2A-A8C3-B793B2320A21";
 	setAttr ".op" 2;
 	setAttr ".i2" -type "float3" 0.001 1 1 ;
-createNode hyperLayout -n "hyperLayout22";
-	rename -uid "003B318F-41CA-B9F1-87EF-74ABF6A6B9E0";
-	setAttr ".ihi" 0;
-	setAttr -s 23 ".hyp";
 createNode distanceBetween -n "LegFoot__instance_1_mirror:distBetween_hook_root_joint_rootPosLocator_hook_target_joint_endPosLocator";
-	rename -uid "F3990D34-425B-71A0-BA93-8484CE60773F";
+	rename -uid "71935E10-4F74-4574-3F31-948E80F8BD00";
+createNode blendColors -n "LegFoot__instance_1_mirror:hook_root_joint_ikHandle_lockBlend";
+	rename -uid "9592AFA9-45F3-77FE-565F-DA89315920E5";
+	setAttr ".b" 1;
+	setAttr ".c2" -type "float3" 1 0 1 ;
+createNode hyperLayout -n "hyperLayout22";
+	rename -uid "242AAFD8-4E64-332E-92C9-6EBAA393D18D";
+	setAttr ".ihi" 0;
+	setAttr -s 24 ".hyp";
 createNode lambert -n "LegFoot__instance_1_mirror:hook_root_joint_m_hookRepresentation";
-	rename -uid "4B17669B-4B15-FD54-7A48-D1B9CB6B7F76";
+	rename -uid "A97B756B-4F85-F434-F32A-C397DCA247F6";
 	setAttr ".dc" 0;
 	setAttr ".c" -type "float3" 0.56099999 0.56099999 0.56099999 ;
 	setAttr ".ambc" -type "float3" 1 1 1 ;
-createNode shadingEngine -n "LegFoot__instance_1_mirror:hook_root_joint_m_hookRepresentation_SG";
-	rename -uid "D1D90CB0-4B31-8359-0DBE-068CC798F44D";
-	setAttr ".ihi" 0;
-	setAttr ".ro" yes;
 createNode hyperLayout -n "hyperLayout23";
-	rename -uid "3AA9A429-46CA-2FC5-B8A8-4780A9DDEB6F";
+	rename -uid "F0D53E86-440D-6999-109A-A68187293377";
 	setAttr ".ihi" 0;
 	setAttr -s 7 ".hyp";
 	setAttr ".hyp[1].x" 71;
@@ -10342,54 +10413,14 @@ createNode hyperLayout -n "hyperLayout23";
 	setAttr ".hyp[3].y" 93;
 	setAttr ".hyp[3].isf" yes;
 	setAttr ".anf" yes;
-createNode materialInfo -n "materialInfo21";
-	rename -uid "EC66258E-45CA-9C32-BC67-C4BA5D4DA563";
-createNode hyperLayout -n "hyperLayout18";
-	rename -uid "109B5EAD-46B9-0DC3-C84E-FFB42CC4DFD1";
+createNode shadingEngine -n "LegFoot__instance_1_mirror:hook_root_joint_m_hookRepresentation_SG";
+	rename -uid "12E3CD13-4E25-EDED-1F69-84A6D04A6680";
 	setAttr ".ihi" 0;
-	setAttr -s 4 ".hyp";
-	setAttr ".hyp[0].x" 71;
-	setAttr ".hyp[0].y" 93;
-	setAttr ".hyp[0].isf" yes;
-	setAttr ".hyp[1].x" 409;
-	setAttr ".hyp[1].y" 309;
-	setAttr ".hyp[1].isf" yes;
-	setAttr ".hyp[2].x" 240;
-	setAttr ".hyp[2].y" 309;
-	setAttr ".hyp[2].isf" yes;
-	setAttr ".hyp[3].x" 71;
-	setAttr ".hyp[3].y" 309;
-	setAttr ".hyp[3].isf" yes;
-	setAttr ".anf" yes;
-createNode lambert -n "LegFoot__instance_1_mirror:ankle_joint_m_translation_control";
-	rename -uid "D5C0D8B2-4B84-7A16-3670-1ABBCECE704A";
-	setAttr ".dc" 0;
-	setAttr ".c" -type "float3" 0.97250003 0.66659999 0.149 ;
-	setAttr ".ambc" -type "float3" 1 1 1 ;
-createNode hyperLayout -n "hyperLayout19";
-	rename -uid "4BFFE1B6-443B-8F1A-89C5-819553CF9A46";
-	setAttr ".ihi" 0;
-	setAttr -s 4 ".hyp";
-	setAttr ".hyp[0].x" 71;
-	setAttr ".hyp[0].y" 93;
-	setAttr ".hyp[0].isf" yes;
-	setAttr ".hyp[1].x" 409;
-	setAttr ".hyp[1].y" 309;
-	setAttr ".hyp[1].isf" yes;
-	setAttr ".hyp[2].x" 240;
-	setAttr ".hyp[2].y" 309;
-	setAttr ".hyp[2].isf" yes;
-	setAttr ".hyp[3].x" 71;
-	setAttr ".hyp[3].y" 309;
-	setAttr ".hyp[3].isf" yes;
-	setAttr ".anf" yes;
-createNode shadingEngine -n "LegFoot__instance_1_mirror:ankle_joint_m_translation_control_SG";
-	rename -uid "0B68B654-4841-32B7-EE45-52A14E81D85B";
 	setAttr ".ro" yes;
-createNode materialInfo -n "materialInfo18";
-	rename -uid "4179E94B-4490-775C-D58E-1AA7E66C35FC";
+createNode materialInfo -n "materialInfo21";
+	rename -uid "A896E142-4B44-ADC4-B52E-C1B816238B5F";
 createNode lightLinker -s -n "lightLinker1";
-	rename -uid "EFF6A752-4A29-D688-E8AF-C5AAB8FA534F";
+	rename -uid "8E770158-4EBC-775B-6285-D4BC9FEC479C";
 	setAttr -s 32 ".lnk";
 	setAttr -s 32 ".slnk";
 select -ne :time1;
@@ -10411,7 +10442,7 @@ select -ne :defaultShaderList1;
 select -ne :postProcessList1;
 	setAttr -s 2 ".p";
 select -ne :defaultRenderUtilityList1;
-	setAttr -s 42 ".u";
+	setAttr -s 52 ".u";
 select -ne :defaultRenderingList1;
 select -ne :initialShadingGroup;
 	setAttr -s 3 ".dsm";
@@ -10420,15 +10451,14 @@ select -ne :initialShadingGroup;
 select -ne :initialParticleSE;
 	setAttr ".ro" yes;
 select -ne :defaultRenderGlobals;
+	addAttr -ci true -h true -sn "dss" -ln "defaultSurfaceShader" -dt "string";
 	setAttr ".ren" -type "string" "arnold";
-	setAttr ".fs" 1;
-	setAttr ".ef" 10;
-	setAttr ".ifp" -type "string" "01_Legs";
+	setAttr ".ifp" -type "string" "01_Leg_Foot";
+	setAttr ".dss" -type "string" "lambert1";
 select -ne :defaultResolution;
 	setAttr ".pa" 1;
 	setAttr ".dar" 1;
 select -ne :defaultColorMgtGlobals;
-	setAttr ".cme" no;
 	setAttr ".cfe" yes;
 	setAttr ".cfp" -type "string" "<MAYA_RESOURCES>/OCIO-configs/Maya2022-default/config.ocio";
 	setAttr ".vtn" -type "string" "ACES 1.0 SDR-video (sRGB)";
@@ -10450,19 +10480,19 @@ connectAttr "LegFoot__instance_1:hip_joint_pointConstraint.ctz" "LegFoot__instan
 		;
 connectAttr "LegFoot__instance_1:hip_joint.s" "LegFoot__instance_1:knee_joint.is"
 		;
-connectAttr "LegFoot__instance_1:knee_joint_scaleMultiply.ox" "LegFoot__instance_1:knee_joint.tx"
+connectAttr "LegFoot__instance_1:knee_joint_scaleMultiply.o" "LegFoot__instance_1:knee_joint.t"
 		;
 connectAttr "LegFoot__instance_1:knee_joint.s" "LegFoot__instance_1:ankle_joint.is"
 		;
-connectAttr "LegFoot__instance_1:ankle_joint_scaleMultiply.ox" "LegFoot__instance_1:ankle_joint.tx"
+connectAttr "LegFoot__instance_1:ankle_joint_scaleMultiply.o" "LegFoot__instance_1:ankle_joint.t"
 		;
 connectAttr "LegFoot__instance_1:ankle_joint.s" "LegFoot__instance_1:ball_joint.is"
 		;
-connectAttr "LegFoot__instance_1:ball_joint_scaleMultiply.ox" "LegFoot__instance_1:ball_joint.tx"
+connectAttr "LegFoot__instance_1:ball_joint_scaleMultiply.o" "LegFoot__instance_1:ball_joint.t"
 		;
 connectAttr "LegFoot__instance_1:ball_joint.s" "LegFoot__instance_1:toe_joint.is"
 		;
-connectAttr "LegFoot__instance_1:toe_joint_scaleMultiply.ox" "LegFoot__instance_1:toe_joint.tx"
+connectAttr "LegFoot__instance_1:toe_joint_scaleMultiply.o" "LegFoot__instance_1:toe_joint.t"
 		;
 connectAttr "LegFoot__instance_1:toe_joint.tx" "LegFoot__instance_1:ball_jointikEffector.tx"
 		;
@@ -11194,7 +11224,7 @@ connectAttr "LegFoot__instance_1:hook_root_joint_pointConstraint.ctz" "LegFoot__
 		;
 connectAttr "LegFoot__instance_1:hook_root_joint.s" "LegFoot__instance_1:hook_target_joint.is"
 		;
-connectAttr "LegFoot__instance_1:hook_target_joint_scaleMultiply.ox" "LegFoot__instance_1:hook_target_joint.tx"
+connectAttr "LegFoot__instance_1:hook_target_joint_scaleMultiply.o" "LegFoot__instance_1:hook_target_joint.t"
 		;
 connectAttr "LegFoot__instance_1:hook_target_joint.tx" "LegFoot__instance_1:hook_root_jointikEffector.tx"
 		;
@@ -11656,19 +11686,19 @@ connectAttr "LegFoot__instance_1_mirror:hip_joint_pointConstraint.ctz" "LegFoot_
 		;
 connectAttr "LegFoot__instance_1_mirror:hip_joint.s" "LegFoot__instance_1_mirror:knee_joint.is"
 		;
-connectAttr "LegFoot__instance_1_mirror:knee_joint_scaleMultiply.ox" "LegFoot__instance_1_mirror:knee_joint.tx"
+connectAttr "LegFoot__instance_1_mirror:knee_joint_scaleMultiply.o" "LegFoot__instance_1_mirror:knee_joint.t"
 		;
 connectAttr "LegFoot__instance_1_mirror:knee_joint.s" "LegFoot__instance_1_mirror:ankle_joint.is"
 		;
-connectAttr "LegFoot__instance_1_mirror:ankle_joint_scaleMultiply.ox" "LegFoot__instance_1_mirror:ankle_joint.tx"
+connectAttr "LegFoot__instance_1_mirror:ankle_joint_scaleMultiply.o" "LegFoot__instance_1_mirror:ankle_joint.t"
 		;
 connectAttr "LegFoot__instance_1_mirror:ankle_joint.s" "LegFoot__instance_1_mirror:ball_joint.is"
 		;
-connectAttr "LegFoot__instance_1_mirror:ball_joint_scaleMultiply.ox" "LegFoot__instance_1_mirror:ball_joint.tx"
+connectAttr "LegFoot__instance_1_mirror:ball_joint_scaleMultiply.o" "LegFoot__instance_1_mirror:ball_joint.t"
 		;
 connectAttr "LegFoot__instance_1_mirror:ball_joint.s" "LegFoot__instance_1_mirror:toe_joint.is"
 		;
-connectAttr "LegFoot__instance_1_mirror:toe_joint_scaleMultiply.ox" "LegFoot__instance_1_mirror:toe_joint.tx"
+connectAttr "LegFoot__instance_1_mirror:toe_joint_scaleMultiply.o" "LegFoot__instance_1_mirror:toe_joint.t"
 		;
 connectAttr "LegFoot__instance_1_mirror:toe_joint.tx" "LegFoot__instance_1_mirror:ball_jointikEffector.tx"
 		;
@@ -12404,7 +12434,7 @@ connectAttr "LegFoot__instance_1_mirror:hook_root_joint_pointConstraint.ctz" "Le
 		;
 connectAttr "LegFoot__instance_1_mirror:hook_root_joint.s" "LegFoot__instance_1_mirror:hook_target_joint.is"
 		;
-connectAttr "LegFoot__instance_1_mirror:hook_target_joint_scaleMultiply.ox" "LegFoot__instance_1_mirror:hook_target_joint.tx"
+connectAttr "LegFoot__instance_1_mirror:hook_target_joint_scaleMultiply.o" "LegFoot__instance_1_mirror:hook_target_joint.t"
 		;
 connectAttr "LegFoot__instance_1_mirror:hook_target_joint.tx" "LegFoot__instance_1_mirror:hook_root_jointikEffector.tx"
 		;
@@ -12858,25 +12888,25 @@ connectAttr "LegFoot__instance_1_mirror:ankle_joint_translation_control.pm" "IK_
 		;
 connectAttr "IK_hip_joint_ikHandle_positionLocator_pointConstraint2.w0" "IK_hip_joint_ikHandle_positionLocator_pointConstraint2.tg[0].tw"
 		;
-connectAttr "Group__legs.sy" "Group__legs.sx" -l on;
-connectAttr "Group__legs.sy" "Group__legs.sz" -l on;
-connectAttr "LegFoot__instance_1:module_transform.sy" "LegFoot__instance_1:module_transform.sx"
-		;
-connectAttr "LegFoot__instance_1:module_transform.sy" "LegFoot__instance_1:module_transform.sz"
-		;
+connectAttr "Group__Legs.sy" "Group__Legs.sx" -l on;
+connectAttr "Group__Legs.sy" "Group__Legs.sz" -l on;
 connectAttr "LegFoot__instance_1_mirror:module_transform.sy" "LegFoot__instance_1_mirror:module_transform.sx"
 		;
 connectAttr "LegFoot__instance_1_mirror:module_transform.sy" "LegFoot__instance_1_mirror:module_transform.sz"
 		;
-connectAttr "Group__legs.t" "Group_container.boc[0]";
-connectAttr "Group__legs.tx" "Group_container.boc[1]";
-connectAttr "Group__legs.ty" "Group_container.boc[2]";
-connectAttr "Group__legs.tz" "Group_container.boc[3]";
-connectAttr "Group__legs.r" "Group_container.boc[4]";
-connectAttr "Group__legs.rx" "Group_container.boc[5]";
-connectAttr "Group__legs.ry" "Group_container.boc[6]";
-connectAttr "Group__legs.rz" "Group_container.boc[7]";
-connectAttr "Group__legs.sy" "Group_container.boc[8]";
+connectAttr "LegFoot__instance_1:module_transform.sy" "LegFoot__instance_1:module_transform.sx"
+		;
+connectAttr "LegFoot__instance_1:module_transform.sy" "LegFoot__instance_1:module_transform.sz"
+		;
+connectAttr "Group__Legs.t" "Group_container.boc[0]";
+connectAttr "Group__Legs.tx" "Group_container.boc[1]";
+connectAttr "Group__Legs.ty" "Group_container.boc[2]";
+connectAttr "Group__Legs.tz" "Group_container.boc[3]";
+connectAttr "Group__Legs.r" "Group_container.boc[4]";
+connectAttr "Group__Legs.rx" "Group_container.boc[5]";
+connectAttr "Group__Legs.ry" "Group_container.boc[6]";
+connectAttr "Group__Legs.rz" "Group_container.boc[7]";
+connectAttr "Group__Legs.sy" "Group_container.boc[8]";
 connectAttr "hyperLayout31.msg" "Group_container.hl";
 connectAttr "LegFoot__instance_1:hip_joint.r" "LegFoot__instance_1:module_container.boc[0]"
 		;
@@ -13123,8 +13153,16 @@ connectAttr "LegFoot__instance_1_mirror:ball_joint_orientation_control_container
 		;
 connectAttr "hyperLayout16.msg" "LegFoot__instance_1_mirror:module_container.hl"
 		;
-connectAttr "Group__legs.msg" "hyperLayout31.hyp[0].dn";
-connectAttr "Group__legsShape.msg" "hyperLayout31.hyp[1].dn";
+connectAttr "Group__Legs.msg" "hyperLayout31.hyp[0].dn";
+connectAttr "Group__LegsShape.msg" "hyperLayout31.hyp[1].dn";
+connectAttr "LegFoot__instance_1:distBetween_IK_hip_joint_positionLocator_IK_knee_joint_positionLocator_scaleFactor.ox" "LegFoot__instance_1:distBetween_IK_hip_joint_positionLocator_IK_knee_joint_positionLocator_translationValue.i2x"
+		;
+connectAttr "LegFoot__instance_1:ankle_joint_rootPosLocatorShape.wp" "LegFoot__instance_1:distBetween_ankle_joint_rootPosLocator_ball_joint_endPosLocator.p1"
+		;
+connectAttr "LegFoot__instance_1:ball_joint_endPosLocatorShape.wp" "LegFoot__instance_1:distBetween_ankle_joint_rootPosLocator_ball_joint_endPosLocator.p2"
+		;
+connectAttr "LegFoot__instance_1:ankle_joint_ikHandle_scaleFactor.ox" "LegFoot__instance_1:ankle_joint_ikHandle_lockBlend.c1r"
+		;
 connectAttr "hyperLayout3.msg" "LegFoot__instance_1:knee_joint_translation_control_container.hl"
 		;
 connectAttr "LegFoot__instance_1:knee_joint_translation_control.t" "LegFoot__instance_1:knee_joint_translation_control_container.boc[0]"
@@ -13134,16 +13172,6 @@ connectAttr "LegFoot__instance_1:knee_joint_translation_control.tx" "LegFoot__in
 connectAttr "LegFoot__instance_1:knee_joint_translation_control.ty" "LegFoot__instance_1:knee_joint_translation_control_container.boc[2]"
 		;
 connectAttr "LegFoot__instance_1:knee_joint_translation_control.tz" "LegFoot__instance_1:knee_joint_translation_control_container.boc[3]"
-		;
-connectAttr "hyperLayout4.msg" "LegFoot__instance_1:ankle_joint_translation_control_container.hl"
-		;
-connectAttr "LegFoot__instance_1:ankle_joint_translation_control.t" "LegFoot__instance_1:ankle_joint_translation_control_container.boc[0]"
-		;
-connectAttr "LegFoot__instance_1:ankle_joint_translation_control.tx" "LegFoot__instance_1:ankle_joint_translation_control_container.boc[1]"
-		;
-connectAttr "LegFoot__instance_1:ankle_joint_translation_control.ty" "LegFoot__instance_1:ankle_joint_translation_control_container.boc[2]"
-		;
-connectAttr "LegFoot__instance_1:ankle_joint_translation_control.tz" "LegFoot__instance_1:ankle_joint_translation_control_container.boc[3]"
 		;
 connectAttr "hyperLayout2.msg" "LegFoot__instance_1:hip_joint_translation_control_container.hl"
 		;
@@ -13155,21 +13183,47 @@ connectAttr "LegFoot__instance_1:hip_joint_translation_control.ty" "LegFoot__ins
 		;
 connectAttr "LegFoot__instance_1:hip_joint_translation_control.tz" "LegFoot__instance_1:hip_joint_translation_control_container.boc[3]"
 		;
-connectAttr "LegFoot__instance_1:IK_hip_joint_positionLocatorShape.wp" "LegFoot__instance_1:distBetween_IK_hip_joint_positionLocator_IK_knee_joint_positionLocator.p1"
+connectAttr "LegFoot__instance_1:distBetween_IK_hip_joint_positionLocator_IK_knee_joint_positionLocator.d" "LegFoot__instance_1:distBetween_IK_hip_joint_positionLocator_IK_knee_joint_positionLocator_scaleFactor.i1x"
 		;
-connectAttr "LegFoot__instance_1:IK_knee_joint_positionLocatorShape.wp" "LegFoot__instance_1:distBetween_IK_hip_joint_positionLocator_IK_knee_joint_positionLocator.p2"
+connectAttr "LegFoot__instance_1:distBetween_ball_joint_rootPosLocator_toe_joint_endPosLocator.d" "LegFoot__instance_1:ball_joint_ikHandle_scaleFactor.i1x"
 		;
-connectAttr "LegFoot__instance_1:ankle_joint_rootPosLocatorShape.wp" "LegFoot__instance_1:distBetween_ankle_joint_rootPosLocator_ball_joint_endPosLocator.p1"
+connectAttr "LegFoot__instance_1:ankle_joint_ikHandle_lockBlend.opr" "LegFoot__instance_1:ball_joint_scaleMultiply.i2x"
 		;
-connectAttr "LegFoot__instance_1:ball_joint_endPosLocatorShape.wp" "LegFoot__instance_1:distBetween_ankle_joint_rootPosLocator_ball_joint_endPosLocator.p2"
+connectAttr "LegFoot__instance_1:knee_joint_ikHandle_lockBlend.opr" "LegFoot__instance_1:ankle_joint_scaleMultiply.i2x"
 		;
-connectAttr "LegFoot__instance_1:ball_joint_rootPosLocatorShape.wp" "LegFoot__instance_1:distBetween_ball_joint_rootPosLocator_toe_joint_endPosLocator.p1"
+connectAttr "LegFoot__instance_1:distBetween_knee_joint_rootPosLocator_ankle_joint_endPosLocator.d" "LegFoot__instance_1:knee_joint_ikHandle_scaleFactor.i1x"
 		;
-connectAttr "LegFoot__instance_1:toe_joint_endPosLocatorShape.wp" "LegFoot__instance_1:distBetween_ball_joint_rootPosLocator_toe_joint_endPosLocator.p2"
+connectAttr "LegFoot__instance_1:hip_joint_ikHandle_lockBlend.opr" "LegFoot__instance_1:knee_joint_scaleMultiply.i2x"
 		;
-connectAttr "LegFoot__instance_1:IK_knee_joint_positionLocatorShape.wp" "LegFoot__instance_1:distBetween_IK_knee_joint_positionLocator_IK_hip_joint_ikHandle_positionLocator.p1"
+connectAttr "LegFoot__instance_1:distBetween_ankle_joint_rootPosLocator_ball_joint_endPosLocator.d" "LegFoot__instance_1:ankle_joint_ikHandle_scaleFactor.i1x"
 		;
-connectAttr "LegFoot__instance_1:IK_hip_joint_ikHandle_positionLocatorShape.wp" "LegFoot__instance_1:distBetween_IK_knee_joint_positionLocator_IK_hip_joint_ikHandle_positionLocator.p2"
+connectAttr "LegFoot__instance_1:ball_joint_ikHandle_lockBlend.opr" "LegFoot__instance_1:toe_joint_scaleMultiply.i2x"
+		;
+connectAttr "LegFoot__instance_1:distBetween_hip_joint_rootPosLocator_knee_joint_endPosLocator.d" "LegFoot__instance_1:hip_joint_ikHandle_scaleFactor.i1x"
+		;
+connectAttr "LegFoot__instance_1:hip_joint_rootPosLocatorShape.wp" "LegFoot__instance_1:distBetween_hip_joint_rootPosLocator_knee_joint_endPosLocator.p1"
+		;
+connectAttr "LegFoot__instance_1:knee_joint_endPosLocatorShape.wp" "LegFoot__instance_1:distBetween_hip_joint_rootPosLocator_knee_joint_endPosLocator.p2"
+		;
+connectAttr "LegFoot__instance_1:hip_joint_ikHandle_scaleFactor.ox" "LegFoot__instance_1:hip_joint_ikHandle_lockBlend.c1r"
+		;
+connectAttr "LegFoot__instance_1:distBetween_IK_knee_joint_positionLocator_IK_hip_joint_ikHandle_positionLocator.d" "LegFoot__instance_1:distBetween_IK_knee_joint_positionLocator_IK_hip_joint_ikHandle_positionLocator_scaleFactor.i1x"
+		;
+connectAttr "hyperLayout14.msg" "LegFoot__instance_1:ankle_joint_orientation_control_container.hl"
+		;
+connectAttr "LegFoot__instance_1:ankle_joint_orientation_control.rx" "LegFoot__instance_1:ankle_joint_orientation_control_container.boc[0]"
+		;
+connectAttr "hyperLayout15.msg" "LegFoot__instance_1:ball_joint_orientation_control_container.hl"
+		;
+connectAttr "LegFoot__instance_1:ball_joint_orientation_control.rx" "LegFoot__instance_1:ball_joint_orientation_control_container.boc[0]"
+		;
+connectAttr "hyperLayout9.msg" "LegFoot__instance_1:hip_joint_hierarchy_representation_container.hl"
+		;
+connectAttr "hyperLayout10.msg" "LegFoot__instance_1:knee_joint_hierarchy_representation_container.hl"
+		;
+connectAttr "hyperLayout13.msg" "LegFoot__instance_1:IK_knee_joint_preferredAngle_representation_container.hl"
+		;
+connectAttr "LegFoot__instance_1:IK_knee_joint_preferredAngle_representation.axis" "LegFoot__instance_1:IK_knee_joint_preferredAngle_representation_container.boc[0]"
 		;
 connectAttr "hyperLayout6.msg" "LegFoot__instance_1:toe_joint_translation_control_container.hl"
 		;
@@ -13180,24 +13234,6 @@ connectAttr "LegFoot__instance_1:toe_joint_translation_control.tx" "LegFoot__ins
 connectAttr "LegFoot__instance_1:toe_joint_translation_control.ty" "LegFoot__instance_1:toe_joint_translation_control_container.boc[2]"
 		;
 connectAttr "LegFoot__instance_1:toe_joint_translation_control.tz" "LegFoot__instance_1:toe_joint_translation_control_container.boc[3]"
-		;
-connectAttr "hyperLayout9.msg" "LegFoot__instance_1:hip_joint_hierarchy_representation_container.hl"
-		;
-connectAttr "hyperLayout13.msg" "LegFoot__instance_1:IK_knee_joint_preferredAngle_representation_container.hl"
-		;
-connectAttr "LegFoot__instance_1:IK_knee_joint_preferredAngle_representation.axis" "LegFoot__instance_1:IK_knee_joint_preferredAngle_representation_container.boc[0]"
-		;
-connectAttr "hyperLayout5.msg" "LegFoot__instance_1:ball_joint_translation_control_container.hl"
-		;
-connectAttr "LegFoot__instance_1:ball_joint_translation_control.t" "LegFoot__instance_1:ball_joint_translation_control_container.boc[0]"
-		;
-connectAttr "LegFoot__instance_1:ball_joint_translation_control.tx" "LegFoot__instance_1:ball_joint_translation_control_container.boc[1]"
-		;
-connectAttr "LegFoot__instance_1:ball_joint_translation_control.ty" "LegFoot__instance_1:ball_joint_translation_control_container.boc[2]"
-		;
-connectAttr "LegFoot__instance_1:ball_joint_translation_control.tz" "LegFoot__instance_1:ball_joint_translation_control_container.boc[3]"
-		;
-connectAttr "hyperLayout10.msg" "LegFoot__instance_1:knee_joint_hierarchy_representation_container.hl"
 		;
 connectAttr "LegFoot__instance_1:hook_root_joint.r" "LegFoot__instance_1:hook_container.boc[0]"
 		;
@@ -13216,21 +13252,25 @@ connectAttr "LegFoot__instance_1:hook_target_joint.ry" "LegFoot__instance_1:hook
 connectAttr "LegFoot__instance_1:hook_target_joint.rz" "LegFoot__instance_1:hook_container.boc[7]"
 		;
 connectAttr "hyperLayout7.msg" "LegFoot__instance_1:hook_container.hl";
-connectAttr "hyperLayout14.msg" "LegFoot__instance_1:ankle_joint_orientation_control_container.hl"
+connectAttr "hyperLayout4.msg" "LegFoot__instance_1:ankle_joint_translation_control_container.hl"
 		;
-connectAttr "LegFoot__instance_1:ankle_joint_orientation_control.rx" "LegFoot__instance_1:ankle_joint_orientation_control_container.boc[0]"
+connectAttr "LegFoot__instance_1:ankle_joint_translation_control.t" "LegFoot__instance_1:ankle_joint_translation_control_container.boc[0]"
 		;
-connectAttr "hyperLayout15.msg" "LegFoot__instance_1:ball_joint_orientation_control_container.hl"
+connectAttr "LegFoot__instance_1:ankle_joint_translation_control.tx" "LegFoot__instance_1:ankle_joint_translation_control_container.boc[1]"
 		;
-connectAttr "LegFoot__instance_1:ball_joint_orientation_control.rx" "LegFoot__instance_1:ball_joint_orientation_control_container.boc[0]"
+connectAttr "LegFoot__instance_1:ankle_joint_translation_control.ty" "LegFoot__instance_1:ankle_joint_translation_control_container.boc[2]"
 		;
-connectAttr "LegFoot__instance_1:knee_joint_rootPosLocatorShape.wp" "LegFoot__instance_1:distBetween_knee_joint_rootPosLocator_ankle_joint_endPosLocator.p1"
+connectAttr "LegFoot__instance_1:ankle_joint_translation_control.tz" "LegFoot__instance_1:ankle_joint_translation_control_container.boc[3]"
 		;
-connectAttr "LegFoot__instance_1:ankle_joint_endPosLocatorShape.wp" "LegFoot__instance_1:distBetween_knee_joint_rootPosLocator_ankle_joint_endPosLocator.p2"
+connectAttr "hyperLayout5.msg" "LegFoot__instance_1:ball_joint_translation_control_container.hl"
 		;
-connectAttr "LegFoot__instance_1:hip_joint_rootPosLocatorShape.wp" "LegFoot__instance_1:distBetween_hip_joint_rootPosLocator_knee_joint_endPosLocator.p1"
+connectAttr "LegFoot__instance_1:ball_joint_translation_control.t" "LegFoot__instance_1:ball_joint_translation_control_container.boc[0]"
 		;
-connectAttr "LegFoot__instance_1:knee_joint_endPosLocatorShape.wp" "LegFoot__instance_1:distBetween_hip_joint_rootPosLocator_knee_joint_endPosLocator.p2"
+connectAttr "LegFoot__instance_1:ball_joint_translation_control.tx" "LegFoot__instance_1:ball_joint_translation_control_container.boc[1]"
+		;
+connectAttr "LegFoot__instance_1:ball_joint_translation_control.ty" "LegFoot__instance_1:ball_joint_translation_control_container.boc[2]"
+		;
+connectAttr "LegFoot__instance_1:ball_joint_translation_control.tz" "LegFoot__instance_1:ball_joint_translation_control_container.boc[3]"
 		;
 connectAttr "LegFoot__instance_1:module_grp.msg" "hyperLayout1.hyp[0].dn";
 connectAttr "LegFoot__instance_1:joints_grp.msg" "hyperLayout1.hyp[1].dn";
@@ -13280,207 +13320,205 @@ connectAttr "LegFoot__instance_1:distBetween_hip_joint_rootPosLocator_knee_joint
 		;
 connectAttr "LegFoot__instance_1:hip_joint_ikHandle_scaleFactor.msg" "hyperLayout1.hyp[28].dn"
 		;
-connectAttr "LegFoot__instance_1:knee_joint_scaleMultiply.msg" "hyperLayout1.hyp[29].dn"
+connectAttr "LegFoot__instance_1:hip_joint_ikHandle_lockBlend.msg" "hyperLayout1.hyp[29].dn"
 		;
-connectAttr "LegFoot__instance_1:hip_joint_rootPosLocatorShape.msg" "hyperLayout1.hyp[30].dn"
+connectAttr "LegFoot__instance_1:knee_joint_scaleMultiply.msg" "hyperLayout1.hyp[30].dn"
 		;
-connectAttr "LegFoot__instance_1:knee_joint_endPosLocatorShape.msg" "hyperLayout1.hyp[31].dn"
+connectAttr "LegFoot__instance_1:hip_joint_rootPosLocatorShape.msg" "hyperLayout1.hyp[31].dn"
 		;
-connectAttr "LegFoot__instance_1:hip_joint_translation_control_poleVectorLocator_parentConstraintGrp.msg" "hyperLayout1.hyp[32].dn"
+connectAttr "LegFoot__instance_1:knee_joint_endPosLocatorShape.msg" "hyperLayout1.hyp[32].dn"
 		;
-connectAttr "hip_joint_translation_control_poleVectorLocator_parentConstraintGrp_parentConstraint1.msg" "hyperLayout1.hyp[33].dn"
+connectAttr "LegFoot__instance_1:hip_joint_translation_control_poleVectorLocator_parentConstraintGrp.msg" "hyperLayout1.hyp[33].dn"
 		;
-connectAttr "LegFoot__instance_1:knee_joint_endPosLocator_pointConstraint.msg" "hyperLayout1.hyp[34].dn"
+connectAttr "hip_joint_translation_control_poleVectorLocator_parentConstraintGrp_parentConstraint1.msg" "hyperLayout1.hyp[34].dn"
 		;
-connectAttr "LegFoot__instance_1:hip_joint_translation_control_poleVectorLocator.msg" "hyperLayout1.hyp[35].dn"
+connectAttr "LegFoot__instance_1:knee_joint_endPosLocator_pointConstraint.msg" "hyperLayout1.hyp[35].dn"
 		;
-connectAttr "LegFoot__instance_1:hip_joint_translation_control_poleVectorLocatorShape.msg" "hyperLayout1.hyp[36].dn"
+connectAttr "LegFoot__instance_1:hip_joint_translation_control_poleVectorLocator.msg" "hyperLayout1.hyp[36].dn"
 		;
-connectAttr "LegFoot__instance_1:hip_joint_hierarchy_representation_container.msg" "hyperLayout1.hyp[37].dn"
+connectAttr "LegFoot__instance_1:hip_joint_translation_control_poleVectorLocatorShape.msg" "hyperLayout1.hyp[37].dn"
 		;
-connectAttr "LegFoot__instance_1:knee_joint_ikHandle.msg" "hyperLayout1.hyp[38].dn"
+connectAttr "LegFoot__instance_1:hip_joint_hierarchy_representation_container.msg" "hyperLayout1.hyp[38].dn"
 		;
-connectAttr "LegFoot__instance_1:knee_jointikEffector.msg" "hyperLayout1.hyp[39].dn"
+connectAttr "LegFoot__instance_1:knee_joint_ikHandle.msg" "hyperLayout1.hyp[39].dn"
 		;
-connectAttr "knee_joint_ikHandle_poleVectorConstraint1.msg" "hyperLayout1.hyp[40].dn"
+connectAttr "LegFoot__instance_1:knee_jointikEffector.msg" "hyperLayout1.hyp[40].dn"
 		;
-connectAttr "LegFoot__instance_1:knee_joint_rootPosLocator.msg" "hyperLayout1.hyp[41].dn"
+connectAttr "knee_joint_ikHandle_poleVectorConstraint1.msg" "hyperLayout1.hyp[41].dn"
 		;
-connectAttr "LegFoot__instance_1:ankle_joint_endPosLocator.msg" "hyperLayout1.hyp[42].dn"
+connectAttr "LegFoot__instance_1:knee_joint_rootPosLocator.msg" "hyperLayout1.hyp[42].dn"
 		;
-connectAttr "LegFoot__instance_1:knee_joint_rootPosLocator_pointConstraint.msg" "hyperLayout1.hyp[43].dn"
+connectAttr "LegFoot__instance_1:ankle_joint_endPosLocator.msg" "hyperLayout1.hyp[43].dn"
 		;
-connectAttr "LegFoot__instance_1:knee_joint_ikHandle_pointConstraint.msg" "hyperLayout1.hyp[44].dn"
+connectAttr "LegFoot__instance_1:knee_joint_rootPosLocator_pointConstraint.msg" "hyperLayout1.hyp[44].dn"
 		;
-connectAttr "LegFoot__instance_1:distBetween_knee_joint_rootPosLocator_ankle_joint_endPosLocator.msg" "hyperLayout1.hyp[45].dn"
+connectAttr "LegFoot__instance_1:knee_joint_ikHandle_pointConstraint.msg" "hyperLayout1.hyp[45].dn"
 		;
-connectAttr "LegFoot__instance_1:knee_joint_ikHandle_scaleFactor.msg" "hyperLayout1.hyp[46].dn"
+connectAttr "LegFoot__instance_1:distBetween_knee_joint_rootPosLocator_ankle_joint_endPosLocator.msg" "hyperLayout1.hyp[46].dn"
 		;
-connectAttr "LegFoot__instance_1:ankle_joint_scaleMultiply.msg" "hyperLayout1.hyp[47].dn"
+connectAttr "LegFoot__instance_1:knee_joint_ikHandle_scaleFactor.msg" "hyperLayout1.hyp[47].dn"
 		;
-connectAttr "LegFoot__instance_1:knee_joint_rootPosLocatorShape.msg" "hyperLayout1.hyp[48].dn"
+connectAttr "LegFoot__instance_1:knee_joint_ikHandle_lockBlend.msg" "hyperLayout1.hyp[48].dn"
 		;
-connectAttr "LegFoot__instance_1:ankle_joint_endPosLocatorShape.msg" "hyperLayout1.hyp[49].dn"
+connectAttr "LegFoot__instance_1:ankle_joint_scaleMultiply.msg" "hyperLayout1.hyp[49].dn"
 		;
-connectAttr "LegFoot__instance_1:knee_joint_translation_control_poleVectorLocator_parentConstraintGrp.msg" "hyperLayout1.hyp[50].dn"
+connectAttr "LegFoot__instance_1:knee_joint_rootPosLocatorShape.msg" "hyperLayout1.hyp[50].dn"
 		;
-connectAttr "knee_joint_translation_control_poleVectorLocator_parentConstraintGrp_parentConstraint1.msg" "hyperLayout1.hyp[51].dn"
+connectAttr "LegFoot__instance_1:ankle_joint_endPosLocatorShape.msg" "hyperLayout1.hyp[51].dn"
 		;
-connectAttr "LegFoot__instance_1:ankle_joint_endPosLocator_pointConstraint.msg" "hyperLayout1.hyp[52].dn"
+connectAttr "LegFoot__instance_1:knee_joint_translation_control_poleVectorLocator_parentConstraintGrp.msg" "hyperLayout1.hyp[52].dn"
 		;
-connectAttr "LegFoot__instance_1:knee_joint_translation_control_poleVectorLocator.msg" "hyperLayout1.hyp[53].dn"
+connectAttr "knee_joint_translation_control_poleVectorLocator_parentConstraintGrp_parentConstraint1.msg" "hyperLayout1.hyp[53].dn"
 		;
-connectAttr "LegFoot__instance_1:knee_joint_translation_control_poleVectorLocatorShape.msg" "hyperLayout1.hyp[54].dn"
+connectAttr "LegFoot__instance_1:ankle_joint_endPosLocator_pointConstraint.msg" "hyperLayout1.hyp[54].dn"
 		;
-connectAttr "LegFoot__instance_1:knee_joint_hierarchy_representation_container.msg" "hyperLayout1.hyp[55].dn"
+connectAttr "LegFoot__instance_1:knee_joint_translation_control_poleVectorLocator.msg" "hyperLayout1.hyp[55].dn"
 		;
-connectAttr "LegFoot__instance_1:ankle_joint_ikHandle.msg" "hyperLayout1.hyp[56].dn"
+connectAttr "LegFoot__instance_1:knee_joint_translation_control_poleVectorLocatorShape.msg" "hyperLayout1.hyp[56].dn"
 		;
-connectAttr "LegFoot__instance_1:ankle_jointikEffector.msg" "hyperLayout1.hyp[57].dn"
+connectAttr "LegFoot__instance_1:knee_joint_hierarchy_representation_container.msg" "hyperLayout1.hyp[57].dn"
 		;
-connectAttr "ankle_joint_ikHandle_poleVectorConstraint1.msg" "hyperLayout1.hyp[58].dn"
+connectAttr "LegFoot__instance_1:ankle_joint_ikHandle.msg" "hyperLayout1.hyp[58].dn"
 		;
-connectAttr "LegFoot__instance_1:ankle_joint_rootPosLocator.msg" "hyperLayout1.hyp[59].dn"
+connectAttr "LegFoot__instance_1:ankle_jointikEffector.msg" "hyperLayout1.hyp[59].dn"
 		;
-connectAttr "LegFoot__instance_1:ball_joint_endPosLocator.msg" "hyperLayout1.hyp[60].dn"
+connectAttr "ankle_joint_ikHandle_poleVectorConstraint1.msg" "hyperLayout1.hyp[60].dn"
 		;
-connectAttr "LegFoot__instance_1:ankle_joint_rootPosLocator_pointConstraint.msg" "hyperLayout1.hyp[61].dn"
+connectAttr "LegFoot__instance_1:ankle_joint_rootPosLocator.msg" "hyperLayout1.hyp[61].dn"
 		;
-connectAttr "LegFoot__instance_1:ankle_joint_ikHandle_pointConstraint.msg" "hyperLayout1.hyp[62].dn"
+connectAttr "LegFoot__instance_1:ball_joint_endPosLocator.msg" "hyperLayout1.hyp[62].dn"
 		;
-connectAttr "LegFoot__instance_1:distBetween_ankle_joint_rootPosLocator_ball_joint_endPosLocator.msg" "hyperLayout1.hyp[63].dn"
+connectAttr "LegFoot__instance_1:ankle_joint_rootPosLocator_pointConstraint.msg" "hyperLayout1.hyp[63].dn"
 		;
-connectAttr "LegFoot__instance_1:ankle_joint_ikHandle_scaleFactor.msg" "hyperLayout1.hyp[64].dn"
+connectAttr "LegFoot__instance_1:ankle_joint_ikHandle_pointConstraint.msg" "hyperLayout1.hyp[64].dn"
 		;
-connectAttr "LegFoot__instance_1:ball_joint_scaleMultiply.msg" "hyperLayout1.hyp[65].dn"
+connectAttr "LegFoot__instance_1:distBetween_ankle_joint_rootPosLocator_ball_joint_endPosLocator.msg" "hyperLayout1.hyp[65].dn"
 		;
-connectAttr "LegFoot__instance_1:ankle_joint_rootPosLocatorShape.msg" "hyperLayout1.hyp[66].dn"
+connectAttr "LegFoot__instance_1:ankle_joint_ikHandle_scaleFactor.msg" "hyperLayout1.hyp[66].dn"
 		;
-connectAttr "LegFoot__instance_1:ball_joint_endPosLocatorShape.msg" "hyperLayout1.hyp[67].dn"
+connectAttr "LegFoot__instance_1:ankle_joint_ikHandle_lockBlend.msg" "hyperLayout1.hyp[67].dn"
 		;
-connectAttr "LegFoot__instance_1:ankle_joint_translation_control_poleVectorLocator_parentConstraintGrp.msg" "hyperLayout1.hyp[68].dn"
+connectAttr "LegFoot__instance_1:ball_joint_scaleMultiply.msg" "hyperLayout1.hyp[68].dn"
 		;
-connectAttr "ankle_joint_translation_control_poleVectorLocator_parentConstraintGrp_parentConstraint1.msg" "hyperLayout1.hyp[69].dn"
+connectAttr "LegFoot__instance_1:ankle_joint_rootPosLocatorShape.msg" "hyperLayout1.hyp[69].dn"
 		;
-connectAttr "LegFoot__instance_1:ball_joint_endPosLocator_pointConstraint.msg" "hyperLayout1.hyp[70].dn"
+connectAttr "LegFoot__instance_1:ball_joint_endPosLocatorShape.msg" "hyperLayout1.hyp[70].dn"
 		;
-connectAttr "LegFoot__instance_1:ankle_joint_translation_control_poleVectorLocator.msg" "hyperLayout1.hyp[71].dn"
+connectAttr "LegFoot__instance_1:ankle_joint_translation_control_poleVectorLocator_parentConstraintGrp.msg" "hyperLayout1.hyp[71].dn"
 		;
-connectAttr "LegFoot__instance_1:ankle_joint_translation_control_poleVectorLocatorShape.msg" "hyperLayout1.hyp[72].dn"
+connectAttr "ankle_joint_translation_control_poleVectorLocator_parentConstraintGrp_parentConstraint1.msg" "hyperLayout1.hyp[72].dn"
 		;
-connectAttr "LegFoot__instance_1:ball_joint_ikHandle.msg" "hyperLayout1.hyp[74].dn"
+connectAttr "LegFoot__instance_1:ball_joint_endPosLocator_pointConstraint.msg" "hyperLayout1.hyp[73].dn"
 		;
-connectAttr "LegFoot__instance_1:ball_jointikEffector.msg" "hyperLayout1.hyp[75].dn"
+connectAttr "LegFoot__instance_1:ankle_joint_translation_control_poleVectorLocator.msg" "hyperLayout1.hyp[74].dn"
 		;
-connectAttr "ball_joint_ikHandle_poleVectorConstraint1.msg" "hyperLayout1.hyp[76].dn"
+connectAttr "LegFoot__instance_1:ankle_joint_translation_control_poleVectorLocatorShape.msg" "hyperLayout1.hyp[75].dn"
 		;
-connectAttr "LegFoot__instance_1:ball_joint_rootPosLocator.msg" "hyperLayout1.hyp[77].dn"
+connectAttr "LegFoot__instance_1:ball_joint_ikHandle.msg" "hyperLayout1.hyp[77].dn"
 		;
-connectAttr "LegFoot__instance_1:toe_joint_endPosLocator.msg" "hyperLayout1.hyp[78].dn"
+connectAttr "LegFoot__instance_1:ball_jointikEffector.msg" "hyperLayout1.hyp[78].dn"
 		;
-connectAttr "LegFoot__instance_1:ball_joint_rootPosLocator_pointConstraint.msg" "hyperLayout1.hyp[79].dn"
+connectAttr "ball_joint_ikHandle_poleVectorConstraint1.msg" "hyperLayout1.hyp[79].dn"
 		;
-connectAttr "LegFoot__instance_1:ball_joint_ikHandle_pointConstraint.msg" "hyperLayout1.hyp[80].dn"
+connectAttr "LegFoot__instance_1:ball_joint_rootPosLocator.msg" "hyperLayout1.hyp[80].dn"
 		;
-connectAttr "LegFoot__instance_1:distBetween_ball_joint_rootPosLocator_toe_joint_endPosLocator.msg" "hyperLayout1.hyp[81].dn"
+connectAttr "LegFoot__instance_1:toe_joint_endPosLocator.msg" "hyperLayout1.hyp[81].dn"
 		;
-connectAttr "LegFoot__instance_1:ball_joint_ikHandle_scaleFactor.msg" "hyperLayout1.hyp[82].dn"
+connectAttr "LegFoot__instance_1:ball_joint_rootPosLocator_pointConstraint.msg" "hyperLayout1.hyp[82].dn"
 		;
-connectAttr "LegFoot__instance_1:toe_joint_scaleMultiply.msg" "hyperLayout1.hyp[83].dn"
+connectAttr "LegFoot__instance_1:ball_joint_ikHandle_pointConstraint.msg" "hyperLayout1.hyp[83].dn"
 		;
-connectAttr "LegFoot__instance_1:ball_joint_rootPosLocatorShape.msg" "hyperLayout1.hyp[84].dn"
+connectAttr "LegFoot__instance_1:distBetween_ball_joint_rootPosLocator_toe_joint_endPosLocator.msg" "hyperLayout1.hyp[84].dn"
 		;
-connectAttr "LegFoot__instance_1:toe_joint_endPosLocatorShape.msg" "hyperLayout1.hyp[85].dn"
+connectAttr "LegFoot__instance_1:ball_joint_ikHandle_scaleFactor.msg" "hyperLayout1.hyp[85].dn"
 		;
-connectAttr "LegFoot__instance_1:ball_joint_translation_control_poleVectorLocator_parentConstraintGrp.msg" "hyperLayout1.hyp[86].dn"
+connectAttr "LegFoot__instance_1:ball_joint_ikHandle_lockBlend.msg" "hyperLayout1.hyp[86].dn"
 		;
-connectAttr "ball_joint_translation_control_poleVectorLocator_parentConstraintGrp_parentConstraint1.msg" "hyperLayout1.hyp[87].dn"
+connectAttr "LegFoot__instance_1:toe_joint_scaleMultiply.msg" "hyperLayout1.hyp[87].dn"
 		;
-connectAttr "LegFoot__instance_1:toe_joint_endPosLocator_pointConstraint.msg" "hyperLayout1.hyp[88].dn"
+connectAttr "LegFoot__instance_1:ball_joint_rootPosLocatorShape.msg" "hyperLayout1.hyp[88].dn"
 		;
-connectAttr "LegFoot__instance_1:ball_joint_translation_control_poleVectorLocator.msg" "hyperLayout1.hyp[89].dn"
+connectAttr "LegFoot__instance_1:toe_joint_endPosLocatorShape.msg" "hyperLayout1.hyp[89].dn"
 		;
-connectAttr "LegFoot__instance_1:ball_joint_translation_control_poleVectorLocatorShape.msg" "hyperLayout1.hyp[90].dn"
+connectAttr "LegFoot__instance_1:ball_joint_translation_control_poleVectorLocator_parentConstraintGrp.msg" "hyperLayout1.hyp[90].dn"
 		;
-connectAttr "LegFoot__instance_1:IK_hip_joint.msg" "hyperLayout1.hyp[92].dn";
-connectAttr "LegFoot__instance_1:IK_knee_joint.msg" "hyperLayout1.hyp[93].dn";
-connectAttr "LegFoot__instance_1:IK_ankle_joint.msg" "hyperLayout1.hyp[94].dn";
-connectAttr "LegFoot__instance_1:IK_ball_joint.msg" "hyperLayout1.hyp[95].dn";
-connectAttr "LegFoot__instance_1:IK_toe_joint.msg" "hyperLayout1.hyp[96].dn";
-connectAttr "LegFoot__instance_1:distBetween_IK_hip_joint_positionLocator_IK_knee_joint_positionLocator.msg" "hyperLayout1.hyp[97].dn"
+connectAttr "ball_joint_translation_control_poleVectorLocator_parentConstraintGrp_parentConstraint1.msg" "hyperLayout1.hyp[91].dn"
 		;
-connectAttr "LegFoot__instance_1:distBetween_IK_hip_joint_positionLocator_IK_knee_joint_positionLocator_scaleFactor.msg" "hyperLayout1.hyp[98].dn"
+connectAttr "LegFoot__instance_1:toe_joint_endPosLocator_pointConstraint.msg" "hyperLayout1.hyp[92].dn"
 		;
-connectAttr "LegFoot__instance_1:distBetween_IK_hip_joint_positionLocator_IK_knee_joint_positionLocator_translationValue.msg" "hyperLayout1.hyp[99].dn"
+connectAttr "LegFoot__instance_1:ball_joint_translation_control_poleVectorLocator.msg" "hyperLayout1.hyp[93].dn"
 		;
-connectAttr "LegFoot__instance_1:distBetween_IK_knee_joint_positionLocator_IK_hip_joint_ikHandle_positionLocator.msg" "hyperLayout1.hyp[100].dn"
+connectAttr "LegFoot__instance_1:ball_joint_translation_control_poleVectorLocatorShape.msg" "hyperLayout1.hyp[94].dn"
 		;
-connectAttr "LegFoot__instance_1:distBetween_IK_knee_joint_positionLocator_IK_hip_joint_ikHandle_positionLocator_scaleFactor.msg" "hyperLayout1.hyp[101].dn"
+connectAttr "LegFoot__instance_1:IK_hip_joint.msg" "hyperLayout1.hyp[96].dn";
+connectAttr "LegFoot__instance_1:IK_knee_joint.msg" "hyperLayout1.hyp[97].dn";
+connectAttr "LegFoot__instance_1:IK_ankle_joint.msg" "hyperLayout1.hyp[98].dn";
+connectAttr "LegFoot__instance_1:IK_ball_joint.msg" "hyperLayout1.hyp[99].dn";
+connectAttr "LegFoot__instance_1:IK_toe_joint.msg" "hyperLayout1.hyp[100].dn";
+connectAttr "LegFoot__instance_1:distBetween_IK_hip_joint_positionLocator_IK_knee_joint_positionLocator.msg" "hyperLayout1.hyp[101].dn"
 		;
-connectAttr "LegFoot__instance_1:distBetween_IK_knee_joint_positionLocator_IK_hip_joint_ikHandle_positionLocator_translationValue.msg" "hyperLayout1.hyp[102].dn"
+connectAttr "LegFoot__instance_1:distBetween_IK_hip_joint_positionLocator_IK_knee_joint_positionLocator_scaleFactor.msg" "hyperLayout1.hyp[102].dn"
 		;
-connectAttr "LegFoot__instance_1:IK_hip_joint_ikHandle.msg" "hyperLayout1.hyp[103].dn"
+connectAttr "LegFoot__instance_1:distBetween_IK_hip_joint_positionLocator_IK_knee_joint_positionLocator_translationValue.msg" "hyperLayout1.hyp[103].dn"
 		;
-connectAttr "LegFoot__instance_1:IK_hip_joint_ikEffector.msg" "hyperLayout1.hyp[104].dn"
+connectAttr "LegFoot__instance_1:distBetween_IK_knee_joint_positionLocator_IK_hip_joint_ikHandle_positionLocator.msg" "hyperLayout1.hyp[104].dn"
 		;
-connectAttr "LegFoot__instance_1:IK_hip_joint_positionLocator.msg" "hyperLayout1.hyp[105].dn"
+connectAttr "LegFoot__instance_1:distBetween_IK_knee_joint_positionLocator_IK_hip_joint_ikHandle_positionLocator_scaleFactor.msg" "hyperLayout1.hyp[105].dn"
 		;
-connectAttr "LegFoot__instance_1:IK_knee_joint_positionLocator.msg" "hyperLayout1.hyp[106].dn"
+connectAttr "LegFoot__instance_1:distBetween_IK_knee_joint_positionLocator_IK_hip_joint_ikHandle_positionLocator_translationValue.msg" "hyperLayout1.hyp[106].dn"
 		;
-connectAttr "LegFoot__instance_1:IK_hip_joint_ikHandle_positionLocator.msg" "hyperLayout1.hyp[107].dn"
+connectAttr "LegFoot__instance_1:IK_hip_joint_ikHandle.msg" "hyperLayout1.hyp[107].dn"
 		;
-connectAttr "IK_hip_joint_ikHandle_poleVectorConstraint1.msg" "hyperLayout1.hyp[108].dn"
+connectAttr "LegFoot__instance_1:IK_hip_joint_ikEffector.msg" "hyperLayout1.hyp[108].dn"
 		;
-connectAttr "LegFoot__instance_1:IK_hip_joint_positionLocatorShape.msg" "hyperLayout1.hyp[109].dn"
+connectAttr "LegFoot__instance_1:IK_hip_joint_positionLocator.msg" "hyperLayout1.hyp[109].dn"
 		;
-connectAttr "LegFoot__instance_1:IK_knee_joint_positionLocatorShape.msg" "hyperLayout1.hyp[110].dn"
+connectAttr "LegFoot__instance_1:IK_knee_joint_positionLocator.msg" "hyperLayout1.hyp[110].dn"
 		;
-connectAttr "LegFoot__instance_1:IK_hip_joint_ikHandle_positionLocatorShape.msg" "hyperLayout1.hyp[111].dn"
+connectAttr "LegFoot__instance_1:IK_hip_joint_ikHandle_positionLocator.msg" "hyperLayout1.hyp[111].dn"
 		;
-connectAttr "IK_hip_joint_positionLocator_pointConstraint1.msg" "hyperLayout1.hyp[112].dn"
+connectAttr "IK_hip_joint_ikHandle_poleVectorConstraint1.msg" "hyperLayout1.hyp[112].dn"
 		;
-connectAttr "IK_knee_joint_positionLocator_pointConstraint1.msg" "hyperLayout1.hyp[113].dn"
+connectAttr "LegFoot__instance_1:IK_hip_joint_positionLocatorShape.msg" "hyperLayout1.hyp[113].dn"
 		;
-connectAttr "IK_hip_joint_ikHandle_positionLocator_pointConstraint1.msg" "hyperLayout1.hyp[114].dn"
+connectAttr "LegFoot__instance_1:IK_knee_joint_positionLocatorShape.msg" "hyperLayout1.hyp[114].dn"
 		;
-connectAttr "LegFoot__instance_1:IK_knee_joint_preferredAngle_representation_container.msg" "hyperLayout1.hyp[115].dn"
+connectAttr "LegFoot__instance_1:IK_hip_joint_ikHandle_positionLocatorShape.msg" "hyperLayout1.hyp[115].dn"
 		;
-connectAttr "LegFoot__instance_1:ankle_joint_orientation_control_container.msg" "hyperLayout1.hyp[116].dn"
+connectAttr "IK_hip_joint_positionLocator_pointConstraint1.msg" "hyperLayout1.hyp[116].dn"
 		;
-connectAttr "LegFoot__instance_1:ball_joint_orientation_control_container.msg" "hyperLayout1.hyp[117].dn"
+connectAttr "IK_knee_joint_positionLocator_pointConstraint1.msg" "hyperLayout1.hyp[117].dn"
 		;
-connectAttr "LegFoot__instance_1:knee_joint_ikHandle_scaleFactor.ox" "LegFoot__instance_1:ankle_joint_scaleMultiply.i2x"
+connectAttr "IK_hip_joint_ikHandle_positionLocator_pointConstraint1.msg" "hyperLayout1.hyp[118].dn"
 		;
-connectAttr "LegFoot__instance_1:distBetween_hip_joint_rootPosLocator_knee_joint_endPosLocator.d" "LegFoot__instance_1:hip_joint_ikHandle_scaleFactor.i1x"
+connectAttr "LegFoot__instance_1:IK_knee_joint_preferredAngle_representation_container.msg" "hyperLayout1.hyp[119].dn"
 		;
-connectAttr "LegFoot__instance_1:hip_joint_ikHandle_scaleFactor.ox" "LegFoot__instance_1:knee_joint_scaleMultiply.i2x"
+connectAttr "LegFoot__instance_1:ankle_joint_orientation_control_container.msg" "hyperLayout1.hyp[120].dn"
 		;
-connectAttr "LegFoot__instance_1:distBetween_knee_joint_rootPosLocator_ankle_joint_endPosLocator.d" "LegFoot__instance_1:knee_joint_ikHandle_scaleFactor.i1x"
+connectAttr "LegFoot__instance_1:ball_joint_orientation_control_container.msg" "hyperLayout1.hyp[121].dn"
+		;
+connectAttr "LegFoot__instance_1:knee_joint_rootPosLocatorShape.wp" "LegFoot__instance_1:distBetween_knee_joint_rootPosLocator_ankle_joint_endPosLocator.p1"
+		;
+connectAttr "LegFoot__instance_1:ankle_joint_endPosLocatorShape.wp" "LegFoot__instance_1:distBetween_knee_joint_rootPosLocator_ankle_joint_endPosLocator.p2"
+		;
+connectAttr "LegFoot__instance_1:knee_joint_ikHandle_scaleFactor.ox" "LegFoot__instance_1:knee_joint_ikHandle_lockBlend.c1r"
+		;
+connectAttr "LegFoot__instance_1:ball_joint_rootPosLocatorShape.wp" "LegFoot__instance_1:distBetween_ball_joint_rootPosLocator_toe_joint_endPosLocator.p1"
+		;
+connectAttr "LegFoot__instance_1:toe_joint_endPosLocatorShape.wp" "LegFoot__instance_1:distBetween_ball_joint_rootPosLocator_toe_joint_endPosLocator.p2"
+		;
+connectAttr "LegFoot__instance_1:ball_joint_ikHandle_scaleFactor.ox" "LegFoot__instance_1:ball_joint_ikHandle_lockBlend.c1r"
+		;
+connectAttr "LegFoot__instance_1:IK_hip_joint_positionLocatorShape.wp" "LegFoot__instance_1:distBetween_IK_hip_joint_positionLocator_IK_knee_joint_positionLocator.p1"
+		;
+connectAttr "LegFoot__instance_1:IK_knee_joint_positionLocatorShape.wp" "LegFoot__instance_1:distBetween_IK_hip_joint_positionLocator_IK_knee_joint_positionLocator.p2"
+		;
+connectAttr "LegFoot__instance_1:IK_knee_joint_positionLocatorShape.wp" "LegFoot__instance_1:distBetween_IK_knee_joint_positionLocator_IK_hip_joint_ikHandle_positionLocator.p1"
+		;
+connectAttr "LegFoot__instance_1:IK_hip_joint_ikHandle_positionLocatorShape.wp" "LegFoot__instance_1:distBetween_IK_knee_joint_positionLocator_IK_hip_joint_ikHandle_positionLocator.p2"
 		;
 connectAttr "LegFoot__instance_1:distBetween_IK_knee_joint_positionLocator_IK_hip_joint_ikHandle_positionLocator_scaleFactor.ox" "LegFoot__instance_1:distBetween_IK_knee_joint_positionLocator_IK_hip_joint_ikHandle_positionLocator_translationValue.i2x"
 		;
-connectAttr "LegFoot__instance_1:distBetween_IK_hip_joint_positionLocator_IK_knee_joint_positionLocator_scaleFactor.ox" "LegFoot__instance_1:distBetween_IK_hip_joint_positionLocator_IK_knee_joint_positionLocator_translationValue.i2x"
-		;
-connectAttr "LegFoot__instance_1:distBetween_IK_hip_joint_positionLocator_IK_knee_joint_positionLocator.d" "LegFoot__instance_1:distBetween_IK_hip_joint_positionLocator_IK_knee_joint_positionLocator_scaleFactor.i1x"
-		;
-connectAttr "LegFoot__instance_1:distBetween_ball_joint_rootPosLocator_toe_joint_endPosLocator.d" "LegFoot__instance_1:ball_joint_ikHandle_scaleFactor.i1x"
-		;
-connectAttr "LegFoot__instance_1:ankle_joint_ikHandle_scaleFactor.ox" "LegFoot__instance_1:ball_joint_scaleMultiply.i2x"
-		;
-connectAttr "LegFoot__instance_1:distBetween_ankle_joint_rootPosLocator_ball_joint_endPosLocator.d" "LegFoot__instance_1:ankle_joint_ikHandle_scaleFactor.i1x"
-		;
-connectAttr "LegFoot__instance_1:ball_joint_ikHandle_scaleFactor.ox" "LegFoot__instance_1:toe_joint_scaleMultiply.i2x"
-		;
-connectAttr "LegFoot__instance_1:distBetween_IK_knee_joint_positionLocator_IK_hip_joint_ikHandle_positionLocator.d" "LegFoot__instance_1:distBetween_IK_knee_joint_positionLocator_IK_hip_joint_ikHandle_positionLocator_scaleFactor.i1x"
-		;
-connectAttr "LegFoot__instance_1:ankle_joint_m_translation_control_SG.msg" "materialInfo3.sg"
-		;
-connectAttr "LegFoot__instance_1:ankle_joint_m_translation_control.msg" "materialInfo3.m"
-		;
-connectAttr "LegFoot__instance_1:ankle_joint_m_translation_control.oc" "LegFoot__instance_1:ankle_joint_m_translation_control_SG.ss"
-		;
-connectAttr "LegFoot__instance_1:ankle_joint_translation_controlShape.iog" "LegFoot__instance_1:ankle_joint_m_translation_control_SG.dsm"
-		 -na;
 connectAttr "LegFoot__instance_1:hip_joint_m_translation_control_SG.msg" "materialInfo1.sg"
 		;
 connectAttr "LegFoot__instance_1:hip_joint_m_translation_control.msg" "materialInfo1.m"
@@ -13488,10 +13526,6 @@ connectAttr "LegFoot__instance_1:hip_joint_m_translation_control.msg" "materialI
 connectAttr "LegFoot__instance_1:hip_joint_m_translation_control.oc" "LegFoot__instance_1:hip_joint_m_translation_control_SG.ss"
 		;
 connectAttr "LegFoot__instance_1:hip_joint_translation_controlShape.iog" "LegFoot__instance_1:hip_joint_m_translation_control_SG.dsm"
-		 -na;
-connectAttr "LegFoot__instance_1:knee_joint_m_translation_control.oc" "LegFoot__instance_1:knee_joint_m_translation_control_SG.ss"
-		;
-connectAttr "LegFoot__instance_1:knee_joint_translation_controlShape.iog" "LegFoot__instance_1:knee_joint_m_translation_control_SG.dsm"
 		 -na;
 connectAttr "LegFoot__instance_1:knee_joint_translation_controlShape.msg" "hyperLayout3.hyp[0].dn"
 		;
@@ -13501,17 +13535,13 @@ connectAttr "LegFoot__instance_1:knee_joint_m_translation_control_SG.msg" "hyper
 		;
 connectAttr "LegFoot__instance_1:knee_joint_m_translation_control.msg" "hyperLayout3.hyp[3].dn"
 		;
+connectAttr "LegFoot__instance_1:knee_joint_m_translation_control.oc" "LegFoot__instance_1:knee_joint_m_translation_control_SG.ss"
+		;
+connectAttr "LegFoot__instance_1:knee_joint_translation_controlShape.iog" "LegFoot__instance_1:knee_joint_m_translation_control_SG.dsm"
+		 -na;
 connectAttr "LegFoot__instance_1:knee_joint_m_translation_control_SG.msg" "materialInfo2.sg"
 		;
 connectAttr "LegFoot__instance_1:knee_joint_m_translation_control.msg" "materialInfo2.m"
-		;
-connectAttr "LegFoot__instance_1:ankle_joint_translation_controlShape.msg" "hyperLayout4.hyp[0].dn"
-		;
-connectAttr "LegFoot__instance_1:ankle_joint_translation_control.msg" "hyperLayout4.hyp[1].dn"
-		;
-connectAttr "LegFoot__instance_1:ankle_joint_m_translation_control_SG.msg" "hyperLayout4.hyp[2].dn"
-		;
-connectAttr "LegFoot__instance_1:ankle_joint_m_translation_control.msg" "hyperLayout4.hyp[3].dn"
 		;
 connectAttr "LegFoot__instance_1:hip_joint_translation_controlShape.msg" "hyperLayout2.hyp[0].dn"
 		;
@@ -13520,194 +13550,6 @@ connectAttr "LegFoot__instance_1:hip_joint_translation_control.msg" "hyperLayout
 connectAttr "LegFoot__instance_1:hip_joint_m_translation_control_SG.msg" "hyperLayout2.hyp[2].dn"
 		;
 connectAttr "LegFoot__instance_1:hip_joint_m_translation_control.msg" "hyperLayout2.hyp[3].dn"
-		;
-connectAttr "LegFoot__instance_1:ball_joint_m_translation_control_SG.msg" "materialInfo4.sg"
-		;
-connectAttr "LegFoot__instance_1:ball_joint_m_translation_control.msg" "materialInfo4.m"
-		;
-connectAttr "LegFoot__instance_1:ball_joint_m_translation_control.oc" "LegFoot__instance_1:ball_joint_m_translation_control_SG.ss"
-		;
-connectAttr "LegFoot__instance_1:ball_joint_translation_controlShape.iog" "LegFoot__instance_1:ball_joint_m_translation_control_SG.dsm"
-		 -na;
-connectAttr "LegFoot__instance_1:toe_joint_translation_controlShape.msg" "hyperLayout6.hyp[0].dn"
-		;
-connectAttr "LegFoot__instance_1:toe_joint_translation_control.msg" "hyperLayout6.hyp[1].dn"
-		;
-connectAttr "LegFoot__instance_1:toe_joint_m_translation_control_SG.msg" "hyperLayout6.hyp[2].dn"
-		;
-connectAttr "LegFoot__instance_1:toe_joint_m_translation_control.msg" "hyperLayout6.hyp[3].dn"
-		;
-connectAttr "LegFoot__instance_1:toe_joint_m_translation_control.oc" "LegFoot__instance_1:toe_joint_m_translation_control_SG.ss"
-		;
-connectAttr "LegFoot__instance_1:toe_joint_translation_controlShape.iog" "LegFoot__instance_1:toe_joint_m_translation_control_SG.dsm"
-		 -na;
-connectAttr "LegFoot__instance_1:toe_joint_m_translation_control_SG.msg" "materialInfo5.sg"
-		;
-connectAttr "LegFoot__instance_1:toe_joint_m_translation_control.msg" "materialInfo5.m"
-		;
-connectAttr "LegFoot__instance_1:hip_joint_m_hierarchyRepresentation.msg" "hyperLayout9.hyp[1].dn"
-		;
-connectAttr "LegFoot__instance_1:hip_joint_m_hookRepresentation_SG.msg" "hyperLayout9.hyp[3].dn"
-		;
-connectAttr "LegFoot__instance_1:hip_joint_hierarchy_representation.msg" "hyperLayout9.hyp[4].dn"
-		;
-connectAttr "LegFoot__instance_1:hip_joint_hierarchy_representationShape.msg" "hyperLayout9.hyp[5].dn"
-		;
-connectAttr "LegFoot__instance_1:hip_joint_hierarchy_arrow_representation.msg" "hyperLayout9.hyp[6].dn"
-		;
-connectAttr "LegFoot__instance_1:hip_joint_hierarchy_arrow_representationShape.msg" "hyperLayout9.hyp[7].dn"
-		;
-connectAttr "LegFoot__instance_1:hip_joint_hierarchy_representation_parentConstraint_grp.msg" "hyperLayout9.hyp[8].dn"
-		;
-connectAttr "hip_joint_hierarchy_representation_parentConstraint_grp_parentConstraint1.msg" "hyperLayout9.hyp[9].dn"
-		;
-connectAttr "hip_joint_hierarchy_representation_parentConstraint_grp_scaleConstraint1.msg" "hyperLayout9.hyp[10].dn"
-		;
-connectAttr "LegFoot__instance_1:hip_joint_m_hierarchyRepresentation.oc" "LegFoot__instance_1:hip_joint_m_hookRepresentation_SG.ss"
-		;
-connectAttr "LegFoot__instance_1:hip_joint_hierarchy_representationShape.iog" "LegFoot__instance_1:hip_joint_m_hookRepresentation_SG.dsm"
-		 -na;
-connectAttr "LegFoot__instance_1:hip_joint_hierarchy_arrow_representationShape.iog" "LegFoot__instance_1:hip_joint_m_hookRepresentation_SG.dsm"
-		 -na;
-connectAttr "LegFoot__instance_1:hip_joint_m_hookRepresentation_SG.msg" "materialInfo7.sg"
-		;
-connectAttr "LegFoot__instance_1:hip_joint_m_hierarchyRepresentation.msg" "materialInfo7.m"
-		;
-connectAttr "LegFoot__instance_1:IK_knee_joint_preferredAngle_representation.axis" "LegFoot__instance_1:IK_knee_joint_preferredAngle_representation_rotateX.i"
-		;
-connectAttr "LegFoot__instance_1:IK_knee_joint_m_preferredAngle_representation.msg" "hyperLayout13.hyp[0].dn"
-		;
-connectAttr "LegFoot__instance_1:IK_knee_joint_preferredAngle_representation.msg" "hyperLayout13.hyp[1].dn"
-		;
-connectAttr "LegFoot__instance_1:IK_knee_joint_preferredAngle_representationShape.msg" "hyperLayout13.hyp[2].dn"
-		;
-connectAttr "LegFoot__instance_1:IK_knee_joint_preferredAngle_representation_SG.msg" "hyperLayout13.hyp[3].dn"
-		;
-connectAttr "LegFoot__instance_1:IK_knee_joint_preferredAngle_representation_rotateX.msg" "hyperLayout13.hyp[4].dn"
-		;
-connectAttr "LegFoot__instance_1:IK_knee_joint_preferredAngle_parentConstraintGrp.msg" "hyperLayout13.hyp[5].dn"
-		;
-connectAttr "IK_knee_joint_preferredAngle_parentConstraintGrp_parentConstraint1.msg" "hyperLayout13.hyp[6].dn"
-		;
-connectAttr "IK_knee_joint_preferredAngle_parentConstraintGrp_scaleConstraint1.msg" "hyperLayout13.hyp[7].dn"
-		;
-connectAttr "LegFoot__instance_1:IK_knee_joint_m_preferredAngle_representation.oc" "LegFoot__instance_1:IK_knee_joint_preferredAngle_representation_SG.ss"
-		;
-connectAttr "LegFoot__instance_1:IK_knee_joint_preferredAngle_representationShape.iog" "LegFoot__instance_1:IK_knee_joint_preferredAngle_representation_SG.dsm"
-		 -na;
-connectAttr "LegFoot__instance_1:IK_knee_joint_preferredAngle_representation_SG.msg" "materialInfo11.sg"
-		;
-connectAttr "LegFoot__instance_1:IK_knee_joint_m_preferredAngle_representation.msg" "materialInfo11.m"
-		;
-connectAttr "LegFoot__instance_1:ball_joint_translation_controlShape.msg" "hyperLayout5.hyp[0].dn"
-		;
-connectAttr "LegFoot__instance_1:ball_joint_translation_control.msg" "hyperLayout5.hyp[1].dn"
-		;
-connectAttr "LegFoot__instance_1:ball_joint_m_translation_control_SG.msg" "hyperLayout5.hyp[2].dn"
-		;
-connectAttr "LegFoot__instance_1:ball_joint_m_translation_control.msg" "hyperLayout5.hyp[3].dn"
-		;
-connectAttr "LegFoot__instance_1:knee_joint_m_hierarchyRepresentation.msg" "hyperLayout10.hyp[1].dn"
-		;
-connectAttr "LegFoot__instance_1:knee_joint_m_hookRepresentation_SG.msg" "hyperLayout10.hyp[3].dn"
-		;
-connectAttr "LegFoot__instance_1:knee_joint_hierarchy_representation.msg" "hyperLayout10.hyp[4].dn"
-		;
-connectAttr "LegFoot__instance_1:knee_joint_hierarchy_representationShape.msg" "hyperLayout10.hyp[5].dn"
-		;
-connectAttr "LegFoot__instance_1:knee_joint_hierarchy_arrow_representation.msg" "hyperLayout10.hyp[6].dn"
-		;
-connectAttr "LegFoot__instance_1:knee_joint_hierarchy_arrow_representationShape.msg" "hyperLayout10.hyp[7].dn"
-		;
-connectAttr "LegFoot__instance_1:knee_joint_hierarchy_representation_parentConstraint_grp.msg" "hyperLayout10.hyp[8].dn"
-		;
-connectAttr "knee_joint_hierarchy_representation_parentConstraint_grp_parentConstraint1.msg" "hyperLayout10.hyp[9].dn"
-		;
-connectAttr "knee_joint_hierarchy_representation_parentConstraint_grp_scaleConstraint1.msg" "hyperLayout10.hyp[10].dn"
-		;
-connectAttr "LegFoot__instance_1:knee_joint_m_hierarchyRepresentation.oc" "LegFoot__instance_1:knee_joint_m_hookRepresentation_SG.ss"
-		;
-connectAttr "LegFoot__instance_1:knee_joint_hierarchy_representationShape.iog" "LegFoot__instance_1:knee_joint_m_hookRepresentation_SG.dsm"
-		 -na;
-connectAttr "LegFoot__instance_1:knee_joint_hierarchy_arrow_representationShape.iog" "LegFoot__instance_1:knee_joint_m_hookRepresentation_SG.dsm"
-		 -na;
-connectAttr "LegFoot__instance_1:knee_joint_m_hookRepresentation_SG.msg" "materialInfo8.sg"
-		;
-connectAttr "LegFoot__instance_1:knee_joint_m_hierarchyRepresentation.msg" "materialInfo8.m"
-		;
-connectAttr "hyperLayout8.msg" "LegFoot__instance_1:hook_root_joint_hook_representation_container.hl"
-		;
-connectAttr "LegFoot__instance_1:hook_grp.msg" "hyperLayout7.hyp[0].dn";
-connectAttr "LegFoot__instance_1:hook_root_joint.msg" "hyperLayout7.hyp[1].dn";
-connectAttr "LegFoot__instance_1:hook_target_joint.msg" "hyperLayout7.hyp[2].dn"
-		;
-connectAttr "LegFoot__instance_1:unhookedTarget.msg" "hyperLayout7.hyp[3].dn";
-connectAttr "LegFoot__instance_1:unhookedTargetShape.msg" "hyperLayout7.hyp[4].dn"
-		;
-connectAttr "unhookedTarget_pointConstraint1.msg" "hyperLayout7.hyp[5].dn";
-connectAttr "LegFoot__instance_1:hook_root_joint_ikHandle.msg" "hyperLayout7.hyp[6].dn"
-		;
-connectAttr "LegFoot__instance_1:hook_root_jointikEffector.msg" "hyperLayout7.hyp[7].dn"
-		;
-connectAttr "LegFoot__instance_1:hook_root_joint_ikHandle_poleVectorLocator.msg" "hyperLayout7.hyp[8].dn"
-		;
-connectAttr "hook_root_joint_ikHandle_poleVectorConstraint1.msg" "hyperLayout7.hyp[9].dn"
-		;
-connectAttr "LegFoot__instance_1:hook_root_joint_rootPosLocator.msg" "hyperLayout7.hyp[10].dn"
-		;
-connectAttr "LegFoot__instance_1:hook_target_joint_endPosLocator.msg" "hyperLayout7.hyp[11].dn"
-		;
-connectAttr "LegFoot__instance_1:hook_root_joint_rootPosLocator_pointConstraint.msg" "hyperLayout7.hyp[12].dn"
-		;
-connectAttr "LegFoot__instance_1:hook_root_joint_ikHandle_pointConstraint.msg" "hyperLayout7.hyp[13].dn"
-		;
-connectAttr "LegFoot__instance_1:distBetween_hook_root_joint_rootPosLocator_hook_target_joint_endPosLocator.msg" "hyperLayout7.hyp[14].dn"
-		;
-connectAttr "LegFoot__instance_1:hook_root_joint_ikHandle_scaleFactor.msg" "hyperLayout7.hyp[15].dn"
-		;
-connectAttr "LegFoot__instance_1:hook_target_joint_scaleMultiply.msg" "hyperLayout7.hyp[16].dn"
-		;
-connectAttr "LegFoot__instance_1:hook_root_joint_ikHandle_poleVectorLocatorShape.msg" "hyperLayout7.hyp[17].dn"
-		;
-connectAttr "LegFoot__instance_1:hook_root_joint_rootPosLocatorShape.msg" "hyperLayout7.hyp[18].dn"
-		;
-connectAttr "LegFoot__instance_1:hook_target_joint_endPosLocatorShape.msg" "hyperLayout7.hyp[19].dn"
-		;
-connectAttr "LegFoot__instance_1:hook_root_joint_pointConstraint.msg" "hyperLayout7.hyp[20].dn"
-		;
-connectAttr "LegFoot__instance_1:hook_pointConstraint.msg" "hyperLayout7.hyp[21].dn"
-		;
-connectAttr "LegFoot__instance_1:hook_root_joint_hook_representation_container.msg" "hyperLayout7.hyp[22].dn"
-		;
-connectAttr "LegFoot__instance_1:hook_root_joint_rootPosLocatorShape.wp" "LegFoot__instance_1:distBetween_hook_root_joint_rootPosLocator_hook_target_joint_endPosLocator.p1"
-		;
-connectAttr "LegFoot__instance_1:hook_target_joint_endPosLocatorShape.wp" "LegFoot__instance_1:distBetween_hook_root_joint_rootPosLocator_hook_target_joint_endPosLocator.p2"
-		;
-connectAttr "LegFoot__instance_1:distBetween_hook_root_joint_rootPosLocator_hook_target_joint_endPosLocator.d" "LegFoot__instance_1:hook_root_joint_ikHandle_scaleFactor.i1x"
-		;
-connectAttr "LegFoot__instance_1:hook_root_joint_ikHandle_scaleFactor.ox" "LegFoot__instance_1:hook_target_joint_scaleMultiply.i2x"
-		;
-connectAttr "LegFoot__instance_1:hook_root_joint_m_hookRepresentation.msg" "hyperLayout8.hyp[1].dn"
-		;
-connectAttr "LegFoot__instance_1:hook_root_joint_m_hookRepresentation_SG.msg" "hyperLayout8.hyp[3].dn"
-		;
-connectAttr "LegFoot__instance_1:hook_root_joint_hook_representation.msg" "hyperLayout8.hyp[4].dn"
-		;
-connectAttr "LegFoot__instance_1:hook_root_joint_hook_representationShape.msg" "hyperLayout8.hyp[5].dn"
-		;
-connectAttr "LegFoot__instance_1:hook_root_joint_hook_representation_parentConstraint_grp.msg" "hyperLayout8.hyp[6].dn"
-		;
-connectAttr "hook_root_joint_hook_representation_parentConstraint_grp_parentConstraint1.msg" "hyperLayout8.hyp[7].dn"
-		;
-connectAttr "hook_root_joint_hook_representation_parentConstraint_grp_scaleConstraint1.msg" "hyperLayout8.hyp[8].dn"
-		;
-connectAttr "LegFoot__instance_1:hook_root_joint_m_hookRepresentation.oc" "LegFoot__instance_1:hook_root_joint_m_hookRepresentation_SG.ss"
-		;
-connectAttr "LegFoot__instance_1:hook_root_joint_hook_representationShape.iog" "LegFoot__instance_1:hook_root_joint_m_hookRepresentation_SG.dsm"
-		 -na;
-connectAttr "LegFoot__instance_1:hook_root_joint_m_hookRepresentation_SG.msg" "materialInfo6.sg"
-		;
-connectAttr "LegFoot__instance_1:hook_root_joint_m_hookRepresentation.msg" "materialInfo6.m"
 		;
 connectAttr "LegFoot__instance_1:ankle_joint_m_yAxisBlock.msg" "hyperLayout14.hyp[0].dn"
 		;
@@ -13727,25 +13569,25 @@ connectAttr "ankle_joint_orientation_control_parentConstraint_grp_parentConstrai
 		;
 connectAttr "ankle_joint_orientation_control_parentConstraint_grp_scaleConstraint1.msg" "hyperLayout14.hyp[9].dn"
 		;
-connectAttr "LegFoot__instance_1:ankle_joint_m_zAxisBlock.oc" "LegFoot__instance_1:ankle_joint_m_zAxisBlockSG.ss"
-		;
-connectAttr "LegFoot__instance_1:ankle_joint_orientation_controlShape.iog.og[1]" "LegFoot__instance_1:ankle_joint_m_zAxisBlockSG.dsm"
-		 -na;
-connectAttr "groupId20.msg" "LegFoot__instance_1:ankle_joint_m_zAxisBlockSG.gn" 
-		-na;
 connectAttr "LegFoot__instance_1:ankle_joint_m_yAxisBlock.oc" "LegFoot__instance_1:ankle_joint_m_yAxisBlockSG.ss"
 		;
 connectAttr "LegFoot__instance_1:ankle_joint_orientation_controlShape.iog.og[0]" "LegFoot__instance_1:ankle_joint_m_yAxisBlockSG.dsm"
 		 -na;
 connectAttr "groupId19.msg" "LegFoot__instance_1:ankle_joint_m_yAxisBlockSG.gn" 
 		-na;
-connectAttr "LegFoot__instance_1:ankle_joint_m_zAxisBlockSG.msg" "materialInfo12.sg"
+connectAttr "LegFoot__instance_1:ankle_joint_m_zAxisBlock.oc" "LegFoot__instance_1:ankle_joint_m_zAxisBlockSG.ss"
 		;
-connectAttr "LegFoot__instance_1:ankle_joint_m_zAxisBlock.msg" "materialInfo12.m"
-		;
+connectAttr "LegFoot__instance_1:ankle_joint_orientation_controlShape.iog.og[1]" "LegFoot__instance_1:ankle_joint_m_zAxisBlockSG.dsm"
+		 -na;
+connectAttr "groupId20.msg" "LegFoot__instance_1:ankle_joint_m_zAxisBlockSG.gn" 
+		-na;
 connectAttr "LegFoot__instance_1:ankle_joint_m_yAxisBlockSG.msg" "materialInfo13.sg"
 		;
 connectAttr "LegFoot__instance_1:ankle_joint_m_yAxisBlock.msg" "materialInfo13.m"
+		;
+connectAttr "LegFoot__instance_1:ankle_joint_m_zAxisBlockSG.msg" "materialInfo12.sg"
+		;
+connectAttr "LegFoot__instance_1:ankle_joint_m_zAxisBlock.msg" "materialInfo12.m"
 		;
 connectAttr "LegFoot__instance_1:ball_joint_m_yAxisBlock.msg" "hyperLayout15.hyp[0].dn"
 		;
@@ -13785,31 +13627,229 @@ connectAttr "LegFoot__instance_1:ball_joint_m_zAxisBlockSG.msg" "materialInfo14.
 		;
 connectAttr "LegFoot__instance_1:ball_joint_m_zAxisBlock.msg" "materialInfo14.m"
 		;
-connectAttr "hyperLayout24.msg" "LegFoot__instance_1_mirror:hip_joint_hierarchy_representation_container.hl"
+connectAttr "LegFoot__instance_1:hip_joint_m_hierarchyRepresentation.oc" "LegFoot__instance_1:hip_joint_m_hookRepresentation_SG.ss"
 		;
-connectAttr "hyperLayout25.msg" "LegFoot__instance_1_mirror:knee_joint_hierarchy_representation_container.hl"
+connectAttr "LegFoot__instance_1:hip_joint_hierarchy_representationShape.iog" "LegFoot__instance_1:hip_joint_m_hookRepresentation_SG.dsm"
+		 -na;
+connectAttr "LegFoot__instance_1:hip_joint_hierarchy_arrow_representationShape.iog" "LegFoot__instance_1:hip_joint_m_hookRepresentation_SG.dsm"
+		 -na;
+connectAttr "LegFoot__instance_1:hip_joint_m_hierarchyRepresentation.msg" "hyperLayout9.hyp[1].dn"
 		;
-connectAttr "hyperLayout28.msg" "LegFoot__instance_1_mirror:IK_knee_joint_preferredAngle_representation_container.hl"
+connectAttr "LegFoot__instance_1:hip_joint_m_hookRepresentation_SG.msg" "hyperLayout9.hyp[3].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:IK_knee_joint_preferredAngle_representation.axis" "LegFoot__instance_1_mirror:IK_knee_joint_preferredAngle_representation_container.boc[0]"
+connectAttr "LegFoot__instance_1:hip_joint_hierarchy_representation.msg" "hyperLayout9.hyp[4].dn"
 		;
-connectAttr "hyperLayout29.msg" "LegFoot__instance_1_mirror:ankle_joint_orientation_control_container.hl"
+connectAttr "LegFoot__instance_1:hip_joint_hierarchy_representationShape.msg" "hyperLayout9.hyp[5].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:ankle_joint_orientation_control.rx" "LegFoot__instance_1_mirror:ankle_joint_orientation_control_container.boc[0]"
+connectAttr "LegFoot__instance_1:hip_joint_hierarchy_arrow_representation.msg" "hyperLayout9.hyp[6].dn"
 		;
-connectAttr "hyperLayout30.msg" "LegFoot__instance_1_mirror:ball_joint_orientation_control_container.hl"
+connectAttr "LegFoot__instance_1:hip_joint_hierarchy_arrow_representationShape.msg" "hyperLayout9.hyp[7].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:ball_joint_orientation_control.rx" "LegFoot__instance_1_mirror:ball_joint_orientation_control_container.boc[0]"
+connectAttr "LegFoot__instance_1:hip_joint_hierarchy_representation_parentConstraint_grp.msg" "hyperLayout9.hyp[8].dn"
 		;
-connectAttr "hyperLayout17.msg" "LegFoot__instance_1_mirror:hip_joint_translation_control_container.hl"
+connectAttr "hip_joint_hierarchy_representation_parentConstraint_grp_parentConstraint1.msg" "hyperLayout9.hyp[9].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:hip_joint_translation_control.t" "LegFoot__instance_1_mirror:hip_joint_translation_control_container.boc[0]"
+connectAttr "hip_joint_hierarchy_representation_parentConstraint_grp_scaleConstraint1.msg" "hyperLayout9.hyp[10].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:hip_joint_translation_control.tx" "LegFoot__instance_1_mirror:hip_joint_translation_control_container.boc[1]"
+connectAttr "LegFoot__instance_1:hip_joint_m_hookRepresentation_SG.msg" "materialInfo7.sg"
 		;
-connectAttr "LegFoot__instance_1_mirror:hip_joint_translation_control.ty" "LegFoot__instance_1_mirror:hip_joint_translation_control_container.boc[2]"
+connectAttr "LegFoot__instance_1:hip_joint_m_hierarchyRepresentation.msg" "materialInfo7.m"
 		;
-connectAttr "LegFoot__instance_1_mirror:hip_joint_translation_control.tz" "LegFoot__instance_1_mirror:hip_joint_translation_control_container.boc[3]"
+connectAttr "LegFoot__instance_1:knee_joint_m_hierarchyRepresentation.oc" "LegFoot__instance_1:knee_joint_m_hookRepresentation_SG.ss"
+		;
+connectAttr "LegFoot__instance_1:knee_joint_hierarchy_representationShape.iog" "LegFoot__instance_1:knee_joint_m_hookRepresentation_SG.dsm"
+		 -na;
+connectAttr "LegFoot__instance_1:knee_joint_hierarchy_arrow_representationShape.iog" "LegFoot__instance_1:knee_joint_m_hookRepresentation_SG.dsm"
+		 -na;
+connectAttr "LegFoot__instance_1:knee_joint_m_hierarchyRepresentation.msg" "hyperLayout10.hyp[1].dn"
+		;
+connectAttr "LegFoot__instance_1:knee_joint_m_hookRepresentation_SG.msg" "hyperLayout10.hyp[3].dn"
+		;
+connectAttr "LegFoot__instance_1:knee_joint_hierarchy_representation.msg" "hyperLayout10.hyp[4].dn"
+		;
+connectAttr "LegFoot__instance_1:knee_joint_hierarchy_representationShape.msg" "hyperLayout10.hyp[5].dn"
+		;
+connectAttr "LegFoot__instance_1:knee_joint_hierarchy_arrow_representation.msg" "hyperLayout10.hyp[6].dn"
+		;
+connectAttr "LegFoot__instance_1:knee_joint_hierarchy_arrow_representationShape.msg" "hyperLayout10.hyp[7].dn"
+		;
+connectAttr "LegFoot__instance_1:knee_joint_hierarchy_representation_parentConstraint_grp.msg" "hyperLayout10.hyp[8].dn"
+		;
+connectAttr "knee_joint_hierarchy_representation_parentConstraint_grp_parentConstraint1.msg" "hyperLayout10.hyp[9].dn"
+		;
+connectAttr "knee_joint_hierarchy_representation_parentConstraint_grp_scaleConstraint1.msg" "hyperLayout10.hyp[10].dn"
+		;
+connectAttr "LegFoot__instance_1:knee_joint_m_hookRepresentation_SG.msg" "materialInfo8.sg"
+		;
+connectAttr "LegFoot__instance_1:knee_joint_m_hierarchyRepresentation.msg" "materialInfo8.m"
+		;
+connectAttr "LegFoot__instance_1:IK_knee_joint_preferredAngle_representation.axis" "LegFoot__instance_1:IK_knee_joint_preferredAngle_representation_rotateX.i"
+		;
+connectAttr "LegFoot__instance_1:IK_knee_joint_m_preferredAngle_representation.msg" "hyperLayout13.hyp[0].dn"
+		;
+connectAttr "LegFoot__instance_1:IK_knee_joint_preferredAngle_representation.msg" "hyperLayout13.hyp[1].dn"
+		;
+connectAttr "LegFoot__instance_1:IK_knee_joint_preferredAngle_representationShape.msg" "hyperLayout13.hyp[2].dn"
+		;
+connectAttr "LegFoot__instance_1:IK_knee_joint_preferredAngle_representation_SG.msg" "hyperLayout13.hyp[3].dn"
+		;
+connectAttr "LegFoot__instance_1:IK_knee_joint_preferredAngle_representation_rotateX.msg" "hyperLayout13.hyp[4].dn"
+		;
+connectAttr "LegFoot__instance_1:IK_knee_joint_preferredAngle_parentConstraintGrp.msg" "hyperLayout13.hyp[5].dn"
+		;
+connectAttr "IK_knee_joint_preferredAngle_parentConstraintGrp_parentConstraint1.msg" "hyperLayout13.hyp[6].dn"
+		;
+connectAttr "IK_knee_joint_preferredAngle_parentConstraintGrp_scaleConstraint1.msg" "hyperLayout13.hyp[7].dn"
+		;
+connectAttr "LegFoot__instance_1:IK_knee_joint_m_preferredAngle_representation.oc" "LegFoot__instance_1:IK_knee_joint_preferredAngle_representation_SG.ss"
+		;
+connectAttr "LegFoot__instance_1:IK_knee_joint_preferredAngle_representationShape.iog" "LegFoot__instance_1:IK_knee_joint_preferredAngle_representation_SG.dsm"
+		 -na;
+connectAttr "LegFoot__instance_1:IK_knee_joint_preferredAngle_representation_SG.msg" "materialInfo11.sg"
+		;
+connectAttr "LegFoot__instance_1:IK_knee_joint_m_preferredAngle_representation.msg" "materialInfo11.m"
+		;
+connectAttr "LegFoot__instance_1:toe_joint_translation_controlShape.msg" "hyperLayout6.hyp[0].dn"
+		;
+connectAttr "LegFoot__instance_1:toe_joint_translation_control.msg" "hyperLayout6.hyp[1].dn"
+		;
+connectAttr "LegFoot__instance_1:toe_joint_m_translation_control_SG.msg" "hyperLayout6.hyp[2].dn"
+		;
+connectAttr "LegFoot__instance_1:toe_joint_m_translation_control.msg" "hyperLayout6.hyp[3].dn"
+		;
+connectAttr "LegFoot__instance_1:toe_joint_m_translation_control.oc" "LegFoot__instance_1:toe_joint_m_translation_control_SG.ss"
+		;
+connectAttr "LegFoot__instance_1:toe_joint_translation_controlShape.iog" "LegFoot__instance_1:toe_joint_m_translation_control_SG.dsm"
+		 -na;
+connectAttr "LegFoot__instance_1:toe_joint_m_translation_control_SG.msg" "materialInfo5.sg"
+		;
+connectAttr "LegFoot__instance_1:toe_joint_m_translation_control.msg" "materialInfo5.m"
+		;
+connectAttr "LegFoot__instance_1:hook_root_joint_ikHandle_lockBlend.opr" "LegFoot__instance_1:hook_target_joint_scaleMultiply.i2x"
+		;
+connectAttr "LegFoot__instance_1:distBetween_hook_root_joint_rootPosLocator_hook_target_joint_endPosLocator.d" "LegFoot__instance_1:hook_root_joint_ikHandle_scaleFactor.i1x"
+		;
+connectAttr "hyperLayout8.msg" "LegFoot__instance_1:hook_root_joint_hook_representation_container.hl"
+		;
+connectAttr "LegFoot__instance_1:hook_grp.msg" "hyperLayout7.hyp[0].dn";
+connectAttr "LegFoot__instance_1:hook_root_joint.msg" "hyperLayout7.hyp[1].dn";
+connectAttr "LegFoot__instance_1:hook_target_joint.msg" "hyperLayout7.hyp[2].dn"
+		;
+connectAttr "LegFoot__instance_1:unhookedTarget.msg" "hyperLayout7.hyp[3].dn";
+connectAttr "LegFoot__instance_1:unhookedTargetShape.msg" "hyperLayout7.hyp[4].dn"
+		;
+connectAttr "unhookedTarget_pointConstraint1.msg" "hyperLayout7.hyp[5].dn";
+connectAttr "LegFoot__instance_1:hook_root_joint_ikHandle.msg" "hyperLayout7.hyp[6].dn"
+		;
+connectAttr "LegFoot__instance_1:hook_root_jointikEffector.msg" "hyperLayout7.hyp[7].dn"
+		;
+connectAttr "LegFoot__instance_1:hook_root_joint_ikHandle_poleVectorLocator.msg" "hyperLayout7.hyp[8].dn"
+		;
+connectAttr "hook_root_joint_ikHandle_poleVectorConstraint1.msg" "hyperLayout7.hyp[9].dn"
+		;
+connectAttr "LegFoot__instance_1:hook_root_joint_rootPosLocator.msg" "hyperLayout7.hyp[10].dn"
+		;
+connectAttr "LegFoot__instance_1:hook_target_joint_endPosLocator.msg" "hyperLayout7.hyp[11].dn"
+		;
+connectAttr "LegFoot__instance_1:hook_root_joint_rootPosLocator_pointConstraint.msg" "hyperLayout7.hyp[12].dn"
+		;
+connectAttr "LegFoot__instance_1:hook_root_joint_ikHandle_pointConstraint.msg" "hyperLayout7.hyp[13].dn"
+		;
+connectAttr "LegFoot__instance_1:distBetween_hook_root_joint_rootPosLocator_hook_target_joint_endPosLocator.msg" "hyperLayout7.hyp[14].dn"
+		;
+connectAttr "LegFoot__instance_1:hook_root_joint_ikHandle_scaleFactor.msg" "hyperLayout7.hyp[15].dn"
+		;
+connectAttr "LegFoot__instance_1:hook_root_joint_ikHandle_lockBlend.msg" "hyperLayout7.hyp[16].dn"
+		;
+connectAttr "LegFoot__instance_1:hook_target_joint_scaleMultiply.msg" "hyperLayout7.hyp[17].dn"
+		;
+connectAttr "LegFoot__instance_1:hook_root_joint_ikHandle_poleVectorLocatorShape.msg" "hyperLayout7.hyp[18].dn"
+		;
+connectAttr "LegFoot__instance_1:hook_root_joint_rootPosLocatorShape.msg" "hyperLayout7.hyp[19].dn"
+		;
+connectAttr "LegFoot__instance_1:hook_target_joint_endPosLocatorShape.msg" "hyperLayout7.hyp[20].dn"
+		;
+connectAttr "LegFoot__instance_1:hook_root_joint_pointConstraint.msg" "hyperLayout7.hyp[21].dn"
+		;
+connectAttr "LegFoot__instance_1:hook_pointConstraint.msg" "hyperLayout7.hyp[22].dn"
+		;
+connectAttr "LegFoot__instance_1:hook_root_joint_hook_representation_container.msg" "hyperLayout7.hyp[23].dn"
+		;
+connectAttr "LegFoot__instance_1:hook_root_joint_rootPosLocatorShape.wp" "LegFoot__instance_1:distBetween_hook_root_joint_rootPosLocator_hook_target_joint_endPosLocator.p1"
+		;
+connectAttr "LegFoot__instance_1:hook_target_joint_endPosLocatorShape.wp" "LegFoot__instance_1:distBetween_hook_root_joint_rootPosLocator_hook_target_joint_endPosLocator.p2"
+		;
+connectAttr "LegFoot__instance_1:hook_root_joint_ikHandle_scaleFactor.ox" "LegFoot__instance_1:hook_root_joint_ikHandle_lockBlend.c1r"
+		;
+connectAttr "LegFoot__instance_1:hook_root_joint_m_hookRepresentation.oc" "LegFoot__instance_1:hook_root_joint_m_hookRepresentation_SG.ss"
+		;
+connectAttr "LegFoot__instance_1:hook_root_joint_hook_representationShape.iog" "LegFoot__instance_1:hook_root_joint_m_hookRepresentation_SG.dsm"
+		 -na;
+connectAttr "LegFoot__instance_1:hook_root_joint_m_hookRepresentation.msg" "hyperLayout8.hyp[1].dn"
+		;
+connectAttr "LegFoot__instance_1:hook_root_joint_m_hookRepresentation_SG.msg" "hyperLayout8.hyp[3].dn"
+		;
+connectAttr "LegFoot__instance_1:hook_root_joint_hook_representation.msg" "hyperLayout8.hyp[4].dn"
+		;
+connectAttr "LegFoot__instance_1:hook_root_joint_hook_representationShape.msg" "hyperLayout8.hyp[5].dn"
+		;
+connectAttr "LegFoot__instance_1:hook_root_joint_hook_representation_parentConstraint_grp.msg" "hyperLayout8.hyp[6].dn"
+		;
+connectAttr "hook_root_joint_hook_representation_parentConstraint_grp_parentConstraint1.msg" "hyperLayout8.hyp[7].dn"
+		;
+connectAttr "hook_root_joint_hook_representation_parentConstraint_grp_scaleConstraint1.msg" "hyperLayout8.hyp[8].dn"
+		;
+connectAttr "LegFoot__instance_1:hook_root_joint_m_hookRepresentation_SG.msg" "materialInfo6.sg"
+		;
+connectAttr "LegFoot__instance_1:hook_root_joint_m_hookRepresentation.msg" "materialInfo6.m"
+		;
+connectAttr "LegFoot__instance_1:ankle_joint_translation_controlShape.msg" "hyperLayout4.hyp[0].dn"
+		;
+connectAttr "LegFoot__instance_1:ankle_joint_translation_control.msg" "hyperLayout4.hyp[1].dn"
+		;
+connectAttr "LegFoot__instance_1:ankle_joint_m_translation_control_SG.msg" "hyperLayout4.hyp[2].dn"
+		;
+connectAttr "LegFoot__instance_1:ankle_joint_m_translation_control.msg" "hyperLayout4.hyp[3].dn"
+		;
+connectAttr "LegFoot__instance_1:ankle_joint_m_translation_control.oc" "LegFoot__instance_1:ankle_joint_m_translation_control_SG.ss"
+		;
+connectAttr "LegFoot__instance_1:ankle_joint_translation_controlShape.iog" "LegFoot__instance_1:ankle_joint_m_translation_control_SG.dsm"
+		 -na;
+connectAttr "LegFoot__instance_1:ankle_joint_m_translation_control_SG.msg" "materialInfo3.sg"
+		;
+connectAttr "LegFoot__instance_1:ankle_joint_m_translation_control.msg" "materialInfo3.m"
+		;
+connectAttr "LegFoot__instance_1:ball_joint_translation_controlShape.msg" "hyperLayout5.hyp[0].dn"
+		;
+connectAttr "LegFoot__instance_1:ball_joint_translation_control.msg" "hyperLayout5.hyp[1].dn"
+		;
+connectAttr "LegFoot__instance_1:ball_joint_m_translation_control_SG.msg" "hyperLayout5.hyp[2].dn"
+		;
+connectAttr "LegFoot__instance_1:ball_joint_m_translation_control.msg" "hyperLayout5.hyp[3].dn"
+		;
+connectAttr "LegFoot__instance_1:ball_joint_m_translation_control.oc" "LegFoot__instance_1:ball_joint_m_translation_control_SG.ss"
+		;
+connectAttr "LegFoot__instance_1:ball_joint_translation_controlShape.iog" "LegFoot__instance_1:ball_joint_m_translation_control_SG.dsm"
+		 -na;
+connectAttr "LegFoot__instance_1:ball_joint_m_translation_control_SG.msg" "materialInfo4.sg"
+		;
+connectAttr "LegFoot__instance_1:ball_joint_m_translation_control.msg" "materialInfo4.m"
+		;
+connectAttr "LegFoot__instance_1_mirror:ankle_joint_rootPosLocatorShape.wp" "LegFoot__instance_1_mirror:distBetween_ankle_joint_rootPosLocator_ball_joint_endPosLocator.p1"
+		;
+connectAttr "LegFoot__instance_1_mirror:ball_joint_endPosLocatorShape.wp" "LegFoot__instance_1_mirror:distBetween_ankle_joint_rootPosLocator_ball_joint_endPosLocator.p2"
+		;
+connectAttr "LegFoot__instance_1_mirror:ankle_joint_ikHandle_scaleFactor.ox" "LegFoot__instance_1_mirror:ankle_joint_ikHandle_lockBlend.c1r"
+		;
+connectAttr "hyperLayout18.msg" "LegFoot__instance_1_mirror:knee_joint_translation_control_container.hl"
+		;
+connectAttr "LegFoot__instance_1_mirror:knee_joint_translation_control.t" "LegFoot__instance_1_mirror:knee_joint_translation_control_container.boc[0]"
+		;
+connectAttr "LegFoot__instance_1_mirror:knee_joint_translation_control.tx" "LegFoot__instance_1_mirror:knee_joint_translation_control_container.boc[1]"
+		;
+connectAttr "LegFoot__instance_1_mirror:knee_joint_translation_control.ty" "LegFoot__instance_1_mirror:knee_joint_translation_control_container.boc[2]"
+		;
+connectAttr "LegFoot__instance_1_mirror:knee_joint_translation_control.tz" "LegFoot__instance_1_mirror:knee_joint_translation_control_container.boc[3]"
 		;
 connectAttr "hyperLayout20.msg" "LegFoot__instance_1_mirror:ball_joint_translation_control_container.hl"
 		;
@@ -13821,6 +13861,30 @@ connectAttr "LegFoot__instance_1_mirror:ball_joint_translation_control.ty" "LegF
 		;
 connectAttr "LegFoot__instance_1_mirror:ball_joint_translation_control.tz" "LegFoot__instance_1_mirror:ball_joint_translation_control_container.boc[3]"
 		;
+connectAttr "hyperLayout17.msg" "LegFoot__instance_1_mirror:hip_joint_translation_control_container.hl"
+		;
+connectAttr "LegFoot__instance_1_mirror:hip_joint_translation_control.t" "LegFoot__instance_1_mirror:hip_joint_translation_control_container.boc[0]"
+		;
+connectAttr "LegFoot__instance_1_mirror:hip_joint_translation_control.tx" "LegFoot__instance_1_mirror:hip_joint_translation_control_container.boc[1]"
+		;
+connectAttr "LegFoot__instance_1_mirror:hip_joint_translation_control.ty" "LegFoot__instance_1_mirror:hip_joint_translation_control_container.boc[2]"
+		;
+connectAttr "LegFoot__instance_1_mirror:hip_joint_translation_control.tz" "LegFoot__instance_1_mirror:hip_joint_translation_control_container.boc[3]"
+		;
+connectAttr "hyperLayout19.msg" "LegFoot__instance_1_mirror:ankle_joint_translation_control_container.hl"
+		;
+connectAttr "LegFoot__instance_1_mirror:ankle_joint_translation_control.t" "LegFoot__instance_1_mirror:ankle_joint_translation_control_container.boc[0]"
+		;
+connectAttr "LegFoot__instance_1_mirror:ankle_joint_translation_control.tx" "LegFoot__instance_1_mirror:ankle_joint_translation_control_container.boc[1]"
+		;
+connectAttr "LegFoot__instance_1_mirror:ankle_joint_translation_control.ty" "LegFoot__instance_1_mirror:ankle_joint_translation_control_container.boc[2]"
+		;
+connectAttr "LegFoot__instance_1_mirror:ankle_joint_translation_control.tz" "LegFoot__instance_1_mirror:ankle_joint_translation_control_container.boc[3]"
+		;
+connectAttr "hyperLayout28.msg" "LegFoot__instance_1_mirror:IK_knee_joint_preferredAngle_representation_container.hl"
+		;
+connectAttr "LegFoot__instance_1_mirror:IK_knee_joint_preferredAngle_representation.axis" "LegFoot__instance_1_mirror:IK_knee_joint_preferredAngle_representation_container.boc[0]"
+		;
 connectAttr "hyperLayout21.msg" "LegFoot__instance_1_mirror:toe_joint_translation_control_container.hl"
 		;
 connectAttr "LegFoot__instance_1_mirror:toe_joint_translation_control.t" "LegFoot__instance_1_mirror:toe_joint_translation_control_container.boc[0]"
@@ -13830,6 +13894,18 @@ connectAttr "LegFoot__instance_1_mirror:toe_joint_translation_control.tx" "LegFo
 connectAttr "LegFoot__instance_1_mirror:toe_joint_translation_control.ty" "LegFoot__instance_1_mirror:toe_joint_translation_control_container.boc[2]"
 		;
 connectAttr "LegFoot__instance_1_mirror:toe_joint_translation_control.tz" "LegFoot__instance_1_mirror:toe_joint_translation_control_container.boc[3]"
+		;
+connectAttr "hyperLayout24.msg" "LegFoot__instance_1_mirror:hip_joint_hierarchy_representation_container.hl"
+		;
+connectAttr "hyperLayout25.msg" "LegFoot__instance_1_mirror:knee_joint_hierarchy_representation_container.hl"
+		;
+connectAttr "hyperLayout29.msg" "LegFoot__instance_1_mirror:ankle_joint_orientation_control_container.hl"
+		;
+connectAttr "LegFoot__instance_1_mirror:ankle_joint_orientation_control.rx" "LegFoot__instance_1_mirror:ankle_joint_orientation_control_container.boc[0]"
+		;
+connectAttr "hyperLayout30.msg" "LegFoot__instance_1_mirror:ball_joint_orientation_control_container.hl"
+		;
+connectAttr "LegFoot__instance_1_mirror:ball_joint_orientation_control.rx" "LegFoot__instance_1_mirror:ball_joint_orientation_control_container.boc[0]"
 		;
 connectAttr "LegFoot__instance_1_mirror:hook_root_joint.r" "LegFoot__instance_1_mirror:hook_container.boc[0]"
 		;
@@ -13848,25 +13924,41 @@ connectAttr "LegFoot__instance_1_mirror:hook_target_joint.ry" "LegFoot__instance
 connectAttr "LegFoot__instance_1_mirror:hook_target_joint.rz" "LegFoot__instance_1_mirror:hook_container.boc[7]"
 		;
 connectAttr "hyperLayout22.msg" "LegFoot__instance_1_mirror:hook_container.hl";
-connectAttr "hyperLayout18.msg" "LegFoot__instance_1_mirror:knee_joint_translation_control_container.hl"
+connectAttr "LegFoot__instance_1_mirror:IK_knee_joint_positionLocatorShape.wp" "LegFoot__instance_1_mirror:distBetween_IK_knee_joint_positionLocator_IK_hip_joint_ikHandle_positionLocator.p1"
 		;
-connectAttr "LegFoot__instance_1_mirror:knee_joint_translation_control.t" "LegFoot__instance_1_mirror:knee_joint_translation_control_container.boc[0]"
+connectAttr "LegFoot__instance_1_mirror:IK_hip_joint_ikHandle_positionLocatorShape.wp" "LegFoot__instance_1_mirror:distBetween_IK_knee_joint_positionLocator_IK_hip_joint_ikHandle_positionLocator.p2"
 		;
-connectAttr "LegFoot__instance_1_mirror:knee_joint_translation_control.tx" "LegFoot__instance_1_mirror:knee_joint_translation_control_container.boc[1]"
+connectAttr "LegFoot__instance_1_mirror:IK_hip_joint_positionLocatorShape.wp" "LegFoot__instance_1_mirror:distBetween_IK_hip_joint_positionLocator_IK_knee_joint_positionLocator.p1"
 		;
-connectAttr "LegFoot__instance_1_mirror:knee_joint_translation_control.ty" "LegFoot__instance_1_mirror:knee_joint_translation_control_container.boc[2]"
+connectAttr "LegFoot__instance_1_mirror:IK_knee_joint_positionLocatorShape.wp" "LegFoot__instance_1_mirror:distBetween_IK_hip_joint_positionLocator_IK_knee_joint_positionLocator.p2"
 		;
-connectAttr "LegFoot__instance_1_mirror:knee_joint_translation_control.tz" "LegFoot__instance_1_mirror:knee_joint_translation_control_container.boc[3]"
+connectAttr "LegFoot__instance_1_mirror:knee_joint_rootPosLocatorShape.wp" "LegFoot__instance_1_mirror:distBetween_knee_joint_rootPosLocator_ankle_joint_endPosLocator.p1"
 		;
-connectAttr "hyperLayout19.msg" "LegFoot__instance_1_mirror:ankle_joint_translation_control_container.hl"
+connectAttr "LegFoot__instance_1_mirror:ankle_joint_endPosLocatorShape.wp" "LegFoot__instance_1_mirror:distBetween_knee_joint_rootPosLocator_ankle_joint_endPosLocator.p2"
 		;
-connectAttr "LegFoot__instance_1_mirror:ankle_joint_translation_control.t" "LegFoot__instance_1_mirror:ankle_joint_translation_control_container.boc[0]"
+connectAttr "LegFoot__instance_1_mirror:knee_joint_ikHandle_scaleFactor.ox" "LegFoot__instance_1_mirror:knee_joint_ikHandle_lockBlend.c1r"
 		;
-connectAttr "LegFoot__instance_1_mirror:ankle_joint_translation_control.tx" "LegFoot__instance_1_mirror:ankle_joint_translation_control_container.boc[1]"
+connectAttr "LegFoot__instance_1_mirror:ball_joint_ikHandle_lockBlend.opr" "LegFoot__instance_1_mirror:toe_joint_scaleMultiply.i2x"
 		;
-connectAttr "LegFoot__instance_1_mirror:ankle_joint_translation_control.ty" "LegFoot__instance_1_mirror:ankle_joint_translation_control_container.boc[2]"
+connectAttr "LegFoot__instance_1_mirror:distBetween_IK_hip_joint_positionLocator_IK_knee_joint_positionLocator.d" "LegFoot__instance_1_mirror:distBetween_IK_hip_joint_positionLocator_IK_knee_joint_positionLocator_scaleFactor.i1x"
 		;
-connectAttr "LegFoot__instance_1_mirror:ankle_joint_translation_control.tz" "LegFoot__instance_1_mirror:ankle_joint_translation_control_container.boc[3]"
+connectAttr "LegFoot__instance_1_mirror:distBetween_IK_knee_joint_positionLocator_IK_hip_joint_ikHandle_positionLocator.d" "LegFoot__instance_1_mirror:distBetween_IK_knee_joint_positionLocator_IK_hip_joint_ikHandle_positionLocator_scaleFactor.i1x"
+		;
+connectAttr "LegFoot__instance_1_mirror:distBetween_IK_hip_joint_positionLocator_IK_knee_joint_positionLocator_scaleFactor.ox" "LegFoot__instance_1_mirror:distBetween_IK_hip_joint_positionLocator_IK_knee_joint_positionLocator_translationValue.i2x"
+		;
+connectAttr "LegFoot__instance_1_mirror:distBetween_IK_knee_joint_positionLocator_IK_hip_joint_ikHandle_positionLocator_scaleFactor.ox" "LegFoot__instance_1_mirror:distBetween_IK_knee_joint_positionLocator_IK_hip_joint_ikHandle_positionLocator_translationValue.i2x"
+		;
+connectAttr "LegFoot__instance_1_mirror:ankle_joint_ikHandle_lockBlend.opr" "LegFoot__instance_1_mirror:ball_joint_scaleMultiply.i2x"
+		;
+connectAttr "LegFoot__instance_1_mirror:distBetween_hip_joint_rootPosLocator_knee_joint_endPosLocator.d" "LegFoot__instance_1_mirror:hip_joint_ikHandle_scaleFactor.i1x"
+		;
+connectAttr "LegFoot__instance_1_mirror:distBetween_knee_joint_rootPosLocator_ankle_joint_endPosLocator.d" "LegFoot__instance_1_mirror:knee_joint_ikHandle_scaleFactor.i1x"
+		;
+connectAttr "LegFoot__instance_1_mirror:distBetween_ankle_joint_rootPosLocator_ball_joint_endPosLocator.d" "LegFoot__instance_1_mirror:ankle_joint_ikHandle_scaleFactor.i1x"
+		;
+connectAttr "LegFoot__instance_1_mirror:hip_joint_ikHandle_lockBlend.opr" "LegFoot__instance_1_mirror:knee_joint_scaleMultiply.i2x"
+		;
+connectAttr "LegFoot__instance_1_mirror:knee_joint_ikHandle_lockBlend.opr" "LegFoot__instance_1_mirror:ankle_joint_scaleMultiply.i2x"
 		;
 connectAttr "LegFoot__instance_1_mirror:module_grp.msg" "hyperLayout16.hyp[0].dn"
 		;
@@ -13914,225 +14006,305 @@ connectAttr "LegFoot__instance_1_mirror:distBetween_hip_joint_rootPosLocator_kne
 		;
 connectAttr "LegFoot__instance_1_mirror:hip_joint_ikHandle_scaleFactor.msg" "hyperLayout16.hyp[28].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:knee_joint_scaleMultiply.msg" "hyperLayout16.hyp[29].dn"
+connectAttr "LegFoot__instance_1_mirror:hip_joint_ikHandle_lockBlend.msg" "hyperLayout16.hyp[29].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:hip_joint_rootPosLocatorShape.msg" "hyperLayout16.hyp[30].dn"
+connectAttr "LegFoot__instance_1_mirror:knee_joint_scaleMultiply.msg" "hyperLayout16.hyp[30].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:knee_joint_endPosLocatorShape.msg" "hyperLayout16.hyp[31].dn"
+connectAttr "LegFoot__instance_1_mirror:hip_joint_rootPosLocatorShape.msg" "hyperLayout16.hyp[31].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:hip_joint_translation_control_poleVectorLocator_parentConstraintGrp.msg" "hyperLayout16.hyp[32].dn"
+connectAttr "LegFoot__instance_1_mirror:knee_joint_endPosLocatorShape.msg" "hyperLayout16.hyp[32].dn"
 		;
-connectAttr "hip_joint_translation_control_poleVectorLocator_parentConstraintGrp_parentConstraint2.msg" "hyperLayout16.hyp[33].dn"
+connectAttr "LegFoot__instance_1_mirror:hip_joint_translation_control_poleVectorLocator_parentConstraintGrp.msg" "hyperLayout16.hyp[33].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:knee_joint_endPosLocator_pointConstraint.msg" "hyperLayout16.hyp[34].dn"
+connectAttr "hip_joint_translation_control_poleVectorLocator_parentConstraintGrp_parentConstraint2.msg" "hyperLayout16.hyp[34].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:hip_joint_translation_control_poleVectorLocator.msg" "hyperLayout16.hyp[35].dn"
+connectAttr "LegFoot__instance_1_mirror:knee_joint_endPosLocator_pointConstraint.msg" "hyperLayout16.hyp[35].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:hip_joint_translation_control_poleVectorLocatorShape.msg" "hyperLayout16.hyp[36].dn"
+connectAttr "LegFoot__instance_1_mirror:hip_joint_translation_control_poleVectorLocator.msg" "hyperLayout16.hyp[36].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:hip_joint_hierarchy_representation_container.msg" "hyperLayout16.hyp[37].dn"
+connectAttr "LegFoot__instance_1_mirror:hip_joint_translation_control_poleVectorLocatorShape.msg" "hyperLayout16.hyp[37].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:knee_joint_ikHandle.msg" "hyperLayout16.hyp[38].dn"
+connectAttr "LegFoot__instance_1_mirror:hip_joint_hierarchy_representation_container.msg" "hyperLayout16.hyp[38].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:knee_jointikEffector.msg" "hyperLayout16.hyp[39].dn"
+connectAttr "LegFoot__instance_1_mirror:knee_joint_ikHandle.msg" "hyperLayout16.hyp[39].dn"
 		;
-connectAttr "knee_joint_ikHandle_poleVectorConstraint2.msg" "hyperLayout16.hyp[40].dn"
+connectAttr "LegFoot__instance_1_mirror:knee_jointikEffector.msg" "hyperLayout16.hyp[40].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:knee_joint_rootPosLocator.msg" "hyperLayout16.hyp[41].dn"
+connectAttr "knee_joint_ikHandle_poleVectorConstraint2.msg" "hyperLayout16.hyp[41].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:ankle_joint_endPosLocator.msg" "hyperLayout16.hyp[42].dn"
+connectAttr "LegFoot__instance_1_mirror:knee_joint_rootPosLocator.msg" "hyperLayout16.hyp[42].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:knee_joint_rootPosLocator_pointConstraint.msg" "hyperLayout16.hyp[43].dn"
+connectAttr "LegFoot__instance_1_mirror:ankle_joint_endPosLocator.msg" "hyperLayout16.hyp[43].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:knee_joint_ikHandle_pointConstraint.msg" "hyperLayout16.hyp[44].dn"
+connectAttr "LegFoot__instance_1_mirror:knee_joint_rootPosLocator_pointConstraint.msg" "hyperLayout16.hyp[44].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:distBetween_knee_joint_rootPosLocator_ankle_joint_endPosLocator.msg" "hyperLayout16.hyp[45].dn"
+connectAttr "LegFoot__instance_1_mirror:knee_joint_ikHandle_pointConstraint.msg" "hyperLayout16.hyp[45].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:knee_joint_ikHandle_scaleFactor.msg" "hyperLayout16.hyp[46].dn"
+connectAttr "LegFoot__instance_1_mirror:distBetween_knee_joint_rootPosLocator_ankle_joint_endPosLocator.msg" "hyperLayout16.hyp[46].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:ankle_joint_scaleMultiply.msg" "hyperLayout16.hyp[47].dn"
+connectAttr "LegFoot__instance_1_mirror:knee_joint_ikHandle_scaleFactor.msg" "hyperLayout16.hyp[47].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:knee_joint_rootPosLocatorShape.msg" "hyperLayout16.hyp[48].dn"
+connectAttr "LegFoot__instance_1_mirror:knee_joint_ikHandle_lockBlend.msg" "hyperLayout16.hyp[48].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:ankle_joint_endPosLocatorShape.msg" "hyperLayout16.hyp[49].dn"
+connectAttr "LegFoot__instance_1_mirror:ankle_joint_scaleMultiply.msg" "hyperLayout16.hyp[49].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:knee_joint_translation_control_poleVectorLocator_parentConstraintGrp.msg" "hyperLayout16.hyp[50].dn"
+connectAttr "LegFoot__instance_1_mirror:knee_joint_rootPosLocatorShape.msg" "hyperLayout16.hyp[50].dn"
 		;
-connectAttr "knee_joint_translation_control_poleVectorLocator_parentConstraintGrp_parentConstraint2.msg" "hyperLayout16.hyp[51].dn"
+connectAttr "LegFoot__instance_1_mirror:ankle_joint_endPosLocatorShape.msg" "hyperLayout16.hyp[51].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:ankle_joint_endPosLocator_pointConstraint.msg" "hyperLayout16.hyp[52].dn"
+connectAttr "LegFoot__instance_1_mirror:knee_joint_translation_control_poleVectorLocator_parentConstraintGrp.msg" "hyperLayout16.hyp[52].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:knee_joint_translation_control_poleVectorLocator.msg" "hyperLayout16.hyp[53].dn"
+connectAttr "knee_joint_translation_control_poleVectorLocator_parentConstraintGrp_parentConstraint2.msg" "hyperLayout16.hyp[53].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:knee_joint_translation_control_poleVectorLocatorShape.msg" "hyperLayout16.hyp[54].dn"
+connectAttr "LegFoot__instance_1_mirror:ankle_joint_endPosLocator_pointConstraint.msg" "hyperLayout16.hyp[54].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:knee_joint_hierarchy_representation_container.msg" "hyperLayout16.hyp[55].dn"
+connectAttr "LegFoot__instance_1_mirror:knee_joint_translation_control_poleVectorLocator.msg" "hyperLayout16.hyp[55].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:ankle_joint_ikHandle.msg" "hyperLayout16.hyp[56].dn"
+connectAttr "LegFoot__instance_1_mirror:knee_joint_translation_control_poleVectorLocatorShape.msg" "hyperLayout16.hyp[56].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:ankle_jointikEffector.msg" "hyperLayout16.hyp[57].dn"
+connectAttr "LegFoot__instance_1_mirror:knee_joint_hierarchy_representation_container.msg" "hyperLayout16.hyp[57].dn"
 		;
-connectAttr "ankle_joint_ikHandle_poleVectorConstraint2.msg" "hyperLayout16.hyp[58].dn"
+connectAttr "LegFoot__instance_1_mirror:ankle_joint_ikHandle.msg" "hyperLayout16.hyp[58].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:ankle_joint_rootPosLocator.msg" "hyperLayout16.hyp[59].dn"
+connectAttr "LegFoot__instance_1_mirror:ankle_jointikEffector.msg" "hyperLayout16.hyp[59].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:ball_joint_endPosLocator.msg" "hyperLayout16.hyp[60].dn"
+connectAttr "ankle_joint_ikHandle_poleVectorConstraint2.msg" "hyperLayout16.hyp[60].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:ankle_joint_rootPosLocator_pointConstraint.msg" "hyperLayout16.hyp[61].dn"
+connectAttr "LegFoot__instance_1_mirror:ankle_joint_rootPosLocator.msg" "hyperLayout16.hyp[61].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:ankle_joint_ikHandle_pointConstraint.msg" "hyperLayout16.hyp[62].dn"
+connectAttr "LegFoot__instance_1_mirror:ball_joint_endPosLocator.msg" "hyperLayout16.hyp[62].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:distBetween_ankle_joint_rootPosLocator_ball_joint_endPosLocator.msg" "hyperLayout16.hyp[63].dn"
+connectAttr "LegFoot__instance_1_mirror:ankle_joint_rootPosLocator_pointConstraint.msg" "hyperLayout16.hyp[63].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:ankle_joint_ikHandle_scaleFactor.msg" "hyperLayout16.hyp[64].dn"
+connectAttr "LegFoot__instance_1_mirror:ankle_joint_ikHandle_pointConstraint.msg" "hyperLayout16.hyp[64].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:ball_joint_scaleMultiply.msg" "hyperLayout16.hyp[65].dn"
+connectAttr "LegFoot__instance_1_mirror:distBetween_ankle_joint_rootPosLocator_ball_joint_endPosLocator.msg" "hyperLayout16.hyp[65].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:ankle_joint_rootPosLocatorShape.msg" "hyperLayout16.hyp[66].dn"
+connectAttr "LegFoot__instance_1_mirror:ankle_joint_ikHandle_scaleFactor.msg" "hyperLayout16.hyp[66].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:ball_joint_endPosLocatorShape.msg" "hyperLayout16.hyp[67].dn"
+connectAttr "LegFoot__instance_1_mirror:ankle_joint_ikHandle_lockBlend.msg" "hyperLayout16.hyp[67].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:ankle_joint_translation_control_poleVectorLocator_parentConstraintGrp.msg" "hyperLayout16.hyp[68].dn"
+connectAttr "LegFoot__instance_1_mirror:ball_joint_scaleMultiply.msg" "hyperLayout16.hyp[68].dn"
 		;
-connectAttr "ankle_joint_translation_control_poleVectorLocator_parentConstraintGrp_parentConstraint2.msg" "hyperLayout16.hyp[69].dn"
+connectAttr "LegFoot__instance_1_mirror:ankle_joint_rootPosLocatorShape.msg" "hyperLayout16.hyp[69].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:ball_joint_endPosLocator_pointConstraint.msg" "hyperLayout16.hyp[70].dn"
+connectAttr "LegFoot__instance_1_mirror:ball_joint_endPosLocatorShape.msg" "hyperLayout16.hyp[70].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:ankle_joint_translation_control_poleVectorLocator.msg" "hyperLayout16.hyp[71].dn"
+connectAttr "LegFoot__instance_1_mirror:ankle_joint_translation_control_poleVectorLocator_parentConstraintGrp.msg" "hyperLayout16.hyp[71].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:ankle_joint_translation_control_poleVectorLocatorShape.msg" "hyperLayout16.hyp[72].dn"
+connectAttr "ankle_joint_translation_control_poleVectorLocator_parentConstraintGrp_parentConstraint2.msg" "hyperLayout16.hyp[72].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:ball_joint_ikHandle.msg" "hyperLayout16.hyp[74].dn"
+connectAttr "LegFoot__instance_1_mirror:ball_joint_endPosLocator_pointConstraint.msg" "hyperLayout16.hyp[73].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:ball_jointikEffector.msg" "hyperLayout16.hyp[75].dn"
+connectAttr "LegFoot__instance_1_mirror:ankle_joint_translation_control_poleVectorLocator.msg" "hyperLayout16.hyp[74].dn"
 		;
-connectAttr "ball_joint_ikHandle_poleVectorConstraint2.msg" "hyperLayout16.hyp[76].dn"
+connectAttr "LegFoot__instance_1_mirror:ankle_joint_translation_control_poleVectorLocatorShape.msg" "hyperLayout16.hyp[75].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:ball_joint_rootPosLocator.msg" "hyperLayout16.hyp[77].dn"
+connectAttr "LegFoot__instance_1_mirror:ball_joint_ikHandle.msg" "hyperLayout16.hyp[77].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:toe_joint_endPosLocator.msg" "hyperLayout16.hyp[78].dn"
+connectAttr "LegFoot__instance_1_mirror:ball_jointikEffector.msg" "hyperLayout16.hyp[78].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:ball_joint_rootPosLocator_pointConstraint.msg" "hyperLayout16.hyp[79].dn"
+connectAttr "ball_joint_ikHandle_poleVectorConstraint2.msg" "hyperLayout16.hyp[79].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:ball_joint_ikHandle_pointConstraint.msg" "hyperLayout16.hyp[80].dn"
+connectAttr "LegFoot__instance_1_mirror:ball_joint_rootPosLocator.msg" "hyperLayout16.hyp[80].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:distBetween_ball_joint_rootPosLocator_toe_joint_endPosLocator.msg" "hyperLayout16.hyp[81].dn"
+connectAttr "LegFoot__instance_1_mirror:toe_joint_endPosLocator.msg" "hyperLayout16.hyp[81].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:ball_joint_ikHandle_scaleFactor.msg" "hyperLayout16.hyp[82].dn"
+connectAttr "LegFoot__instance_1_mirror:ball_joint_rootPosLocator_pointConstraint.msg" "hyperLayout16.hyp[82].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:toe_joint_scaleMultiply.msg" "hyperLayout16.hyp[83].dn"
+connectAttr "LegFoot__instance_1_mirror:ball_joint_ikHandle_pointConstraint.msg" "hyperLayout16.hyp[83].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:ball_joint_rootPosLocatorShape.msg" "hyperLayout16.hyp[84].dn"
+connectAttr "LegFoot__instance_1_mirror:distBetween_ball_joint_rootPosLocator_toe_joint_endPosLocator.msg" "hyperLayout16.hyp[84].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:toe_joint_endPosLocatorShape.msg" "hyperLayout16.hyp[85].dn"
+connectAttr "LegFoot__instance_1_mirror:ball_joint_ikHandle_scaleFactor.msg" "hyperLayout16.hyp[85].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:ball_joint_translation_control_poleVectorLocator_parentConstraintGrp.msg" "hyperLayout16.hyp[86].dn"
+connectAttr "LegFoot__instance_1_mirror:ball_joint_ikHandle_lockBlend.msg" "hyperLayout16.hyp[86].dn"
 		;
-connectAttr "ball_joint_translation_control_poleVectorLocator_parentConstraintGrp_parentConstraint2.msg" "hyperLayout16.hyp[87].dn"
+connectAttr "LegFoot__instance_1_mirror:toe_joint_scaleMultiply.msg" "hyperLayout16.hyp[87].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:toe_joint_endPosLocator_pointConstraint.msg" "hyperLayout16.hyp[88].dn"
+connectAttr "LegFoot__instance_1_mirror:ball_joint_rootPosLocatorShape.msg" "hyperLayout16.hyp[88].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:ball_joint_translation_control_poleVectorLocator.msg" "hyperLayout16.hyp[89].dn"
+connectAttr "LegFoot__instance_1_mirror:toe_joint_endPosLocatorShape.msg" "hyperLayout16.hyp[89].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:ball_joint_translation_control_poleVectorLocatorShape.msg" "hyperLayout16.hyp[90].dn"
+connectAttr "LegFoot__instance_1_mirror:ball_joint_translation_control_poleVectorLocator_parentConstraintGrp.msg" "hyperLayout16.hyp[90].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:IK_hip_joint.msg" "hyperLayout16.hyp[92].dn"
+connectAttr "ball_joint_translation_control_poleVectorLocator_parentConstraintGrp_parentConstraint2.msg" "hyperLayout16.hyp[91].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:IK_knee_joint.msg" "hyperLayout16.hyp[93].dn"
+connectAttr "LegFoot__instance_1_mirror:toe_joint_endPosLocator_pointConstraint.msg" "hyperLayout16.hyp[92].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:IK_ankle_joint.msg" "hyperLayout16.hyp[94].dn"
+connectAttr "LegFoot__instance_1_mirror:ball_joint_translation_control_poleVectorLocator.msg" "hyperLayout16.hyp[93].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:distBetween_IK_hip_joint_positionLocator_IK_knee_joint_positionLocator.msg" "hyperLayout16.hyp[95].dn"
+connectAttr "LegFoot__instance_1_mirror:ball_joint_translation_control_poleVectorLocatorShape.msg" "hyperLayout16.hyp[94].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:distBetween_IK_hip_joint_positionLocator_IK_knee_joint_positionLocator_scaleFactor.msg" "hyperLayout16.hyp[96].dn"
+connectAttr "LegFoot__instance_1_mirror:IK_hip_joint.msg" "hyperLayout16.hyp[96].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:distBetween_IK_hip_joint_positionLocator_IK_knee_joint_positionLocator_translationValue.msg" "hyperLayout16.hyp[97].dn"
+connectAttr "LegFoot__instance_1_mirror:IK_knee_joint.msg" "hyperLayout16.hyp[97].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:distBetween_IK_knee_joint_positionLocator_IK_hip_joint_ikHandle_positionLocator.msg" "hyperLayout16.hyp[98].dn"
+connectAttr "LegFoot__instance_1_mirror:IK_ankle_joint.msg" "hyperLayout16.hyp[98].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:distBetween_IK_knee_joint_positionLocator_IK_hip_joint_ikHandle_positionLocator_scaleFactor.msg" "hyperLayout16.hyp[99].dn"
+connectAttr "LegFoot__instance_1_mirror:distBetween_IK_hip_joint_positionLocator_IK_knee_joint_positionLocator.msg" "hyperLayout16.hyp[99].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:distBetween_IK_knee_joint_positionLocator_IK_hip_joint_ikHandle_positionLocator_translationValue.msg" "hyperLayout16.hyp[100].dn"
+connectAttr "LegFoot__instance_1_mirror:distBetween_IK_hip_joint_positionLocator_IK_knee_joint_positionLocator_scaleFactor.msg" "hyperLayout16.hyp[100].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:IK_hip_joint_ikHandle.msg" "hyperLayout16.hyp[101].dn"
+connectAttr "LegFoot__instance_1_mirror:distBetween_IK_hip_joint_positionLocator_IK_knee_joint_positionLocator_translationValue.msg" "hyperLayout16.hyp[101].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:IK_hip_joint_ikEffector.msg" "hyperLayout16.hyp[102].dn"
+connectAttr "LegFoot__instance_1_mirror:distBetween_IK_knee_joint_positionLocator_IK_hip_joint_ikHandle_positionLocator.msg" "hyperLayout16.hyp[102].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:IK_hip_joint_positionLocator.msg" "hyperLayout16.hyp[103].dn"
+connectAttr "LegFoot__instance_1_mirror:distBetween_IK_knee_joint_positionLocator_IK_hip_joint_ikHandle_positionLocator_scaleFactor.msg" "hyperLayout16.hyp[103].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:IK_knee_joint_positionLocator.msg" "hyperLayout16.hyp[104].dn"
+connectAttr "LegFoot__instance_1_mirror:distBetween_IK_knee_joint_positionLocator_IK_hip_joint_ikHandle_positionLocator_translationValue.msg" "hyperLayout16.hyp[104].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:IK_hip_joint_ikHandle_positionLocator.msg" "hyperLayout16.hyp[105].dn"
+connectAttr "LegFoot__instance_1_mirror:IK_hip_joint_ikHandle.msg" "hyperLayout16.hyp[105].dn"
 		;
-connectAttr "IK_hip_joint_ikHandle_poleVectorConstraint2.msg" "hyperLayout16.hyp[106].dn"
+connectAttr "LegFoot__instance_1_mirror:IK_hip_joint_ikEffector.msg" "hyperLayout16.hyp[106].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:IK_hip_joint_positionLocatorShape.msg" "hyperLayout16.hyp[107].dn"
+connectAttr "LegFoot__instance_1_mirror:IK_hip_joint_positionLocator.msg" "hyperLayout16.hyp[107].dn"
 		;
-connectAttr "IK_ball_joint1.msg" "hyperLayout16.hyp[108].dn";
-connectAttr "IK_toe_joint1.msg" "hyperLayout16.hyp[109].dn";
-connectAttr "LegFoot__instance_1_mirror:IK_knee_joint_positionLocatorShape.msg" "hyperLayout16.hyp[110].dn"
+connectAttr "LegFoot__instance_1_mirror:IK_knee_joint_positionLocator.msg" "hyperLayout16.hyp[108].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:IK_hip_joint_ikHandle_positionLocatorShape.msg" "hyperLayout16.hyp[111].dn"
+connectAttr "LegFoot__instance_1_mirror:IK_hip_joint_ikHandle_positionLocator.msg" "hyperLayout16.hyp[109].dn"
 		;
-connectAttr "IK_hip_joint_positionLocator_pointConstraint2.msg" "hyperLayout16.hyp[112].dn"
+connectAttr "IK_hip_joint_ikHandle_poleVectorConstraint2.msg" "hyperLayout16.hyp[110].dn"
 		;
-connectAttr "IK_knee_joint_positionLocator_pointConstraint2.msg" "hyperLayout16.hyp[113].dn"
+connectAttr "LegFoot__instance_1_mirror:IK_hip_joint_positionLocatorShape.msg" "hyperLayout16.hyp[111].dn"
 		;
-connectAttr "IK_hip_joint_ikHandle_positionLocator_pointConstraint2.msg" "hyperLayout16.hyp[114].dn"
+connectAttr "IK_ball_joint1.msg" "hyperLayout16.hyp[112].dn";
+connectAttr "IK_toe_joint1.msg" "hyperLayout16.hyp[113].dn";
+connectAttr "LegFoot__instance_1_mirror:IK_knee_joint_positionLocatorShape.msg" "hyperLayout16.hyp[114].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:IK_knee_joint_preferredAngle_representation_container.msg" "hyperLayout16.hyp[115].dn"
+connectAttr "LegFoot__instance_1_mirror:IK_hip_joint_ikHandle_positionLocatorShape.msg" "hyperLayout16.hyp[115].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:ankle_joint_orientation_control_container.msg" "hyperLayout16.hyp[116].dn"
+connectAttr "IK_hip_joint_positionLocator_pointConstraint2.msg" "hyperLayout16.hyp[116].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:ball_joint_orientation_control_container.msg" "hyperLayout16.hyp[117].dn"
+connectAttr "IK_knee_joint_positionLocator_pointConstraint2.msg" "hyperLayout16.hyp[117].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:knee_joint_ikHandle_scaleFactor.ox" "LegFoot__instance_1_mirror:ankle_joint_scaleMultiply.i2x"
+connectAttr "IK_hip_joint_ikHandle_positionLocator_pointConstraint2.msg" "hyperLayout16.hyp[118].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:ankle_joint_ikHandle_scaleFactor.ox" "LegFoot__instance_1_mirror:ball_joint_scaleMultiply.i2x"
+connectAttr "LegFoot__instance_1_mirror:IK_knee_joint_preferredAngle_representation_container.msg" "hyperLayout16.hyp[119].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:distBetween_hip_joint_rootPosLocator_knee_joint_endPosLocator.d" "LegFoot__instance_1_mirror:hip_joint_ikHandle_scaleFactor.i1x"
+connectAttr "LegFoot__instance_1_mirror:ankle_joint_orientation_control_container.msg" "hyperLayout16.hyp[120].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:distBetween_IK_knee_joint_positionLocator_IK_hip_joint_ikHandle_positionLocator.d" "LegFoot__instance_1_mirror:distBetween_IK_knee_joint_positionLocator_IK_hip_joint_ikHandle_positionLocator_scaleFactor.i1x"
+connectAttr "LegFoot__instance_1_mirror:ball_joint_orientation_control_container.msg" "hyperLayout16.hyp[121].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:distBetween_IK_hip_joint_positionLocator_IK_knee_joint_positionLocator_scaleFactor.ox" "LegFoot__instance_1_mirror:distBetween_IK_hip_joint_positionLocator_IK_knee_joint_positionLocator_translationValue.i2x"
+connectAttr "LegFoot__instance_1_mirror:hip_joint_ikHandle_scaleFactor.ox" "LegFoot__instance_1_mirror:hip_joint_ikHandle_lockBlend.c1r"
 		;
-connectAttr "LegFoot__instance_1_mirror:hip_joint_ikHandle_scaleFactor.ox" "LegFoot__instance_1_mirror:knee_joint_scaleMultiply.i2x"
-		;
-connectAttr "LegFoot__instance_1_mirror:distBetween_IK_knee_joint_positionLocator_IK_hip_joint_ikHandle_positionLocator_scaleFactor.ox" "LegFoot__instance_1_mirror:distBetween_IK_knee_joint_positionLocator_IK_hip_joint_ikHandle_positionLocator_translationValue.i2x"
-		;
-connectAttr "LegFoot__instance_1_mirror:distBetween_IK_hip_joint_positionLocator_IK_knee_joint_positionLocator.d" "LegFoot__instance_1_mirror:distBetween_IK_hip_joint_positionLocator_IK_knee_joint_positionLocator_scaleFactor.i1x"
-		;
-connectAttr "LegFoot__instance_1_mirror:distBetween_knee_joint_rootPosLocator_ankle_joint_endPosLocator.d" "LegFoot__instance_1_mirror:knee_joint_ikHandle_scaleFactor.i1x"
-		;
-connectAttr "LegFoot__instance_1_mirror:distBetween_ball_joint_rootPosLocator_toe_joint_endPosLocator.d" "LegFoot__instance_1_mirror:ball_joint_ikHandle_scaleFactor.i1x"
-		;
-connectAttr "LegFoot__instance_1_mirror:distBetween_ankle_joint_rootPosLocator_ball_joint_endPosLocator.d" "LegFoot__instance_1_mirror:ankle_joint_ikHandle_scaleFactor.i1x"
-		;
-connectAttr "LegFoot__instance_1_mirror:ball_joint_ikHandle_scaleFactor.ox" "LegFoot__instance_1_mirror:toe_joint_scaleMultiply.i2x"
-		;
-connectAttr "LegFoot__instance_1_mirror:IK_hip_joint_positionLocatorShape.wp" "LegFoot__instance_1_mirror:distBetween_IK_hip_joint_positionLocator_IK_knee_joint_positionLocator.p1"
-		;
-connectAttr "LegFoot__instance_1_mirror:IK_knee_joint_positionLocatorShape.wp" "LegFoot__instance_1_mirror:distBetween_IK_hip_joint_positionLocator_IK_knee_joint_positionLocator.p2"
-		;
-connectAttr "LegFoot__instance_1_mirror:ankle_joint_rootPosLocatorShape.wp" "LegFoot__instance_1_mirror:distBetween_ankle_joint_rootPosLocator_ball_joint_endPosLocator.p1"
-		;
-connectAttr "LegFoot__instance_1_mirror:ball_joint_endPosLocatorShape.wp" "LegFoot__instance_1_mirror:distBetween_ankle_joint_rootPosLocator_ball_joint_endPosLocator.p2"
+connectAttr "LegFoot__instance_1_mirror:ball_joint_ikHandle_scaleFactor.ox" "LegFoot__instance_1_mirror:ball_joint_ikHandle_lockBlend.c1r"
 		;
 connectAttr "LegFoot__instance_1_mirror:ball_joint_rootPosLocatorShape.wp" "LegFoot__instance_1_mirror:distBetween_ball_joint_rootPosLocator_toe_joint_endPosLocator.p1"
 		;
 connectAttr "LegFoot__instance_1_mirror:toe_joint_endPosLocatorShape.wp" "LegFoot__instance_1_mirror:distBetween_ball_joint_rootPosLocator_toe_joint_endPosLocator.p2"
 		;
-connectAttr "LegFoot__instance_1_mirror:knee_joint_rootPosLocatorShape.wp" "LegFoot__instance_1_mirror:distBetween_knee_joint_rootPosLocator_ankle_joint_endPosLocator.p1"
-		;
-connectAttr "LegFoot__instance_1_mirror:ankle_joint_endPosLocatorShape.wp" "LegFoot__instance_1_mirror:distBetween_knee_joint_rootPosLocator_ankle_joint_endPosLocator.p2"
-		;
-connectAttr "LegFoot__instance_1_mirror:IK_knee_joint_positionLocatorShape.wp" "LegFoot__instance_1_mirror:distBetween_IK_knee_joint_positionLocator_IK_hip_joint_ikHandle_positionLocator.p1"
-		;
-connectAttr "LegFoot__instance_1_mirror:IK_hip_joint_ikHandle_positionLocatorShape.wp" "LegFoot__instance_1_mirror:distBetween_IK_knee_joint_positionLocator_IK_hip_joint_ikHandle_positionLocator.p2"
-		;
 connectAttr "LegFoot__instance_1_mirror:hip_joint_rootPosLocatorShape.wp" "LegFoot__instance_1_mirror:distBetween_hip_joint_rootPosLocator_knee_joint_endPosLocator.p1"
 		;
 connectAttr "LegFoot__instance_1_mirror:knee_joint_endPosLocatorShape.wp" "LegFoot__instance_1_mirror:distBetween_hip_joint_rootPosLocator_knee_joint_endPosLocator.p2"
+		;
+connectAttr "LegFoot__instance_1_mirror:distBetween_ball_joint_rootPosLocator_toe_joint_endPosLocator.d" "LegFoot__instance_1_mirror:ball_joint_ikHandle_scaleFactor.i1x"
+		;
+connectAttr "LegFoot__instance_1_mirror:hip_joint_m_translation_control_SG.msg" "materialInfo16.sg"
+		;
+connectAttr "LegFoot__instance_1_mirror:hip_joint_m_translation_control.msg" "materialInfo16.m"
+		;
+connectAttr "LegFoot__instance_1_mirror:hip_joint_m_translation_control.oc" "LegFoot__instance_1_mirror:hip_joint_m_translation_control_SG.ss"
+		;
+connectAttr "LegFoot__instance_1_mirror:hip_joint_translation_controlShape.iog" "LegFoot__instance_1_mirror:hip_joint_m_translation_control_SG.dsm"
+		 -na;
+connectAttr "LegFoot__instance_1_mirror:knee_joint_translation_controlShape.msg" "hyperLayout18.hyp[0].dn"
+		;
+connectAttr "LegFoot__instance_1_mirror:knee_joint_translation_control.msg" "hyperLayout18.hyp[1].dn"
+		;
+connectAttr "LegFoot__instance_1_mirror:knee_joint_m_translation_control_SG.msg" "hyperLayout18.hyp[2].dn"
+		;
+connectAttr "LegFoot__instance_1_mirror:knee_joint_m_translation_control.msg" "hyperLayout18.hyp[3].dn"
+		;
+connectAttr "LegFoot__instance_1_mirror:knee_joint_m_translation_control.oc" "LegFoot__instance_1_mirror:knee_joint_m_translation_control_SG.ss"
+		;
+connectAttr "LegFoot__instance_1_mirror:knee_joint_translation_controlShape.iog" "LegFoot__instance_1_mirror:knee_joint_m_translation_control_SG.dsm"
+		 -na;
+connectAttr "LegFoot__instance_1_mirror:knee_joint_m_translation_control_SG.msg" "materialInfo17.sg"
+		;
+connectAttr "LegFoot__instance_1_mirror:knee_joint_m_translation_control.msg" "materialInfo17.m"
+		;
+connectAttr "LegFoot__instance_1_mirror:ball_joint_translation_controlShape.msg" "hyperLayout20.hyp[0].dn"
+		;
+connectAttr "LegFoot__instance_1_mirror:ball_joint_translation_control.msg" "hyperLayout20.hyp[1].dn"
+		;
+connectAttr "LegFoot__instance_1_mirror:ball_joint_m_translation_control_SG.msg" "hyperLayout20.hyp[2].dn"
+		;
+connectAttr "LegFoot__instance_1_mirror:ball_joint_m_translation_control.msg" "hyperLayout20.hyp[3].dn"
+		;
+connectAttr "LegFoot__instance_1_mirror:ball_joint_m_translation_control.oc" "LegFoot__instance_1_mirror:ball_joint_m_translation_control_SG.ss"
+		;
+connectAttr "LegFoot__instance_1_mirror:ball_joint_translation_controlShape.iog" "LegFoot__instance_1_mirror:ball_joint_m_translation_control_SG.dsm"
+		 -na;
+connectAttr "LegFoot__instance_1_mirror:ball_joint_m_translation_control_SG.msg" "materialInfo19.sg"
+		;
+connectAttr "LegFoot__instance_1_mirror:ball_joint_m_translation_control.msg" "materialInfo19.m"
+		;
+connectAttr "LegFoot__instance_1_mirror:hip_joint_translation_controlShape.msg" "hyperLayout17.hyp[0].dn"
+		;
+connectAttr "LegFoot__instance_1_mirror:hip_joint_translation_control.msg" "hyperLayout17.hyp[1].dn"
+		;
+connectAttr "LegFoot__instance_1_mirror:hip_joint_m_translation_control_SG.msg" "hyperLayout17.hyp[2].dn"
+		;
+connectAttr "LegFoot__instance_1_mirror:hip_joint_m_translation_control.msg" "hyperLayout17.hyp[3].dn"
+		;
+connectAttr "LegFoot__instance_1_mirror:ankle_joint_translation_controlShape.msg" "hyperLayout19.hyp[0].dn"
+		;
+connectAttr "LegFoot__instance_1_mirror:ankle_joint_translation_control.msg" "hyperLayout19.hyp[1].dn"
+		;
+connectAttr "LegFoot__instance_1_mirror:ankle_joint_m_translation_control_SG.msg" "hyperLayout19.hyp[2].dn"
+		;
+connectAttr "LegFoot__instance_1_mirror:ankle_joint_m_translation_control.msg" "hyperLayout19.hyp[3].dn"
+		;
+connectAttr "LegFoot__instance_1_mirror:ankle_joint_m_translation_control.oc" "LegFoot__instance_1_mirror:ankle_joint_m_translation_control_SG.ss"
+		;
+connectAttr "LegFoot__instance_1_mirror:ankle_joint_translation_controlShape.iog" "LegFoot__instance_1_mirror:ankle_joint_m_translation_control_SG.dsm"
+		 -na;
+connectAttr "LegFoot__instance_1_mirror:ankle_joint_m_translation_control_SG.msg" "materialInfo18.sg"
+		;
+connectAttr "LegFoot__instance_1_mirror:ankle_joint_m_translation_control.msg" "materialInfo18.m"
+		;
+connectAttr "LegFoot__instance_1_mirror:IK_knee_joint_m_preferredAngle_representation.oc" "LegFoot__instance_1_mirror:IK_knee_joint_preferredAngle_representation_SG.ss"
+		;
+connectAttr "LegFoot__instance_1_mirror:IK_knee_joint_preferredAngle_representationShape.iog" "LegFoot__instance_1_mirror:IK_knee_joint_preferredAngle_representation_SG.dsm"
+		 -na;
+connectAttr "LegFoot__instance_1_mirror:IK_knee_joint_m_preferredAngle_representation.msg" "hyperLayout28.hyp[0].dn"
+		;
+connectAttr "LegFoot__instance_1_mirror:IK_knee_joint_preferredAngle_representation.msg" "hyperLayout28.hyp[1].dn"
+		;
+connectAttr "LegFoot__instance_1_mirror:IK_knee_joint_preferredAngle_representationShape.msg" "hyperLayout28.hyp[2].dn"
+		;
+connectAttr "LegFoot__instance_1_mirror:IK_knee_joint_preferredAngle_representation_SG.msg" "hyperLayout28.hyp[3].dn"
+		;
+connectAttr "LegFoot__instance_1_mirror:IK_knee_joint_preferredAngle_representation_rotateX.msg" "hyperLayout28.hyp[4].dn"
+		;
+connectAttr "LegFoot__instance_1_mirror:IK_knee_joint_preferredAngle_parentConstraintGrp.msg" "hyperLayout28.hyp[5].dn"
+		;
+connectAttr "IK_knee_joint_preferredAngle_parentConstraintGrp_parentConstraint2.msg" "hyperLayout28.hyp[6].dn"
+		;
+connectAttr "IK_knee_joint_preferredAngle_parentConstraintGrp_scaleConstraint2.msg" "hyperLayout28.hyp[7].dn"
+		;
+connectAttr "LegFoot__instance_1_mirror:IK_knee_joint_preferredAngle_representation.axis" "LegFoot__instance_1_mirror:IK_knee_joint_preferredAngle_representation_rotateX.i"
+		;
+connectAttr "LegFoot__instance_1_mirror:IK_knee_joint_preferredAngle_representation_SG.msg" "materialInfo26.sg"
+		;
+connectAttr "LegFoot__instance_1_mirror:IK_knee_joint_m_preferredAngle_representation.msg" "materialInfo26.m"
+		;
+connectAttr "LegFoot__instance_1_mirror:toe_joint_translation_controlShape.msg" "hyperLayout21.hyp[0].dn"
+		;
+connectAttr "LegFoot__instance_1_mirror:toe_joint_translation_control.msg" "hyperLayout21.hyp[1].dn"
+		;
+connectAttr "LegFoot__instance_1_mirror:toe_joint_m_translation_control_SG.msg" "hyperLayout21.hyp[2].dn"
+		;
+connectAttr "LegFoot__instance_1_mirror:toe_joint_m_translation_control.msg" "hyperLayout21.hyp[3].dn"
+		;
+connectAttr "LegFoot__instance_1_mirror:toe_joint_m_translation_control.oc" "LegFoot__instance_1_mirror:toe_joint_m_translation_control_SG.ss"
+		;
+connectAttr "LegFoot__instance_1_mirror:toe_joint_translation_controlShape.iog" "LegFoot__instance_1_mirror:toe_joint_m_translation_control_SG.dsm"
+		 -na;
+connectAttr "LegFoot__instance_1_mirror:toe_joint_m_translation_control_SG.msg" "materialInfo20.sg"
+		;
+connectAttr "LegFoot__instance_1_mirror:toe_joint_m_translation_control.msg" "materialInfo20.m"
 		;
 connectAttr "LegFoot__instance_1_mirror:hip_joint_m_hierarchyRepresentation.msg" "hyperLayout24.hyp[1].dn"
 		;
@@ -14190,51 +14362,17 @@ connectAttr "LegFoot__instance_1_mirror:knee_joint_m_hookRepresentation_SG.msg" 
 		;
 connectAttr "LegFoot__instance_1_mirror:knee_joint_m_hierarchyRepresentation.msg" "materialInfo23.m"
 		;
-connectAttr "LegFoot__instance_1_mirror:IK_knee_joint_preferredAngle_representation.axis" "LegFoot__instance_1_mirror:IK_knee_joint_preferredAngle_representation_rotateX.i"
-		;
-connectAttr "LegFoot__instance_1_mirror:IK_knee_joint_m_preferredAngle_representation.oc" "LegFoot__instance_1_mirror:IK_knee_joint_preferredAngle_representation_SG.ss"
-		;
-connectAttr "LegFoot__instance_1_mirror:IK_knee_joint_preferredAngle_representationShape.iog" "LegFoot__instance_1_mirror:IK_knee_joint_preferredAngle_representation_SG.dsm"
-		 -na;
-connectAttr "LegFoot__instance_1_mirror:IK_knee_joint_m_preferredAngle_representation.msg" "hyperLayout28.hyp[0].dn"
-		;
-connectAttr "LegFoot__instance_1_mirror:IK_knee_joint_preferredAngle_representation.msg" "hyperLayout28.hyp[1].dn"
-		;
-connectAttr "LegFoot__instance_1_mirror:IK_knee_joint_preferredAngle_representationShape.msg" "hyperLayout28.hyp[2].dn"
-		;
-connectAttr "LegFoot__instance_1_mirror:IK_knee_joint_preferredAngle_representation_SG.msg" "hyperLayout28.hyp[3].dn"
-		;
-connectAttr "LegFoot__instance_1_mirror:IK_knee_joint_preferredAngle_representation_rotateX.msg" "hyperLayout28.hyp[4].dn"
-		;
-connectAttr "LegFoot__instance_1_mirror:IK_knee_joint_preferredAngle_parentConstraintGrp.msg" "hyperLayout28.hyp[5].dn"
-		;
-connectAttr "IK_knee_joint_preferredAngle_parentConstraintGrp_parentConstraint2.msg" "hyperLayout28.hyp[6].dn"
-		;
-connectAttr "IK_knee_joint_preferredAngle_parentConstraintGrp_scaleConstraint2.msg" "hyperLayout28.hyp[7].dn"
-		;
-connectAttr "LegFoot__instance_1_mirror:knee_joint_m_translation_control_SG.msg" "materialInfo17.sg"
-		;
-connectAttr "LegFoot__instance_1_mirror:knee_joint_m_translation_control.msg" "materialInfo17.m"
-		;
-connectAttr "LegFoot__instance_1_mirror:knee_joint_m_translation_control.oc" "LegFoot__instance_1_mirror:knee_joint_m_translation_control_SG.ss"
-		;
-connectAttr "LegFoot__instance_1_mirror:knee_joint_translation_controlShape.iog" "LegFoot__instance_1_mirror:knee_joint_m_translation_control_SG.dsm"
-		 -na;
-connectAttr "LegFoot__instance_1_mirror:IK_knee_joint_preferredAngle_representation_SG.msg" "materialInfo26.sg"
-		;
-connectAttr "LegFoot__instance_1_mirror:IK_knee_joint_m_preferredAngle_representation.msg" "materialInfo26.m"
-		;
-connectAttr "LegFoot__instance_1_mirror:ankle_joint_m_yAxisBlock.oc" "LegFoot__instance_1_mirror:ankle_joint_m_yAxisBlockSG.ss"
-		;
-connectAttr "LegFoot__instance_1_mirror:ankle_joint_orientation_controlShape.iog.og[0]" "LegFoot__instance_1_mirror:ankle_joint_m_yAxisBlockSG.dsm"
-		 -na;
-connectAttr "groupId25.msg" "LegFoot__instance_1_mirror:ankle_joint_m_yAxisBlockSG.gn"
-		 -na;
 connectAttr "LegFoot__instance_1_mirror:ankle_joint_m_zAxisBlock.oc" "LegFoot__instance_1_mirror:ankle_joint_m_zAxisBlockSG.ss"
 		;
 connectAttr "LegFoot__instance_1_mirror:ankle_joint_orientation_controlShape.iog.og[1]" "LegFoot__instance_1_mirror:ankle_joint_m_zAxisBlockSG.dsm"
 		 -na;
 connectAttr "groupId26.msg" "LegFoot__instance_1_mirror:ankle_joint_m_zAxisBlockSG.gn"
+		 -na;
+connectAttr "LegFoot__instance_1_mirror:ankle_joint_m_yAxisBlock.oc" "LegFoot__instance_1_mirror:ankle_joint_m_yAxisBlockSG.ss"
+		;
+connectAttr "LegFoot__instance_1_mirror:ankle_joint_orientation_controlShape.iog.og[0]" "LegFoot__instance_1_mirror:ankle_joint_m_yAxisBlockSG.dsm"
+		 -na;
+connectAttr "groupId25.msg" "LegFoot__instance_1_mirror:ankle_joint_m_yAxisBlockSG.gn"
 		 -na;
 connectAttr "LegFoot__instance_1_mirror:ankle_joint_m_yAxisBlock.msg" "hyperLayout29.hyp[0].dn"
 		;
@@ -14254,20 +14392,14 @@ connectAttr "ankle_joint_orientation_control_parentConstraint_grp_parentConstrai
 		;
 connectAttr "ankle_joint_orientation_control_parentConstraint_grp_scaleConstraint2.msg" "hyperLayout29.hyp[9].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:ankle_joint_m_yAxisBlockSG.msg" "materialInfo28.sg"
-		;
-connectAttr "LegFoot__instance_1_mirror:ankle_joint_m_yAxisBlock.msg" "materialInfo28.m"
-		;
 connectAttr "LegFoot__instance_1_mirror:ankle_joint_m_zAxisBlockSG.msg" "materialInfo27.sg"
 		;
 connectAttr "LegFoot__instance_1_mirror:ankle_joint_m_zAxisBlock.msg" "materialInfo27.m"
 		;
-connectAttr "LegFoot__instance_1_mirror:ball_joint_m_zAxisBlock.oc" "LegFoot__instance_1_mirror:ball_joint_m_zAxisBlockSG.ss"
+connectAttr "LegFoot__instance_1_mirror:ankle_joint_m_yAxisBlockSG.msg" "materialInfo28.sg"
 		;
-connectAttr "LegFoot__instance_1_mirror:ball_joint_orientation_controlShape.iog.og[1]" "LegFoot__instance_1_mirror:ball_joint_m_zAxisBlockSG.dsm"
-		 -na;
-connectAttr "groupId29.msg" "LegFoot__instance_1_mirror:ball_joint_m_zAxisBlockSG.gn"
-		 -na;
+connectAttr "LegFoot__instance_1_mirror:ankle_joint_m_yAxisBlock.msg" "materialInfo28.m"
+		;
 connectAttr "LegFoot__instance_1_mirror:ball_joint_m_yAxisBlock.msg" "hyperLayout30.hyp[0].dn"
 		;
 connectAttr "LegFoot__instance_1_mirror:ball_joint_m_zAxisBlock.msg" "hyperLayout30.hyp[1].dn"
@@ -14286,6 +14418,12 @@ connectAttr "ball_joint_orientation_control_parentConstraint_grp_parentConstrain
 		;
 connectAttr "ball_joint_orientation_control_parentConstraint_grp_scaleConstraint2.msg" "hyperLayout30.hyp[9].dn"
 		;
+connectAttr "LegFoot__instance_1_mirror:ball_joint_m_zAxisBlock.oc" "LegFoot__instance_1_mirror:ball_joint_m_zAxisBlockSG.ss"
+		;
+connectAttr "LegFoot__instance_1_mirror:ball_joint_orientation_controlShape.iog.og[1]" "LegFoot__instance_1_mirror:ball_joint_m_zAxisBlockSG.dsm"
+		 -na;
+connectAttr "groupId29.msg" "LegFoot__instance_1_mirror:ball_joint_m_zAxisBlockSG.gn"
+		 -na;
 connectAttr "LegFoot__instance_1_mirror:ball_joint_m_yAxisBlock.oc" "LegFoot__instance_1_mirror:ball_joint_m_yAxisBlockSG.ss"
 		;
 connectAttr "LegFoot__instance_1_mirror:ball_joint_orientation_controlShape.iog.og[0]" "LegFoot__instance_1_mirror:ball_joint_m_yAxisBlockSG.dsm"
@@ -14300,59 +14438,17 @@ connectAttr "LegFoot__instance_1_mirror:ball_joint_m_yAxisBlockSG.msg" "material
 		;
 connectAttr "LegFoot__instance_1_mirror:ball_joint_m_yAxisBlock.msg" "materialInfo30.m"
 		;
-connectAttr "LegFoot__instance_1_mirror:hip_joint_translation_controlShape.msg" "hyperLayout17.hyp[0].dn"
-		;
-connectAttr "LegFoot__instance_1_mirror:hip_joint_translation_control.msg" "hyperLayout17.hyp[1].dn"
-		;
-connectAttr "LegFoot__instance_1_mirror:hip_joint_m_translation_control_SG.msg" "hyperLayout17.hyp[2].dn"
-		;
-connectAttr "LegFoot__instance_1_mirror:hip_joint_m_translation_control.msg" "hyperLayout17.hyp[3].dn"
-		;
-connectAttr "LegFoot__instance_1_mirror:hip_joint_m_translation_control.oc" "LegFoot__instance_1_mirror:hip_joint_m_translation_control_SG.ss"
-		;
-connectAttr "LegFoot__instance_1_mirror:hip_joint_translation_controlShape.iog" "LegFoot__instance_1_mirror:hip_joint_m_translation_control_SG.dsm"
-		 -na;
-connectAttr "LegFoot__instance_1_mirror:hip_joint_m_translation_control_SG.msg" "materialInfo16.sg"
-		;
-connectAttr "LegFoot__instance_1_mirror:hip_joint_m_translation_control.msg" "materialInfo16.m"
-		;
-connectAttr "LegFoot__instance_1_mirror:ball_joint_m_translation_control.oc" "LegFoot__instance_1_mirror:ball_joint_m_translation_control_SG.ss"
-		;
-connectAttr "LegFoot__instance_1_mirror:ball_joint_translation_controlShape.iog" "LegFoot__instance_1_mirror:ball_joint_m_translation_control_SG.dsm"
-		 -na;
-connectAttr "LegFoot__instance_1_mirror:ball_joint_translation_controlShape.msg" "hyperLayout20.hyp[0].dn"
-		;
-connectAttr "LegFoot__instance_1_mirror:ball_joint_translation_control.msg" "hyperLayout20.hyp[1].dn"
-		;
-connectAttr "LegFoot__instance_1_mirror:ball_joint_m_translation_control_SG.msg" "hyperLayout20.hyp[2].dn"
-		;
-connectAttr "LegFoot__instance_1_mirror:ball_joint_m_translation_control.msg" "hyperLayout20.hyp[3].dn"
-		;
-connectAttr "LegFoot__instance_1_mirror:ball_joint_m_translation_control_SG.msg" "materialInfo19.sg"
-		;
-connectAttr "LegFoot__instance_1_mirror:ball_joint_m_translation_control.msg" "materialInfo19.m"
-		;
-connectAttr "LegFoot__instance_1_mirror:toe_joint_m_translation_control.oc" "LegFoot__instance_1_mirror:toe_joint_m_translation_control_SG.ss"
-		;
-connectAttr "LegFoot__instance_1_mirror:toe_joint_translation_controlShape.iog" "LegFoot__instance_1_mirror:toe_joint_m_translation_control_SG.dsm"
-		 -na;
-connectAttr "LegFoot__instance_1_mirror:toe_joint_translation_controlShape.msg" "hyperLayout21.hyp[0].dn"
-		;
-connectAttr "LegFoot__instance_1_mirror:toe_joint_translation_control.msg" "hyperLayout21.hyp[1].dn"
-		;
-connectAttr "LegFoot__instance_1_mirror:toe_joint_m_translation_control_SG.msg" "hyperLayout21.hyp[2].dn"
-		;
-connectAttr "LegFoot__instance_1_mirror:toe_joint_m_translation_control.msg" "hyperLayout21.hyp[3].dn"
-		;
-connectAttr "LegFoot__instance_1_mirror:toe_joint_m_translation_control_SG.msg" "materialInfo20.sg"
-		;
-connectAttr "LegFoot__instance_1_mirror:toe_joint_m_translation_control.msg" "materialInfo20.m"
-		;
 connectAttr "hyperLayout23.msg" "LegFoot__instance_1_mirror:hook_root_joint_hook_representation_container.hl"
 		;
-connectAttr "LegFoot__instance_1_mirror:hook_root_joint_ikHandle_scaleFactor.ox" "LegFoot__instance_1_mirror:hook_target_joint_scaleMultiply.i2x"
+connectAttr "LegFoot__instance_1_mirror:hook_root_joint_ikHandle_lockBlend.opr" "LegFoot__instance_1_mirror:hook_target_joint_scaleMultiply.i2x"
 		;
 connectAttr "LegFoot__instance_1_mirror:distBetween_hook_root_joint_rootPosLocator_hook_target_joint_endPosLocator.d" "LegFoot__instance_1_mirror:hook_root_joint_ikHandle_scaleFactor.i1x"
+		;
+connectAttr "LegFoot__instance_1_mirror:hook_root_joint_rootPosLocatorShape.wp" "LegFoot__instance_1_mirror:distBetween_hook_root_joint_rootPosLocator_hook_target_joint_endPosLocator.p1"
+		;
+connectAttr "LegFoot__instance_1_mirror:hook_target_joint_endPosLocatorShape.wp" "LegFoot__instance_1_mirror:distBetween_hook_root_joint_rootPosLocator_hook_target_joint_endPosLocator.p2"
+		;
+connectAttr "LegFoot__instance_1_mirror:hook_root_joint_ikHandle_scaleFactor.ox" "LegFoot__instance_1_mirror:hook_root_joint_ikHandle_lockBlend.c1r"
 		;
 connectAttr "LegFoot__instance_1_mirror:hook_grp.msg" "hyperLayout22.hyp[0].dn";
 connectAttr "LegFoot__instance_1_mirror:hook_root_joint.msg" "hyperLayout22.hyp[1].dn"
@@ -14384,28 +14480,22 @@ connectAttr "LegFoot__instance_1_mirror:distBetween_hook_root_joint_rootPosLocat
 		;
 connectAttr "LegFoot__instance_1_mirror:hook_root_joint_ikHandle_scaleFactor.msg" "hyperLayout22.hyp[15].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:hook_target_joint_scaleMultiply.msg" "hyperLayout22.hyp[16].dn"
+connectAttr "LegFoot__instance_1_mirror:hook_root_joint_ikHandle_lockBlend.msg" "hyperLayout22.hyp[16].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:hook_root_joint_ikHandle_poleVectorLocatorShape.msg" "hyperLayout22.hyp[17].dn"
+connectAttr "LegFoot__instance_1_mirror:hook_target_joint_scaleMultiply.msg" "hyperLayout22.hyp[17].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:hook_root_joint_rootPosLocatorShape.msg" "hyperLayout22.hyp[18].dn"
+connectAttr "LegFoot__instance_1_mirror:hook_root_joint_ikHandle_poleVectorLocatorShape.msg" "hyperLayout22.hyp[18].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:hook_target_joint_endPosLocatorShape.msg" "hyperLayout22.hyp[19].dn"
+connectAttr "LegFoot__instance_1_mirror:hook_root_joint_rootPosLocatorShape.msg" "hyperLayout22.hyp[19].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:hook_root_joint_pointConstraint.msg" "hyperLayout22.hyp[20].dn"
+connectAttr "LegFoot__instance_1_mirror:hook_target_joint_endPosLocatorShape.msg" "hyperLayout22.hyp[20].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:hook_pointConstraint.msg" "hyperLayout22.hyp[21].dn"
+connectAttr "LegFoot__instance_1_mirror:hook_root_joint_pointConstraint.msg" "hyperLayout22.hyp[21].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:hook_root_joint_hook_representation_container.msg" "hyperLayout22.hyp[22].dn"
+connectAttr "LegFoot__instance_1_mirror:hook_pointConstraint.msg" "hyperLayout22.hyp[22].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:hook_root_joint_rootPosLocatorShape.wp" "LegFoot__instance_1_mirror:distBetween_hook_root_joint_rootPosLocator_hook_target_joint_endPosLocator.p1"
+connectAttr "LegFoot__instance_1_mirror:hook_root_joint_hook_representation_container.msg" "hyperLayout22.hyp[23].dn"
 		;
-connectAttr "LegFoot__instance_1_mirror:hook_target_joint_endPosLocatorShape.wp" "LegFoot__instance_1_mirror:distBetween_hook_root_joint_rootPosLocator_hook_target_joint_endPosLocator.p2"
-		;
-connectAttr "LegFoot__instance_1_mirror:hook_root_joint_m_hookRepresentation.oc" "LegFoot__instance_1_mirror:hook_root_joint_m_hookRepresentation_SG.ss"
-		;
-connectAttr "LegFoot__instance_1_mirror:hook_root_joint_hook_representationShape.iog" "LegFoot__instance_1_mirror:hook_root_joint_m_hookRepresentation_SG.dsm"
-		 -na;
 connectAttr "LegFoot__instance_1_mirror:hook_root_joint_m_hookRepresentation.msg" "hyperLayout23.hyp[1].dn"
 		;
 connectAttr "LegFoot__instance_1_mirror:hook_root_joint_m_hookRepresentation_SG.msg" "hyperLayout23.hyp[3].dn"
@@ -14420,33 +14510,13 @@ connectAttr "hook_root_joint_hook_representation_parentConstraint_grp_parentCons
 		;
 connectAttr "hook_root_joint_hook_representation_parentConstraint_grp_scaleConstraint2.msg" "hyperLayout23.hyp[8].dn"
 		;
+connectAttr "LegFoot__instance_1_mirror:hook_root_joint_m_hookRepresentation.oc" "LegFoot__instance_1_mirror:hook_root_joint_m_hookRepresentation_SG.ss"
+		;
+connectAttr "LegFoot__instance_1_mirror:hook_root_joint_hook_representationShape.iog" "LegFoot__instance_1_mirror:hook_root_joint_m_hookRepresentation_SG.dsm"
+		 -na;
 connectAttr "LegFoot__instance_1_mirror:hook_root_joint_m_hookRepresentation_SG.msg" "materialInfo21.sg"
 		;
 connectAttr "LegFoot__instance_1_mirror:hook_root_joint_m_hookRepresentation.msg" "materialInfo21.m"
-		;
-connectAttr "LegFoot__instance_1_mirror:knee_joint_translation_controlShape.msg" "hyperLayout18.hyp[0].dn"
-		;
-connectAttr "LegFoot__instance_1_mirror:knee_joint_translation_control.msg" "hyperLayout18.hyp[1].dn"
-		;
-connectAttr "LegFoot__instance_1_mirror:knee_joint_m_translation_control_SG.msg" "hyperLayout18.hyp[2].dn"
-		;
-connectAttr "LegFoot__instance_1_mirror:knee_joint_m_translation_control.msg" "hyperLayout18.hyp[3].dn"
-		;
-connectAttr "LegFoot__instance_1_mirror:ankle_joint_translation_controlShape.msg" "hyperLayout19.hyp[0].dn"
-		;
-connectAttr "LegFoot__instance_1_mirror:ankle_joint_translation_control.msg" "hyperLayout19.hyp[1].dn"
-		;
-connectAttr "LegFoot__instance_1_mirror:ankle_joint_m_translation_control_SG.msg" "hyperLayout19.hyp[2].dn"
-		;
-connectAttr "LegFoot__instance_1_mirror:ankle_joint_m_translation_control.msg" "hyperLayout19.hyp[3].dn"
-		;
-connectAttr "LegFoot__instance_1_mirror:ankle_joint_m_translation_control.oc" "LegFoot__instance_1_mirror:ankle_joint_m_translation_control_SG.ss"
-		;
-connectAttr "LegFoot__instance_1_mirror:ankle_joint_translation_controlShape.iog" "LegFoot__instance_1_mirror:ankle_joint_m_translation_control_SG.dsm"
-		 -na;
-connectAttr "LegFoot__instance_1_mirror:ankle_joint_m_translation_control_SG.msg" "materialInfo18.sg"
-		;
-connectAttr "LegFoot__instance_1_mirror:ankle_joint_m_translation_control.msg" "materialInfo18.m"
 		;
 relationship "link" ":lightLinker1" ":initialShadingGroup.message" ":defaultLightSet.message";
 relationship "link" ":lightLinker1" ":initialParticleSE.message" ":defaultLightSet.message";
@@ -14612,11 +14682,15 @@ connectAttr "LegFoot__instance_1:distBetween_hook_root_joint_rootPosLocator_hook
 		 -na;
 connectAttr "LegFoot__instance_1:hook_root_joint_ikHandle_scaleFactor.msg" ":defaultRenderUtilityList1.u"
 		 -na;
+connectAttr "LegFoot__instance_1:hook_root_joint_ikHandle_lockBlend.msg" ":defaultRenderUtilityList1.u"
+		 -na;
 connectAttr "LegFoot__instance_1:hook_target_joint_scaleMultiply.msg" ":defaultRenderUtilityList1.u"
 		 -na;
 connectAttr "LegFoot__instance_1:distBetween_hip_joint_rootPosLocator_knee_joint_endPosLocator.msg" ":defaultRenderUtilityList1.u"
 		 -na;
 connectAttr "LegFoot__instance_1:hip_joint_ikHandle_scaleFactor.msg" ":defaultRenderUtilityList1.u"
+		 -na;
+connectAttr "LegFoot__instance_1:hip_joint_ikHandle_lockBlend.msg" ":defaultRenderUtilityList1.u"
 		 -na;
 connectAttr "LegFoot__instance_1:knee_joint_scaleMultiply.msg" ":defaultRenderUtilityList1.u"
 		 -na;
@@ -14624,17 +14698,23 @@ connectAttr "LegFoot__instance_1:distBetween_knee_joint_rootPosLocator_ankle_joi
 		 -na;
 connectAttr "LegFoot__instance_1:knee_joint_ikHandle_scaleFactor.msg" ":defaultRenderUtilityList1.u"
 		 -na;
+connectAttr "LegFoot__instance_1:knee_joint_ikHandle_lockBlend.msg" ":defaultRenderUtilityList1.u"
+		 -na;
 connectAttr "LegFoot__instance_1:ankle_joint_scaleMultiply.msg" ":defaultRenderUtilityList1.u"
 		 -na;
 connectAttr "LegFoot__instance_1:distBetween_ankle_joint_rootPosLocator_ball_joint_endPosLocator.msg" ":defaultRenderUtilityList1.u"
 		 -na;
 connectAttr "LegFoot__instance_1:ankle_joint_ikHandle_scaleFactor.msg" ":defaultRenderUtilityList1.u"
 		 -na;
+connectAttr "LegFoot__instance_1:ankle_joint_ikHandle_lockBlend.msg" ":defaultRenderUtilityList1.u"
+		 -na;
 connectAttr "LegFoot__instance_1:ball_joint_scaleMultiply.msg" ":defaultRenderUtilityList1.u"
 		 -na;
 connectAttr "LegFoot__instance_1:distBetween_ball_joint_rootPosLocator_toe_joint_endPosLocator.msg" ":defaultRenderUtilityList1.u"
 		 -na;
 connectAttr "LegFoot__instance_1:ball_joint_ikHandle_scaleFactor.msg" ":defaultRenderUtilityList1.u"
+		 -na;
+connectAttr "LegFoot__instance_1:ball_joint_ikHandle_lockBlend.msg" ":defaultRenderUtilityList1.u"
 		 -na;
 connectAttr "LegFoot__instance_1:toe_joint_scaleMultiply.msg" ":defaultRenderUtilityList1.u"
 		 -na;
@@ -14654,11 +14734,15 @@ connectAttr "LegFoot__instance_1_mirror:distBetween_hook_root_joint_rootPosLocat
 		 -na;
 connectAttr "LegFoot__instance_1_mirror:hook_root_joint_ikHandle_scaleFactor.msg" ":defaultRenderUtilityList1.u"
 		 -na;
+connectAttr "LegFoot__instance_1_mirror:hook_root_joint_ikHandle_lockBlend.msg" ":defaultRenderUtilityList1.u"
+		 -na;
 connectAttr "LegFoot__instance_1_mirror:hook_target_joint_scaleMultiply.msg" ":defaultRenderUtilityList1.u"
 		 -na;
 connectAttr "LegFoot__instance_1_mirror:distBetween_hip_joint_rootPosLocator_knee_joint_endPosLocator.msg" ":defaultRenderUtilityList1.u"
 		 -na;
 connectAttr "LegFoot__instance_1_mirror:hip_joint_ikHandle_scaleFactor.msg" ":defaultRenderUtilityList1.u"
+		 -na;
+connectAttr "LegFoot__instance_1_mirror:hip_joint_ikHandle_lockBlend.msg" ":defaultRenderUtilityList1.u"
 		 -na;
 connectAttr "LegFoot__instance_1_mirror:knee_joint_scaleMultiply.msg" ":defaultRenderUtilityList1.u"
 		 -na;
@@ -14666,17 +14750,23 @@ connectAttr "LegFoot__instance_1_mirror:distBetween_knee_joint_rootPosLocator_an
 		 -na;
 connectAttr "LegFoot__instance_1_mirror:knee_joint_ikHandle_scaleFactor.msg" ":defaultRenderUtilityList1.u"
 		 -na;
+connectAttr "LegFoot__instance_1_mirror:knee_joint_ikHandle_lockBlend.msg" ":defaultRenderUtilityList1.u"
+		 -na;
 connectAttr "LegFoot__instance_1_mirror:ankle_joint_scaleMultiply.msg" ":defaultRenderUtilityList1.u"
 		 -na;
 connectAttr "LegFoot__instance_1_mirror:distBetween_ankle_joint_rootPosLocator_ball_joint_endPosLocator.msg" ":defaultRenderUtilityList1.u"
 		 -na;
 connectAttr "LegFoot__instance_1_mirror:ankle_joint_ikHandle_scaleFactor.msg" ":defaultRenderUtilityList1.u"
 		 -na;
+connectAttr "LegFoot__instance_1_mirror:ankle_joint_ikHandle_lockBlend.msg" ":defaultRenderUtilityList1.u"
+		 -na;
 connectAttr "LegFoot__instance_1_mirror:ball_joint_scaleMultiply.msg" ":defaultRenderUtilityList1.u"
 		 -na;
 connectAttr "LegFoot__instance_1_mirror:distBetween_ball_joint_rootPosLocator_toe_joint_endPosLocator.msg" ":defaultRenderUtilityList1.u"
 		 -na;
 connectAttr "LegFoot__instance_1_mirror:ball_joint_ikHandle_scaleFactor.msg" ":defaultRenderUtilityList1.u"
+		 -na;
+connectAttr "LegFoot__instance_1_mirror:ball_joint_ikHandle_lockBlend.msg" ":defaultRenderUtilityList1.u"
 		 -na;
 connectAttr "LegFoot__instance_1_mirror:toe_joint_scaleMultiply.msg" ":defaultRenderUtilityList1.u"
 		 -na;
@@ -14696,10 +14786,10 @@ connectAttr "LegFoot__instance_1:module_transformShape.iog" ":initialShadingGrou
 		 -na;
 connectAttr "LegFoot__instance_1_mirror:module_transformShape.iog" ":initialShadingGroup.dsm"
 		 -na;
-connectAttr "Group__legsShape.iog" ":initialShadingGroup.dsm" -na;
+connectAttr "Group__LegsShape.iog" ":initialShadingGroup.dsm" -na;
 connectAttr "groupId18.msg" ":initialShadingGroup.gn" -na;
 connectAttr "groupId21.msg" ":initialShadingGroup.gn" -na;
 connectAttr "groupId24.msg" ":initialShadingGroup.gn" -na;
 connectAttr "groupId27.msg" ":initialShadingGroup.gn" -na;
 connectAttr "ikRPsolver.msg" ":ikSystem.sol" -na;
-// End of 01_Legs.ma
+// End of 01_Leg_Foot.ma
