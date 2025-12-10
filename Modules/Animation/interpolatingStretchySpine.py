@@ -164,20 +164,9 @@ class InterpolatingStretchySpline(controlModule.ControlModule):
 
         # Build clusters using explicit components on the visible curve shape (no reliance on selection).
         shapes = cmds.listRelatives(splineIKCurve, shapes=True, fullPath=True) or []
-        curve_shape = None
-        for s in shapes:
-            if not cmds.getAttr(s + ".intermediateObject"):
-                curve_shape = s
-                break
-        if curve_shape is None and shapes:
-            curve_shape = shapes[0]
-        if curve_shape is None:
-            raise RuntimeError(f"No shape found under spline IK curve '{splineIKCurve}'")
-
+        curve_shape = next((s for s in shapes if not cmds.getAttr(s + ".intermediateObject")), shapes[0] if shapes else None)
         cv_list = cmds.ls(curve_shape + ".cv[*]", flatten=True) or []
-        if not cv_list:
-            raise RuntimeError(f"No CVs found on curve shape '{curve_shape}'")
-
+        
         cv_count = len(cv_list)
         root_components = cv_list[:2] if cv_count >= 2 else cv_list
         end_components = cv_list[-2:] if cv_count >= 2 else cv_list
