@@ -171,21 +171,6 @@ class InterpolatingStretchySpline(controlModule.ControlModule):
         root_components = cv_list[:2] if cv_count >= 2 else cv_list
         end_components = cv_list[-2:] if cv_count >= 2 else cv_list
 
-        # Keep root at the end closest to the root control (handles reversed curves).
-        def _centroid(components):
-            pts = [cmds.pointPosition(c, world=True) for c in components]
-            return [sum(p[i] for p in pts) / len(pts) for i in range(3)]
-
-        def _dist(a, b):
-            return ((a[0]-b[0])**2 + (a[1]-b[1])**2 + (a[2]-b[2])**2) ** 0.5
-
-        root_pos = _centroid(root_components)
-        end_pos = _centroid(end_components)
-        root_ctrl_pos = cmds.xform(rootControlObject, q=True, ws=True, t=True)
-
-        if _dist(root_pos, root_ctrl_pos) > _dist(end_pos, root_ctrl_pos):
-            root_components, end_components = end_components, root_components
-
         root_cluster_nodes = cmds.cluster(root_components, rel=True)
         rootCluster = cmds.rename(root_cluster_nodes[0], splineIKCurve + "_rootCluster")
         rootClusterHandle = cmds.rename(root_cluster_nodes[1], splineIKCurve + "_rootClusterHandle")
