@@ -87,7 +87,8 @@ class InterpolatingStretchySpline(controlModule.ControlModule):
         endControlObjectInfo = self.createRootEndControl("endControl", creationPoseJoints[len(creationPoseJoints)-2], creationPoseJoints[len(creationPoseJoints)-1], True, containedNodes, moduleGrp)
         endControlObject = endControlObjectInfo[0]
 
-        stretchyIKJoints = cmds.duplicate(joints, renameChildren=True)
+        stretchyIKJoints = list(joints)
+        # stretchyIKJoints = cmds.duplicate(joints, renameChildren=True)
         index = 0
         for joint in stretchyIKJoints:
             stretchyIKJoints[index] = cmds.rename(joint, joints[index] + "_stretchyIKJoint")
@@ -97,286 +98,277 @@ class InterpolatingStretchySpline(controlModule.ControlModule):
 
         rootJoint = stretchyIKJoints[1]
         endJoint = stretchyIKJoints[len(stretchyIKJoints)-1]
-        secondJoint = stretchyIKJoints[2]
-        secondToLastJoint = stretchyIKJoints[len(stretchyIKJoints) - 2]
 
-        rootPos = cmds.xform(rootJoint, q=True, worldSpace=True, translation=True)
-        endPos = cmds.xform(endJoint, q=True, worldSpace=True, translation=True)
+        # secondJoint = stretchyIKJoints[2]
+        # secondToLastJoint = stretchyIKJoints[len(stretchyIKJoints) - 2]
 
-        rootLocator = cmds.spaceLocator(n=stretchyIKJoints[0] + "_systemStretch_rootLocator")[0]
-        cmds.xform(rootLocator, worldSpace=True, absolute=True, translation=rootPos)
-        containedNodes.append(rootLocator)
+        # rootPos = cmds.xform(rootJoint, q=True, worldSpace=True, translation=True)
+        # endPos = cmds.xform(endJoint, q=True, worldSpace=True, translation=True)
 
-        endLocator = cmds.spaceLocator(n=stretchyIKJoints[0] + "_systemStretch_endLocator")[0]
-        cmds.xform(endLocator, worldSpace=True, absolute=True, translation=endPos)
-        containedNodes.append(endLocator)
+        # rootLocator = cmds.spaceLocator(n=stretchyIKJoints[0] + "_systemStretch_rootLocator")[0]
+        # cmds.xform(rootLocator, worldSpace=True, absolute=True, translation=rootPos)
+        # containedNodes.append(rootLocator)
 
-        for loc in [rootLocator, endLocator]:
-            cmds.setAttr(loc + ".visibility", 0)
+        # endLocator = cmds.spaceLocator(n=stretchyIKJoints[0] + "_systemStretch_endLocator")[0]
+        # cmds.xform(endLocator, worldSpace=True, absolute=True, translation=endPos)
+        # containedNodes.append(endLocator)
 
-        cmds.parent(rootLocator, rootControlObject, absolute=True)
-        cmds.parent(endLocator, endControlObject, absolute=True)
+        # for loc in [rootLocator, endLocator]:
+        #     cmds.setAttr(loc + ".visibility", 0)
 
-        index = 0
-        for joint in stretchyIKJoints:
-            if index > 2 and index < len(stretchyIKJoints)-1:
-                cmds.select(stretchyIKJoints[index], replace=True)
-                cmds.addAttr(at="float", longName="originalLength")
-                originalLength = cmds.getAttr(stretchyIKJoints[index] + ".translateX")
-                cmds.setAttr(stretchyIKJoints[index] + ".originalLength", originalLength)
+        # cmds.parent(rootLocator, rootControlObject, absolute=True)
+        # cmds.parent(endLocator, endControlObject, absolute=True)
 
-            index += 1
+        # index = 0
+        # for joint in stretchyIKJoints:
+        #     if index > 2 and index < len(stretchyIKJoints)-1:
+        #         cmds.select(stretchyIKJoints[index], replace=True)
+        #         cmds.addAttr(at="float", longName="originalLength")
+        #         originalLength = cmds.getAttr(stretchyIKJoints[index] + ".translateX")
+        #         cmds.setAttr(stretchyIKJoints[index] + ".originalLength", originalLength)
 
-        scaleFactorAttr = self.createDistanceCalculations(rootLocator, endLocator, containedNodes)
+        #     index += 1
 
-        rootScaler = self.createScaler(rootLocator, scaleFactorAttr, containedNodes)
-        endScaler = self.createScaler(endLocator, scaleFactorAttr, containedNodes)
+        # scaleFactorAttr = self.createDistanceCalculations(rootLocator, endLocator, containedNodes)
 
-        rootIKLocators = self.setupBasicStretchyIK(rootJoint, secondJoint, creationPoseJoints[1], rootControlObject, moduleContainer, moduleGrp)
-        rootIK_rootLocator = rootIKLocators[0]
-        rootIK_endLocator = rootIKLocators[1]
+        # rootScaler = self.createScaler(rootLocator, scaleFactorAttr, containedNodes)
+        # endScaler = self.createScaler(endLocator, scaleFactorAttr, containedNodes)
 
-        cmds.parent(rootIK_endLocator, rootScaler, absolute=True)
+        # rootIKLocators = self.setupBasicStretchyIK(rootJoint, secondJoint, creationPoseJoints[1], rootControlObject, moduleContainer, moduleGrp)
+        # rootIK_rootLocator = rootIKLocators[0]
+        # rootIK_endLocator = rootIKLocators[1]
 
-        endIKLocators = self.setupBasicStretchyIK(secondToLastJoint, endJoint, creationPoseJoints[len(creationPoseJoints)-2], endControlObject, moduleContainer, moduleGrp)
-        endIK_rootLocator = endIKLocators[0]
-        endIK_endLocator = endIKLocators[1]
+        # cmds.parent(rootIK_endLocator, rootScaler, absolute=True)
 
-        cmds.parent(endIK_endLocator, endControlObject, absolute=True)
+        # endIKLocators = self.setupBasicStretchyIK(secondToLastJoint, endJoint, creationPoseJoints[len(creationPoseJoints)-2], endControlObject, moduleContainer, moduleGrp)
+        # endIK_rootLocator = endIKLocators[0]
+        # endIK_endLocator = endIKLocators[1]
 
-        ikNodes = cmds.ikHandle(sj=secondJoint, ee=secondToLastJoint, n=secondJoint + "_splineIKHandle", sol="ikSplineSolver", rootOnCurve=False, createCurve=True)
+        # cmds.parent(endIK_endLocator, endControlObject, absolute=True)
 
-        ikNodes[1] = cmds.rename(ikNodes[1], secondJoint + "_splineIKEffector")
-        ikNodes[2] = cmds.rename(ikNodes[2], secondJoint + "_splineIKCurve")
+        ikNodes = cmds.ikHandle(sj=rootJoint, ee=endJoint, n=rootJoint + "_splineIKHandle", sol="ikSplineSolver", rootOnCurve=False, createCurve=True)
+
+        ikNodes[1] = cmds.rename(ikNodes[1], rootJoint + "_splineIKEffector")
+        ikNodes[2] = cmds.rename(ikNodes[2], rootJoint + "_splineIKCurve")
 
         splineIKhandle = ikNodes[0]
         splineIKCurve = ikNodes[2]
-
+        
         containedNodes.extend(ikNodes)
 
         cmds.parent(splineIKhandle, moduleGrp, absolute=True)
         cmds.setAttr(splineIKhandle + ".visibility", 0)
-        cmds.setAttr(splineIKCurve + ".visibility", 0)
+        cmds.setAttr(splineIKCurve + ".visibility", 1)
 
         cmds.parent(splineIKCurve, world=True, absolute=True)
         cmds.setAttr(splineIKCurve + ".inheritsTransform", 0)
         cmds.parent(splineIKCurve, moduleGrp, relative=True)
 
-        # Build clusters using explicit components on the visible curve shape (no reliance on selection).
-        shapes = cmds.listRelatives(splineIKCurve, shapes=True, fullPath=True) or []
-        curve_shape = next((s for s in shapes if not cmds.getAttr(s + ".intermediateObject")), shapes[0] if shapes else None)
-        cv_list = cmds.ls(curve_shape + ".cv[*]", flatten=True) or []
+        # Create clusters
+        curve_shape = cmds.listRelatives(splineIKCurve, shapes=True, fullPath=True)[0]
+        cv_root = curve_shape + ".cv[0:1]"
+        cv_end  = curve_shape + ".cv[2:3]"
         
-        cv_count = len(cv_list)
-        root_components = cv_list[:2] if cv_count >= 2 else cv_list
-        end_components = cv_list[-2:] if cv_count >= 2 else cv_list
+        root_cluster_nodes = cmds.cluster(cv_root)
+        end_cluster_nodes  = cmds.cluster(cv_end)
 
-        root_cluster_nodes = cmds.cluster(root_components, rel=True)
-        rootCluster = cmds.rename(root_cluster_nodes[0], splineIKCurve + "_rootCluster")
-        rootClusterHandle = cmds.rename(root_cluster_nodes[1], splineIKCurve + "_rootClusterHandle")
-        cmds.container(moduleContainer, edit=True, addNode=[rootCluster, rootClusterHandle], ihb=True, includeNetwork=True)
-        containedNodes.extend([rootCluster, rootClusterHandle])
-
-        end_cluster_nodes = cmds.cluster(end_components, rel=True)
-        endCluster = cmds.rename(end_cluster_nodes[0], splineIKCurve + "_endCluster")
-        endClusterHandle = cmds.rename(end_cluster_nodes[1], splineIKCurve + "_endClusterHandle")
-        cmds.container(moduleContainer, edit=True, addNode=[endCluster, endClusterHandle], ihb=True, includeNetwork=True)
-        containedNodes.extend([endCluster, endClusterHandle])
+        rootClusterHandle = root_cluster_nodes[1]
+        endClusterHandle  = end_cluster_nodes[1]
 
         for handle in [rootClusterHandle, endClusterHandle]:
             cmds.setAttr(handle + ".visibility", 0)
 
-        cmds.parent(rootClusterHandle, rootScaler, absolute=True)
-        cmds.parent(endClusterHandle, endScaler, absolute=True)
+        cmds.parent(rootClusterHandle, rootControlObject, absolute=True)
+        cmds.parent(endClusterHandle, endControlObject, absolute=True)
 
         containedNodes.append(cmds.parentConstraint(rootControlObject, rootJoint, maintainOffset=True)[0])
 
-        targetLocatorNodes = cmds.duplicate(endIK_rootLocator, name=endIK_rootLocator + "_duplicateTarget")
-        targetLocator = targetLocatorNodes[0]
-        cmds.delete(targetLocatorNodes[1])
-        cmds.parent(targetLocator, endScaler, absolute=True)
+        # targetLocatorNodes = cmds.duplicate(endIK_rootLocator, name=endIK_rootLocator + "_duplicateTarget")
+        # targetLocator = targetLocatorNodes[0]
+        # cmds.delete(targetLocatorNodes[1])
+        # cmds.parent(targetLocator, endScaler, absolute=True)
 
-        splineScaleFactorAttr = self.createDistanceCalculations(rootIK_endLocator, targetLocator, containedNodes)
+        # splineScaleFactorAttr = self.createDistanceCalculations(rootIK_endLocator, targetLocator, containedNodes)
 
-        index = 0
-        for joint in stretchyIKJoints:
-            if index > 2 and index < len(stretchyIKJoints)-1:
-                multNode = cmds.shadingNode("multiplyDivide", asUtility=True, n=joint + "_jointScale")
-                containedNodes.append(multNode)
-                cmds.connectAttr(splineScaleFactorAttr, multNode + ".input1X")
-                cmds.setAttr(multNode + ".input2X", cmds.getAttr(joint + ".originalLength"))
+        # index = 0
+        # for joint in stretchyIKJoints:
+        #     if index > 2 and index < len(stretchyIKJoints)-1:
+        #         multNode = cmds.shadingNode("multiplyDivide", asUtility=True, n=joint + "_jointScale")
+        #         containedNodes.append(multNode)
+        #         cmds.connectAttr(splineScaleFactorAttr, multNode + ".input1X")
+        #         cmds.setAttr(multNode + ".input2X", cmds.getAttr(joint + ".originalLength"))
 
-                cmds.connectAttr(multNode + ".outputX", joint + ".translateX")
-            index += 1
+        #         cmds.connectAttr(multNode + ".outputX", joint + ".translateX")
+        #     index += 1
 
-        cmds.setAttr(splineIKhandle + ".dTwistControlEnable", 1)
-        cmds.setAttr(splineIKhandle + ".dWorldUpType", 4)
-        cmds.setAttr(splineIKhandle + ".dWorldUpAxis", 5)
+        # cmds.setAttr(splineIKhandle + ".dTwistControlEnable", 1)
+        # cmds.setAttr(splineIKhandle + ".dWorldUpType", 4)
+        # cmds.setAttr(splineIKhandle + ".dWorldUpAxis", 5)
 
-        cmds.setAttr(splineIKhandle + ".dWorldUpVector", 0.0, 0.0, 1.0, type="double3")
-        cmds.setAttr(splineIKhandle + ".dWorldUpVectorEnd", 0.0, 0.0, 1.0, type="double3")
+        # cmds.setAttr(splineIKhandle + ".dWorldUpVector", 0.0, 0.0, 1.0, type="double3")
+        # cmds.setAttr(splineIKhandle + ".dWorldUpVectorEnd", 0.0, 0.0, 1.0, type="double3")
 
-        if createRootControl:
-            cmds.connectAttr(rootControlObject + ".worldMatrix[0]", splineIKhandle + ".dWorldUpMatrix")
-        else:
-            dummyNode = cmds.duplicate(rootJoint, parentOnly=True, n=rootJoint + "_dummyDuplicate")[0]
-            containedNodes.append(dummyNode)
-            cmds.parent(dummyNode, moduleGrp, absolute=True)
-            cmds.connectAttr(dummyNode + ".worldMatrix[0]", splineIKhandle + ".dWorldUpMatrix")
+        # if createRootControl:
+        #     cmds.connectAttr(rootControlObject + ".worldMatrix[0]", splineIKhandle + ".dWorldUpMatrix")
+        # else:
+        #     dummyNode = cmds.duplicate(rootJoint, parentOnly=True, n=rootJoint + "_dummyDuplicate")[0]
+        #     containedNodes.append(dummyNode)
+        #     cmds.parent(dummyNode, moduleGrp, absolute=True)
+        #     cmds.connectAttr(dummyNode + ".worldMatrix[0]", splineIKhandle + ".dWorldUpMatrix")
 
-        cmds.connectAttr(endControlObject + ".worldMatrix[0]", splineIKhandle + ".dWorldUpMatrixEnd")
+        # cmds.connectAttr(endControlObject + ".worldMatrix[0]", splineIKhandle + ".dWorldUpMatrixEnd")
 
-        cmds.select(moduleGrp)
-        cmds.addAttr(at="float", defaultValue=0.0, softMinValue=-10.0, softMaxValue=10.0, keyable=True, longName="offsetY")
-        cmds.addAttr(at="float", defaultValue=0.0, softMinValue=-10.0, softMaxValue=10.0, keyable=True, longName="offsetZ")
+        # cmds.select(moduleGrp)
+        # cmds.addAttr(at="float", defaultValue=0.0, softMinValue=-10.0, softMaxValue=10.0, keyable=True, longName="offsetY")
+        # cmds.addAttr(at="float", defaultValue=0.0, softMinValue=-10.0, softMaxValue=10.0, keyable=True, longName="offsetZ")
 
-        self.publishNameToModuleContainer(moduleGrp + ".offsetY", "interpolator_offsetY", publishToOuterContainers=True)
-        self.publishNameToModuleContainer(moduleGrp + ".offsetZ", "interpolator_offsetZ", publishToOuterContainers=True)
+        # self.publishNameToModuleContainer(moduleGrp + ".offsetY", "interpolator_offsetY", publishToOuterContainers=True)
+        # self.publishNameToModuleContainer(moduleGrp + ".offsetZ", "interpolator_offsetZ", publishToOuterContainers=True)
 
-        inverseNode = cmds.shadingNode("multiplyDivide", asUtility=True, n=moduleGrp + "_offsetInverse")
-        containedNodes.append(inverseNode)
+        # inverseNode = cmds.shadingNode("multiplyDivide", asUtility=True, n=moduleGrp + "_offsetInverse")
+        # containedNodes.append(inverseNode)
 
-        cmds.connectAttr(moduleGrp + ".offsetY", inverseNode + ".input1Y")
-        cmds.connectAttr(moduleGrp + ".offsetZ", inverseNode + ".input1Z")
-        cmds.setAttr(inverseNode + ".input2Y", -1)
-        cmds.setAttr(inverseNode + ".input2Z", -1)
+        # cmds.connectAttr(moduleGrp + ".offsetY", inverseNode + ".input1Y")
+        # cmds.connectAttr(moduleGrp + ".offsetZ", inverseNode + ".input1Z")
+        # cmds.setAttr(inverseNode + ".input2Y", -1)
+        # cmds.setAttr(inverseNode + ".input2Z", -1)
 
-        numStretchyIKJoints = len(stretchyIKJoints)-1
+        # numStretchyIKJoints = len(stretchyIKJoints)-1
 
-        interpolators_ikParents = []
-        aimChildren = []
+        # interpolators_ikParents = []
+        # aimChildren = []
 
-        for i in range(1, numStretchyIKJoints):
-            if i > 1:
-                jointFollower = cmds.group(empty=True, n=stretchyIKJoints[i] + "_follower")
-                containedNodes.append(jointFollower)
-                cmds.parent(jointFollower, moduleGrp, relative=True)
-                containedNodes.append(cmds.parentConstraint(stretchyIKJoints[i], jointFollower, maintainOffset=False, n=jointFollower + "_parentConstraint")[0])
+        # for i in range(1, numStretchyIKJoints):
+        #     if i > 1:
+        #         jointFollower = cmds.group(empty=True, n=stretchyIKJoints[i] + "_follower")
+        #         containedNodes.append(jointFollower)
+        #         cmds.parent(jointFollower, moduleGrp, relative=True)
+        #         containedNodes.append(cmds.parentConstraint(stretchyIKJoints[i], jointFollower, maintainOffset=False, n=jointFollower + "_parentConstraint")[0])
 
-                offset = cmds.group(empty=True, n=stretchyIKJoints[i] + "_interpolatorOffset")
-                containedNodes.append(offset)
-                cmds.parent(offset, jointFollower, relative=True)
+        #         offset = cmds.group(empty=True, n=stretchyIKJoints[i] + "_interpolatorOffset")
+        #         containedNodes.append(offset)
+        #         cmds.parent(offset, jointFollower, relative=True)
 
-                cmds.connectAttr(moduleGrp + ".offsetY", offset + ".translateY")
-                cmds.connectAttr(moduleGrp + ".offsetZ", offset + ".translateZ")
+        #         cmds.connectAttr(moduleGrp + ".offsetY", offset + ".translateY")
+        #         cmds.connectAttr(moduleGrp + ".offsetZ", offset + ".translateZ")
 
-                name = utils.stripAllNamespaces(joints[i])[1] + "_offsetControl"
-                controlObjectInstance = controlObject.ControlObject()
-                offsetControlObject = controlObjectInstance.create(name, "cubeLocator.ma", self, lod=2, translation=True, rotation=False, globalScale=False, spaceSwitching=False)[0]
+        #         name = utils.stripAllNamespaces(joints[i])[1] + "_offsetControl"
+        #         controlObjectInstance = controlObject.ControlObject()
+        #         offsetControlObject = controlObjectInstance.create(name, "cubeLocator.ma", self, lod=2, translation=True, rotation=False, globalScale=False, spaceSwitching=False)[0]
 
-                cmds.parent(offsetControlObject, offset, relative=True)
+        #         cmds.parent(offsetControlObject, offset, relative=True)
 
-                offsetCancelation = cmds.group(empty=True, n=stretchyIKJoints[i] + "_interpolatorOffsetCancelation")
-                containedNodes.append(offsetCancelation)
-                cmds.parent(offsetCancelation, offsetControlObject, relative=True)
+        #         offsetCancelation = cmds.group(empty=True, n=stretchyIKJoints[i] + "_interpolatorOffsetCancelation")
+        #         containedNodes.append(offsetCancelation)
+        #         cmds.parent(offsetCancelation, offsetControlObject, relative=True)
 
-                cmds.connectAttr(inverseNode + ".outputY", offsetCancelation + ".translateY")
-                cmds.connectAttr(inverseNode + ".outputZ", offsetCancelation + ".translateZ")
+        #         cmds.connectAttr(inverseNode + ".outputY", offsetCancelation + ".translateY")
+        #         cmds.connectAttr(inverseNode + ".outputZ", offsetCancelation + ".translateZ")
 
-                interpolators_ikParents.append(offsetCancelation)
+        #         interpolators_ikParents.append(offsetCancelation)
 
-            aimChild = cmds.group(empty=True, n=stretchyIKJoints[i] + "_aimChild")
-            containedNodes.append(aimChild)
-            aimChildren.append(aimChild)
+        #     aimChild = cmds.group(empty=True, n=stretchyIKJoints[i] + "_aimChild")
+        #     containedNodes.append(aimChild)
+        #     aimChildren.append(aimChild)
 
-            if i > 1:
-                cmds.parent(aimChild, offsetCancelation, relative=True)
-            else:
-                cmds.parent(aimChild, stretchyIKJoints[i], relative=True)
+        #     if i > 1:
+        #         cmds.parent(aimChild, offsetCancelation, relative=True)
+        #     else:
+        #         cmds.parent(aimChild, stretchyIKJoints[i], relative=True)
 
-            cmds.setAttr(aimChild + ".translateY", -1)
+        #     cmds.setAttr(aimChild + ".translateY", -1)
 
-        for i in range(1, numStretchyIKJoints):
-            ikNodes = utils.basic_stretchy_IK(joints[i], joints[i+1], container=moduleContainer, scaleCorrectionAttribute=self.blueprintNamespace + ":module_grp.hierarchicalScale", lockMinimumLength=False, poleVectorObject=aimChildren[i-1])
-            ikHandle = ikNodes["ikHandle"]
-            rootLocator = ikNodes["rootLocator"]
-            endLocator = ikNodes["endLocator"]
+        # for i in range(1, numStretchyIKJoints):
+        #     ikNodes = utils.basic_stretchy_IK(joints[i], joints[i+1], container=moduleContainer, scaleCorrectionAttribute=self.blueprintNamespace + ":module_grp.hierarchicalScale", lockMinimumLength=False, poleVectorObject=aimChildren[i-1])
+        #     ikHandle = ikNodes["ikHandle"]
+        #     rootLocator = ikNodes["rootLocator"]
+        #     endLocator = ikNodes["endLocator"]
 
-            for loc in (ikHandle, rootLocator):
-                cmds.parent(loc, moduleGrp, absolute=True)
+        #     for loc in (ikHandle, rootLocator):
+        #         cmds.parent(loc, moduleGrp, absolute=True)
 
-            utils.matchTwistAngle(ikHandle + ".twist", [joints[i],], [stretchyIKJoints[i],])
+        #     utils.matchTwistAngle(ikHandle + ".twist", [joints[i],], [stretchyIKJoints[i],])
 
-            if i == 1:
-                if createRootControl:
-                    containedNodes.append(cmds.pointConstraint(rootControlObject, joints[i], maintainOffset=False, n=joints[i] + "_pointConstraint")[0])
+        #     if i == 1:
+        #         if createRootControl:
+        #             containedNodes.append(cmds.pointConstraint(rootControlObject, joints[i], maintainOffset=False, n=joints[i] + "_pointConstraint")[0])
 
-            cmds.setAttr(endLocator + ".translate", 0.0, 0.0, 0.0, type="double3")
-            if i < numStretchyIKJoints - 1:
-                cmds.parent(endLocator, interpolators_ikParents[i-1], relative=True)
-            else:
-                cmds.parent(endLocator, endControlObject, relative=True)
+        #     cmds.setAttr(endLocator + ".translate", 0.0, 0.0, 0.0, type="double3")
+        #     if i < numStretchyIKJoints - 1:
+        #         cmds.parent(endLocator, interpolators_ikParents[i-1], relative=True)
+        #     else:
+        #         cmds.parent(endLocator, endControlObject, relative=True)
 
-        cmds.setAttr(moduleGrp + ".lod", 2)
+        # cmds.setAttr(moduleGrp + ".lod", 2)
 
         utils.addNodeToContainer(moduleContainer, containedNodes, ihb=True)
 
-        for joint in stretchyIKJoints:
-            jointName = utils.stripAllNamespaces(joint)[1]
-            self.publishNameToModuleContainer(joint + ".rotate", jointName + "_R", publishToOuterContainers=False)
-            self.publishNameToModuleContainer(joint + ".translate", jointName + "_T", publishToOuterContainers=False)
+        # for joint in stretchyIKJoints:
+        #     jointName = utils.stripAllNamespaces(joint)[1]
+        #     self.publishNameToModuleContainer(joint + ".rotate", jointName + "_R", publishToOuterContainers=False)
+        #     self.publishNameToModuleContainer(joint + ".translate", jointName + "_T", publishToOuterContainers=False)
 
-    def setupBasicStretchyIK(self, sJoint, eJoint, creationPose_sJoint, controlObject, moduleContainer, moduleGrp):
-        ikNodes = utils.basic_stretchy_IK(sJoint, eJoint, container=moduleContainer, scaleCorrectionAttribute=self.blueprintNamespace + ":module_grp.hierarchicalScale", lockMinimumLength=False)
-        ikHandle = ikNodes["ikHandle"]
-        rootLocator = ikNodes["rootLocator"]
-        endLocator = ikNodes["endLocator"]
-        poleVectorLocator = ikNodes["poleVectorObject"]
+    # def setupBasicStretchyIK(self, sJoint, eJoint, creationPose_sJoint, controlObject, moduleContainer, moduleGrp):
+    #     ikNodes = utils.basic_stretchy_IK(sJoint, eJoint, container=moduleContainer, scaleCorrectionAttribute=self.blueprintNamespace + ":module_grp.hierarchicalScale", lockMinimumLength=False)
+    #     ikHandle = ikNodes["ikHandle"]
+    #     rootLocator = ikNodes["rootLocator"]
+    #     endLocator = ikNodes["endLocator"]
+    #     poleVectorLocator = ikNodes["poleVectorObject"]
 
-        for loc in [rootLocator, ikHandle]:
-            cmds.parent(loc, moduleGrp, absolute=True)
+    #     for loc in [rootLocator, ikHandle]:
+    #         cmds.parent(loc, moduleGrp, absolute=True)
 
-        cmds.parent(poleVectorLocator, creationPose_sJoint)
-        cmds.setAttr(poleVectorLocator + ".translateX", 0)
-        cmds.setAttr(poleVectorLocator + ".translateY", 10)
-        cmds.setAttr(poleVectorLocator + ".translateZ", 0)
+    #     cmds.parent(poleVectorLocator, creationPose_sJoint)
+    #     cmds.setAttr(poleVectorLocator + ".translateX", 0)
+    #     cmds.setAttr(poleVectorLocator + ".translateY", 10)
+    #     cmds.setAttr(poleVectorLocator + ".translateZ", 0)
 
-        utils.matchTwistAngle(ikHandle + ".twist", [sJoint,], [creationPose_sJoint,])
+    #     utils.matchTwistAngle(ikHandle + ".twist", [sJoint,], [creationPose_sJoint,])
 
-        cmds.parent(poleVectorLocator, controlObject, absolute=True)
+    #     cmds.parent(poleVectorLocator, controlObject, absolute=True)
 
-        return (rootLocator, endLocator)
+    #     return (rootLocator, endLocator)
 
-    def createScaler(self, parentLocator, scaleFactorAttr, containedNodes):
-        scaler = cmds.group(empty=True, n=parentLocator + "_scaler")
-        containedNodes.append(scaler)
-        cmds.parent(scaler, parentLocator, relative=True)
+    # def createScaler(self, parentLocator, scaleFactorAttr, containedNodes):
+    #     scaler = cmds.group(empty=True, n=parentLocator + "_scaler")
+    #     containedNodes.append(scaler)
+    #     cmds.parent(scaler, parentLocator, relative=True)
 
-        for attr in [".scaleX", ".scaleY",  ".scaleZ"]:
-            cmds.connectAttr(scaleFactorAttr, scaler + attr)
+    #     for attr in [".scaleX", ".scaleY",  ".scaleZ"]:
+    #         cmds.connectAttr(scaleFactorAttr, scaler + attr)
 
-        return scaler
+    #     return scaler
 
-    def createDistanceCalculations(self, rootLocator, endLocator, containedNodes):
-        rootLocatorName = utils.stripAllNamespaces(rootLocator)[1]
-        endLocatorName = utils.stripAllNamespaces(endLocator)[1]
-        distNode = cmds.shadingNode("distanceBetween", asUtility=True, n=self.blueprintNamespace + ":" + self.moduleNamespace + ":distanceBetween_" + rootLocatorName + "__" + endLocatorName)
-        containedNodes.append(distNode)
+    # def createDistanceCalculations(self, rootLocator, endLocator, containedNodes):
+    #     rootLocatorName = utils.stripAllNamespaces(rootLocator)[1]
+    #     endLocatorName = utils.stripAllNamespaces(endLocator)[1]
+    #     distNode = cmds.shadingNode("distanceBetween", asUtility=True, n=self.blueprintNamespace + ":" + self.moduleNamespace + ":distanceBetween_" + rootLocatorName + "__" + endLocatorName)
+    #     containedNodes.append(distNode)
 
-        rootLocShape = rootLocator + "Shape"
-        endLocShape = endLocator + "Shape"
+    #     rootLocShape = rootLocator + "Shape"
+    #     endLocShape = endLocator + "Shape"
 
-        cmds.connectAttr(rootLocShape + ".worldPosition[0]", distNode + ".point1")
-        cmds.connectAttr(endLocShape + ".worldPosition[0]", distNode + ".point2")
+    #     cmds.connectAttr(rootLocShape + ".worldPosition[0]", distNode + ".point1")
+    #     cmds.connectAttr(endLocShape + ".worldPosition[0]", distNode + ".point2")
 
-        totalOriginalLength = cmds.getAttr(distNode + ".distance")
-        totalOriginalLength /= cmds.getAttr(self.blueprintNamespace + ":module_grp.hierarchicalScale")
+    #     totalOriginalLength = cmds.getAttr(distNode + ".distance")
+    #     totalOriginalLength /= cmds.getAttr(self.blueprintNamespace + ":module_grp.hierarchicalScale")
 
-        scaleFactor = cmds.shadingNode("multiplyDivide", asUtility=True, n=distNode + "_scaleFactor")
-        containedNodes.append(scaleFactor)
+    #     scaleFactor = cmds.shadingNode("multiplyDivide", asUtility=True, n=distNode + "_scaleFactor")
+    #     containedNodes.append(scaleFactor)
 
-        cmds.setAttr(scaleFactor + ".operation", 2)  # Divide
-        cmds.connectAttr(distNode + ".distance", scaleFactor + ".input1X")
-        cmds.setAttr(scaleFactor + ".input2X", totalOriginalLength)
+    #     cmds.setAttr(scaleFactor + ".operation", 2)  # Divide
+    #     cmds.connectAttr(distNode + ".distance", scaleFactor + ".input1X")
+    #     cmds.setAttr(scaleFactor + ".input2X", totalOriginalLength)
 
-        scaleCorrection = cmds.shadingNode("multiplyDivide", asUtility=True, n=scaleFactor + "_correction")
-        containedNodes.append(scaleCorrection)
+    #     scaleCorrection = cmds.shadingNode("multiplyDivide", asUtility=True, n=scaleFactor + "_correction")
+    #     containedNodes.append(scaleCorrection)
 
-        cmds.setAttr(scaleCorrection + ".operation", 2)  # Divide
-        cmds.connectAttr(scaleFactor + ".outputX", scaleCorrection + ".input1X")
-        cmds.connectAttr(self.blueprintNamespace + ":module_grp.hierarchicalScale", scaleCorrection + ".input2X")
+    #     cmds.setAttr(scaleCorrection + ".operation", 2)  # Divide
+    #     cmds.connectAttr(scaleFactor + ".outputX", scaleCorrection + ".input1X")
+    #     cmds.connectAttr(self.blueprintNamespace + ":module_grp.hierarchicalScale", scaleCorrection + ".input2X")
 
-        return scaleCorrection + ".outputX"
+    #     return scaleCorrection + ".outputX"
 
     def createRootEndControl(self, name, orientJoint, posJoint, translation, containedNodes, moduleGrp):
         controlObjectInstance = controlObject.ControlObject()
@@ -407,71 +399,71 @@ class InterpolatingStretchySpline(controlModule.ControlModule):
 
         return (controlObj, controlParent)
 
-    def UI(self, parentLayout):
-        rootControl = self.blueprintNamespace + ":" + self.moduleNamespace + ":rootControl"
-        if cmds.objExists(rootControl):
-            controlObjectInstance = controlObject.ControlObject(rootControl)
-            controlObjectInstance.UI(parentLayout)
+    # def UI(self, parentLayout):
+    #     rootControl = self.blueprintNamespace + ":" + self.moduleNamespace + ":rootControl"
+    #     if cmds.objExists(rootControl):
+    #         controlObjectInstance = controlObject.ControlObject(rootControl)
+    #         controlObjectInstance.UI(parentLayout)
 
-        jointGrp = self.blueprintNamespace + ":" + self.moduleNamespace + ":joints_grp"
-        joints = utils.findJointChain(jointGrp)
+    #     jointGrp = self.blueprintNamespace + ":" + self.moduleNamespace + ":joints_grp"
+    #     joints = utils.findJointChain(jointGrp)
 
-        joints.pop(0)
-        joints.pop(0)
-        joints.pop()
+    #     joints.pop(0)
+    #     joints.pop(0)
+    #     joints.pop()
 
-        for joint in joints:
-            offsetControl = joint + "_offsetControl"
-            controlObjectInstance = controlObject.ControlObject(offsetControl)
-            controlObjectInstance.UI(parentLayout)
+    #     for joint in joints:
+    #         offsetControl = joint + "_offsetControl"
+    #         controlObjectInstance = controlObject.ControlObject(offsetControl)
+    #         controlObjectInstance.UI(parentLayout)
 
-        endControl = self.blueprintNamespace + ":" + self.moduleNamespace + ":endControl"
-        controlObjectInstance = controlObject.ControlObject(endControl)
-        controlObjectInstance.UI(parentLayout)
+    #     endControl = self.blueprintNamespace + ":" + self.moduleNamespace + ":endControl"
+    #     controlObjectInstance = controlObject.ControlObject(endControl)
+    #     controlObjectInstance.UI(parentLayout)
 
-    def UI_preferences(self, parentLayout):
-        moduleGrp = self.blueprintNamespace + ":" + self.moduleNamespace + ":module_grp"
-        cmds.attrControlGrp(attribute=moduleGrp + ".offsetY", label="Offset Y")
-        cmds.attrControlGrp(attribute=moduleGrp + ".offsetZ", label="Offset Z")
+    # def UI_preferences(self, parentLayout):
+    #     moduleGrp = self.blueprintNamespace + ":" + self.moduleNamespace + ":module_grp"
+    #     cmds.attrControlGrp(attribute=moduleGrp + ".offsetY", label="Offset Y")
+    #     cmds.attrControlGrp(attribute=moduleGrp + ".offsetZ", label="Offset Z")
 
-    def match(self, *args):
-        blueprintJointsGrp = self.blueprintNamespace + ":blueprint_joints_grp"
-        blueprintJoints = utils.findJointChain(blueprintJointsGrp)
-        blueprintJoints.pop(0)
+    # def match(self, *args):
+    #     blueprintJointsGrp = self.blueprintNamespace + ":blueprint_joints_grp"
+    #     blueprintJoints = utils.findJointChain(blueprintJointsGrp)
+    #     blueprintJoints.pop(0)
 
-        jointsGrp = self.blueprintNamespace + ":" + self.moduleNamespace + ":joints_grp"
-        joints = utils.findJointChain(jointsGrp)
-        joints.pop(0)
+    #     jointsGrp = self.blueprintNamespace + ":" + self.moduleNamespace + ":joints_grp"
+    #     joints = utils.findJointChain(jointsGrp)
+    #     joints.pop(0)
 
-        rootControl = self.blueprintNamespace + ":" + self.moduleNamespace + ":rootControl"
-        if cmds.objExists(rootControl):
-            controlObjectInstance = controlObject.ControlObject(rootControl)
+    #     rootControl = self.blueprintNamespace + ":" + self.moduleNamespace + ":rootControl"
+    #     if cmds.objExists(rootControl):
+    #         controlObjectInstance = controlObject.ControlObject(rootControl)
 
-            if controlObjectInstance.translation == [True, True, True]:
-                cmds.xform(rootControl, worldSpace=True, absolute=True, translation=cmds.xform(blueprintJoints[0], q=True, worldSpace=True, translation=True))
+    #         if controlObjectInstance.translation == [True, True, True]:
+    #             cmds.xform(rootControl, worldSpace=True, absolute=True, translation=cmds.xform(blueprintJoints[0], q=True, worldSpace=True, translation=True))
 
-            cmds.xform(rootControl, worldSpace=True, absolute=True, rotation=cmds.xform(blueprintJoints[0], q=True, worldSpace=True, rotation=True))
+    #         cmds.xform(rootControl, worldSpace=True, absolute=True, rotation=cmds.xform(blueprintJoints[0], q=True, worldSpace=True, rotation=True))
 
 
-        endControl = self.blueprintNamespace + ":" + self.moduleNamespace + ":endControl"
-        endJoint = blueprintJoints[len(blueprintJoints)-1]
-        secondToLastJoint = blueprintJoints[len(blueprintJoints) - 2]
-        cmds.xform(endControl, worldSpace=True, absolute=True, translation=cmds.xform(endJoint, q=True, worldSpace=True, translation=True))
-        cmds.xform(endControl, worldSpace=True, absolute=True, rotation=cmds.xform(secondToLastJoint, q=True, worldSpace=True, rotation=True))
+    #     endControl = self.blueprintNamespace + ":" + self.moduleNamespace + ":endControl"
+    #     endJoint = blueprintJoints[len(blueprintJoints)-1]
+    #     secondToLastJoint = blueprintJoints[len(blueprintJoints) - 2]
+    #     cmds.xform(endControl, worldSpace=True, absolute=True, translation=cmds.xform(endJoint, q=True, worldSpace=True, translation=True))
+    #     cmds.xform(endControl, worldSpace=True, absolute=True, rotation=cmds.xform(secondToLastJoint, q=True, worldSpace=True, rotation=True))
 
-        joints.pop(0)
-        joints.pop()
-        blueprintJoints.pop(0)
+    #     joints.pop(0)
+    #     joints.pop()
+    #     blueprintJoints.pop(0)
 
-        moduleGrp = self.blueprintNamespace + ":" + self.moduleNamespace + ":module_grp"
-        offsetY = cmds.getAttr(moduleGrp + ".offsetY")
-        offsetZ = cmds.getAttr(moduleGrp + ".offsetZ")
+    #     moduleGrp = self.blueprintNamespace + ":" + self.moduleNamespace + ":module_grp"
+    #     offsetY = cmds.getAttr(moduleGrp + ".offsetY")
+    #     offsetZ = cmds.getAttr(moduleGrp + ".offsetZ")
 
-        index = 0
-        for joint in joints:
-            offsetControl = joint + "_offsetControl"
-            cmds.xform(offsetControl,worldSpace=True, absolute=True, translation=cmds.xform(blueprintJoints[index], q=True, worldSpace=True, translation=True))
-            cmds.xform(offsetControl, objectSpace=True, relative=True, translation=[0, offsetY, offsetZ])
+    #     index = 0
+    #     for joint in joints:
+    #         offsetControl = joint + "_offsetControl"
+    #         cmds.xform(offsetControl,worldSpace=True, absolute=True, translation=cmds.xform(blueprintJoints[index], q=True, worldSpace=True, translation=True))
+    #         cmds.xform(offsetControl, objectSpace=True, relative=True, translation=[0, offsetY, offsetZ])
 
-            index += 1
+    #         index += 1
 
