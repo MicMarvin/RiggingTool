@@ -17,6 +17,8 @@ importlib.reload(controlObject)
 
 import System.controlModule as controlModule
 importlib.reload(controlModule)
+import System.animation_UI as animation_UI
+importlib.reload(animation_UI)
 
 
 class InterpolatingStretchySpline(controlModule.ControlModule):
@@ -397,32 +399,52 @@ class InterpolatingStretchySpline(controlModule.ControlModule):
 
         return (controlObj, controlParent)
 
-    # def UI(self, parentLayout):
-    #     rootControl = self.blueprintNamespace + ":" + self.moduleNamespace + ":rootControl"
-    #     if cmds.objExists(rootControl):
-    #         controlObjectInstance = controlObject.ControlObject(rootControl)
-    #         controlObjectInstance.UI(parentLayout)
+    def UI(self, parentLayout):
+        rootControl = self.blueprintNamespace + ":" + self.moduleNamespace + ":rootControl"
+        if cmds.objExists(rootControl):
+            controlObjectInstance = controlObject.ControlObject(rootControl)
+            controlObjectInstance.UI(parentLayout)
 
-    #     jointGrp = self.blueprintNamespace + ":" + self.moduleNamespace + ":joints_grp"
-    #     joints = utils.findJointChain(jointGrp)
+        jointGrp = self.blueprintNamespace + ":" + self.moduleNamespace + ":joints_grp"
+        joints = utils.findJointChain(jointGrp)
 
-    #     joints.pop(0)
-    #     joints.pop(0)
-    #     joints.pop()
+        joints.pop(0)
+        joints.pop(0)
+        joints.pop()
 
-    #     for joint in joints:
-    #         offsetControl = joint + "_offsetControl"
-    #         controlObjectInstance = controlObject.ControlObject(offsetControl)
-    #         controlObjectInstance.UI(parentLayout)
+        for joint in joints:
+            offsetControl = joint + "_offsetControl"
+            controlObjectInstance = controlObject.ControlObject(offsetControl)
+            controlObjectInstance.UI(parentLayout)
 
-    #     endControl = self.blueprintNamespace + ":" + self.moduleNamespace + ":endControl"
-    #     controlObjectInstance = controlObject.ControlObject(endControl)
-    #     controlObjectInstance.UI(parentLayout)
+        endControl = self.blueprintNamespace + ":" + self.moduleNamespace + ":endControl"
+        controlObjectInstance = controlObject.ControlObject(endControl)
+        controlObjectInstance.UI(parentLayout)
 
-    # def UI_preferences(self, parentLayout):
-    #     moduleGrp = self.blueprintNamespace + ":" + self.moduleNamespace + ":module_grp"
-    #     cmds.attrControlGrp(attribute=moduleGrp + ".offsetY", label="Offset Y")
-    #     cmds.attrControlGrp(attribute=moduleGrp + ".offsetZ", label="Offset Z")
+    def UI_preferences(self, parentLayout):
+        moduleGrp = self.blueprintNamespace + ":" + self.moduleNamespace + ":module_grp"
+        if not cmds.objExists(moduleGrp):
+            return
+
+        for attr, label in ((".offsetY", "Offset Y"), (".offsetZ", "Offset Z")):
+            plug = moduleGrp + attr
+            try:
+                current = cmds.getAttr(plug)
+            except Exception:
+                current = 0.0
+
+            widget = animation_UI.FloatAttrControlWidget(
+                plug,
+                label + ":",
+                -10.0,
+                10.0,
+                current,
+                conversion=1,
+                decimals=2,
+                singleStep=0.1,
+                callback=lambda v, p=plug: cmds.setAttr(p, v),
+            )
+            parentLayout.addWidget(widget)
 
     # def match(self, *args):
     #     blueprintJointsGrp = self.blueprintNamespace + ":blueprint_joints_grp"
@@ -464,4 +486,3 @@ class InterpolatingStretchySpline(controlModule.ControlModule):
     #         cmds.xform(offsetControl, objectSpace=True, relative=True, translation=[0, offsetY, offsetZ])
 
     #         index += 1
-
