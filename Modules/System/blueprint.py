@@ -418,6 +418,10 @@ class Blueprint():
 
             cmds.setAttr(newJoint + ".segmentScaleCompensate", 0)
 
+        if len(newJoints) > 1:
+            end_joint = newJoints[-1]
+            cmds.joint(end_joint, e=True, oj="none", ch=False, zso=True)
+
         blueprintGrp = cmds.group(empty=True, name=self.moduleNamespace + ":blueprint_joints_grp")
         cmds.parent(newJoints[0], blueprintGrp, absolute=True)
 
