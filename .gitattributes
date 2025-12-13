@@ -1,0 +1,5 @@
+*.ma linguist-language=MayaScript
+*.py linguist-language=Python
+*.md linguist-language=Markdown
+*.txt linguist-language=Plain Text
+*.json linguist-language=JSON
