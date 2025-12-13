@@ -1,2 +1,7 @@
 # Local temporary files
 _Temp/
+
+# Compiled Python files and cache
+__pycache__/
+*.py[cod]
+*$py.class
