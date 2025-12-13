@@ -1,4 +1,7 @@
-*.ma linguist-language=MayaScript
+*.ma linguist-detectable=false
+
+*.ma linguist-language=Maya
+*.mel linguist-language=MEL
 *.py linguist-language=Python
 *.md linguist-language=Markdown
 *.txt linguist-language=Plain Text
