@@ -1,5 +1,5 @@
 //Maya ASCII 2009 scene
-//Name: cubeLocator.ma
+//Name: cube.ma
 //Last modified: Mon, Sep 07, 2009 06:58:20 PM
 //Codeset: 1252
 requires maya "2009";
@@ -93,4 +93,4 @@ connectAttr ":defaultLightSet.msg" "lightLinker1.slnk[1].sllk";
 connectAttr ":initialParticleSE.msg" "lightLinker1.slnk[1].solk";
 connectAttr "lightLinker1.msg" ":lightList1.ln" -na;
 connectAttr "controlShape.iog" ":initialShadingGroup.dsm" -na;
-// End of cubeLocator.ma
+// End of cube.ma

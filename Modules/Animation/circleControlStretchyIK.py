@@ -84,7 +84,7 @@ class CircleControlStretchyIK(controlModule.ControlModule):
             name = "ikHandleControl"
 
             controlObjectInstance = controlObject.ControlObject()
-            handleControlInfo = controlObjectInstance.create(name, "cubeLocator.ma", self, lod=1, translation=True, rotation=False, globalScale=False, spaceSwitching=True)
+            handleControlInfo = controlObjectInstance.create(name, "cube.ma", self, lod=1, translation=True, rotation=False, globalScale=False, spaceSwitching=True)
             handleControl = handleControlInfo[0]
             handleRootParent = handleControlInfo[1]
 
