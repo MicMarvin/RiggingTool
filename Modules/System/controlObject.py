@@ -18,7 +18,6 @@ _LOD_DEFAULTS = {
     "scale": 1.0,
     "color": 6,  # matches UI default (index, 1-based)
     "lineWidth": 1.0,
-    "rotation": (0.0, 0.0, 0.0),
     "shapeFile": DEFAULT_SHAPE_FILE,
 }
 
@@ -210,6 +209,8 @@ def ensure_lod_settings_entry(module_grp, lod):
                         break
             except Exception:
                 continue
+    # Strip deprecated rotation preference if present.
+    entry.pop("rotation", None)
     settings[key] = entry
     save_lod_settings(module_grp, settings)
     return entry
@@ -220,6 +221,8 @@ def apply_lod_preferences(module_namespace, lod, entry):
     Apply stored preferences to controls that belong to the specified LOD.
     This implementation targets appearance-only attributes on nurbsCurve shapes.
     """
+    entry = dict(entry)
+    entry.pop("rotation", None)  # rotation preferences are deprecated
     ns = module_namespace
     target_lod = int(lod)
     expr_nodes = cmds.ls(f"{ns}:*_visibility_expression", type="expression") or []
@@ -282,16 +285,6 @@ def apply_lod_preferences(module_namespace, lod, entry):
                 save_lod_settings(module_grp, settings)
             except Exception as e:
                 print(f"[controlObject] Failed to apply shape '{shape_file}' to {control_name}: {e}")
-
-        # Apply rotation to the control transform (object-space), if requested.
-        rotation = entry.get("rotation", _LOD_DEFAULTS["rotation"])
-        if rotation and len(rotation) >= 3:
-            try:
-                cmds.setAttr(control_name + ".rotateX", float(rotation[0]))
-                cmds.setAttr(control_name + ".rotateY", float(rotation[1]))
-                cmds.setAttr(control_name + ".rotateZ", float(rotation[2]))
-            except Exception:
-                pass
 
 
 class ControlObject:

@@ -1355,13 +1355,19 @@ class Animation_UI(QtWidgets.QDialog):
         moduleGrp = moduleNamespaceFull + ":module_grp"
         controlObject.ensure_lod_settings_entry(moduleGrp, lod)
         settings = controlObject.get_lod_settings(moduleGrp)
-        entry = settings.get(str(int(lod)), {
+        key = str(int(lod))
+        entry = settings.get(key, {
             "scale": 1.0,
             "color": 6,
             "lineWidth": 1.0,
-            "rotation": (0.0, 0.0, 0.0),
             "shapeFile": DEFAULT_SHAPE_FILE,
         })
+        entry = dict(entry)
+        # Drop deprecated rotation preference if it lingers in saved data.
+        if "rotation" in entry:
+            entry.pop("rotation", None)
+            settings[key] = entry
+            controlObject.save_lod_settings(moduleGrp, settings)
         return settings, entry, moduleGrp
 
     def _refresh_controls_preferences_ui(self, moduleNamespaceFull=None):
