@@ -1327,26 +1327,6 @@ class Animation_UI(QtWidgets.QDialog):
                 controlsLayout.addLayout(lineWidthRow)
                 self.UIElements["controlLineWidthSpin"] = lineWidthSpin
 
-                # Rotation
-                rotGroup = QtWidgets.QGroupBox("Rotation")
-                rotLayout = QtWidgets.QHBoxLayout(rotGroup)
-                rotLayout.setSpacing(6)
-                rotSpins = {}
-                for axis in ["X", "Y", "Z"]:
-                    spin = ClickToScrollDoubleSpinBox()
-                    spin.setRange(-360.0, 360.0)
-                    spin.setDecimals(2)
-                    spin.setSingleStep(1.0)
-                    spin.valueChanged.connect(lambda val, ax=axis, ns=moduleNamespaceFull: self.on_control_rotation_changed(ax, val, ns))
-                    lbl = QtWidgets.QLabel(axis + ":")
-                    axisLayout = QtWidgets.QVBoxLayout()
-                    axisLayout.addWidget(lbl)
-                    axisLayout.addWidget(spin)
-                    rotLayout.addLayout(axisLayout)
-                    rotSpins[axis] = spin
-                controlsLayout.addWidget(rotGroup)
-                self.UIElements["controlRotationSpins"] = rotSpins
-
                 prefLayout.addWidget(controlsGroup)
 
                 moduleInst.UI_preferences(prefLayout)
@@ -1431,16 +1411,6 @@ class Animation_UI(QtWidgets.QDialog):
                 lineWidthSpin.blockSignals(True)
                 lineWidthSpin.setValue(entry.get("lineWidth", 1.0))
                 lineWidthSpin.blockSignals(False)
-
-            # Rotation
-            rotSpins = self.UIElements.get("controlRotationSpins", {})
-            rotation = entry.get("rotation", (0.0, 0.0, 0.0))
-            for idx, axis in enumerate(["X", "Y", "Z"]):
-                spin = rotSpins.get(axis)
-                if spin:
-                    spin.blockSignals(True)
-                    spin.setValue(rotation[idx] if len(rotation) > idx else 0.0)
-                    spin.blockSignals(False)
         finally:
             self._suppressControlPrefSignals = False
 
@@ -1472,24 +1442,6 @@ class Animation_UI(QtWidgets.QDialog):
         entry = dict(entry)  # copy
         entry[key] = float(value) if key in ("scale", "lineWidth") else int(value)
         print(f"[animation_UI] change key={key} val={value} ns={ns} lod={lod}")
-        self._persist_lod_entry(ns, lod, entry, settings=settings, moduleGrp=moduleGrp)
-
-    def on_control_rotation_changed(self, axis, value, moduleNamespaceFull=None):
-        if self._suppressControlPrefSignals:
-            return
-        ns = moduleNamespaceFull or self._current_module_namespace_full()
-        if not ns:
-            return
-        lod = self._current_control_level()
-        if lod is None:
-            return
-        settings, entry, moduleGrp = self._load_lod_entry(ns, lod)
-        rotation = list(entry.get("rotation", (0.0, 0.0, 0.0)))
-        axis_index = {"X": 0, "Y": 1, "Z": 2}[axis]
-        rotation += [0.0] * (3 - len(rotation))
-        rotation[axis_index] = float(value)
-        entry = dict(entry)
-        entry["rotation"] = tuple(rotation)
         self._persist_lod_entry(ns, lod, entry, settings=settings, moduleGrp=moduleGrp)
 
     def open_shape_gallery(self, moduleNamespaceFull=None):
