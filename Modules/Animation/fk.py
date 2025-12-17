@@ -86,7 +86,7 @@ class FK(controlModule.ControlModule):
 
         controlObjectInstance = controlObject.ControlObject()
 
-        fkControlInfo = controlObjectInstance.create(name, "sphere.ma", self, lod=1, translation=translationControl, rotation=True, globalScale=False, spaceSwitching=spaceSwitchable)
+        fkControlInfo = controlObjectInstance.create(name, "sphere.shape", self, lod=1, translation=translationControl, rotation=True, globalScale=False, spaceSwitching=spaceSwitchable)
         fkControl = fkControlInfo[0]
 
         cmds.connectAttr(joint + ".rotateOrder", fkControl + ".rotateOrder")

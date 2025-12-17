@@ -28,7 +28,7 @@ class GlobalControl(controlModule.ControlModule):
         name = "globalControl"
 
         controlObjectInstance = controlObject.ControlObject()
-        globalControlInfo = controlObjectInstance.create(name, "globalControl.ma", self, lod=1, translation=True, rotation=True, globalScale=True, spaceSwitching=True)
+        globalControlInfo = controlObjectInstance.create(name, "globalControl.shape", self, lod=1, translation=True, rotation=True, globalScale=True, spaceSwitching=True)
         globalControl = globalControlInfo[0]
         globalControl_rootParent = globalControlInfo[1]
 

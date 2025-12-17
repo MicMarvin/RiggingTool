@@ -4,9 +4,294 @@ importlib.reload(utils)
 
 import maya.cmds as cmds
 import os
+import json
+import re
 from pathlib import Path
 from functools import partial
 from PySide2 import QtWidgets, QtCore, QtGui
+
+# Default control shape used when a module does not specify one explicitly.
+DEFAULT_SHAPE_FILE = "cube.shape"
+
+_LOD_SETTINGS_ATTR = "lodSettings"
+_LOD_DEFAULTS = {
+    "scale": 1.0,
+    "color": 6,  # matches UI default (index, 1-based)
+    "lineWidth": 1.0,
+    "rotation": (0.0, 0.0, 0.0),
+    "shapeFile": DEFAULT_SHAPE_FILE,
+}
+
+_SHAPE_FILE_ATTR = "shapeFile"
+
+
+def _control_objects_dir():
+    """
+    Return the base directory for control shapes/icons.
+    This mirrors the previous behavior of pulling from RIGGING_TOOL_ROOT.
+    """
+    return Path(os.environ["RIGGING_TOOL_ROOT"]) / "RiggingTool" / "ControlObjects" / "Animation"
+
+
+def _apply_shape_overrides(shape_node, attrs):
+    """Apply display overrides stored in the .shape file onto the created shape."""
+    try:
+        if "overrideEnabled" in attrs:
+            cmds.setAttr(shape_node + ".overrideEnabled", bool(attrs.get("overrideEnabled")))
+        if "overrideRGBColors" in attrs:
+            cmds.setAttr(shape_node + ".overrideRGBColors", bool(attrs.get("overrideRGBColors")))
+        if "overrideColorRGB" in attrs:
+            r, g, b = attrs.get("overrideColorRGB", (0, 0, 0))
+            cmds.setAttr(shape_node + ".overrideColorRGB", r, g, b, type="double3")
+        if "useOutlinerColor" in attrs:
+            cmds.setAttr(shape_node + ".useOutlinerColor", bool(attrs.get("useOutlinerColor")))
+        if "outlinerColor" in attrs:
+            r, g, b = attrs.get("outlinerColor", (0, 0, 0))
+            cmds.setAttr(shape_node + ".outlinerColor", r, g, b, type="double3")
+    except Exception as e:
+        print(f"[controlObject] Failed to apply display overrides to {shape_node}: {e}")
+
+
+def _create_shapes_from_file(shape_path, parent_transform):
+    """
+    Build nurbsCurve shapes from a .shape JSON file and parent them under the given transform.
+    Returns the list of created shape nodes.
+    """
+    with open(shape_path, "r") as handle:
+        shape_data = json.load(handle)
+
+    if not isinstance(shape_data, dict) or not shape_data:
+        raise RuntimeError(f"[controlObject] Shape file {shape_path} is empty or malformed.")
+
+    created_shapes = []
+    for shape_name, attrs in shape_data.items():
+        cvs = []
+        for cv in attrs.get("cvs", []):
+            if len(cv) >= 3:
+                cvs.append((cv[0], cv[1], cv[2]))
+
+        degree = int(attrs.get("degree", 1))
+        knots = attrs.get("knots", [])
+        form = int(attrs.get("form", 1))
+        periodic = form == 3  # Maya API form enum: 1=open, 2=closed, 3=periodic
+
+        curve_kwargs = {"d": degree, "p": cvs, "k": knots}
+        if periodic:
+            curve_kwargs["per"] = True
+
+        try:
+            curve_transform = cmds.curve(**curve_kwargs)
+        except Exception:
+            # Retry without periodic flag if the provided knot vector does not support it.
+            curve_kwargs.pop("per", None)
+            curve_transform = cmds.curve(**curve_kwargs)
+
+        shape_nodes = cmds.listRelatives(curve_transform, shapes=True, fullPath=True) or []
+        if not shape_nodes:
+            cmds.delete(curve_transform)
+            raise RuntimeError(f"[controlObject] Failed to create shape {shape_name} from {shape_path}")
+
+        shape_node = shape_nodes[0]
+        # Parent shape under our control transform and clean up the temporary transform.
+        shape_node = cmds.parent(shape_node, parent_transform, relative=True, shape=True)[0]
+        try:
+            shape_node = cmds.rename(shape_node, shape_name)
+        except Exception:
+            # Keep the auto-generated name if rename fails.
+            pass
+        cmds.delete(curve_transform)
+
+        _apply_shape_overrides(shape_node, attrs)
+        created_shapes.append(shape_node)
+
+    return created_shapes
+
+
+def _set_shapefile_attr(control_transform, shape_file_name):
+    """Store the source shape filename on the control transform for later discovery."""
+    try:
+        if not cmds.attributeQuery(_SHAPE_FILE_ATTR, n=control_transform, exists=True):
+            cmds.addAttr(control_transform, ln=_SHAPE_FILE_ATTR, dataType="string")
+        cmds.setAttr(control_transform + "." + _SHAPE_FILE_ATTR, shape_file_name, type="string")
+    except Exception as e:
+        print(f"[controlObject] Failed to record shape file on {control_transform}: {e}")
+
+
+def get_lod_levels(module_grp):
+    """
+    Discover the set of LOD levels referenced by visibility expressions in this module.
+    It parses expressions named '*_visibility_expression' within the same namespace.
+    Falls back to [1] if none are found.
+    """
+    lods = set()
+    ns = module_grp.rpartition(":")[0]
+    expr_nodes = cmds.ls(f"{ns}:*_visibility_expression", type="expression") or []
+    lod_re = re.compile(r"\.lod\s*>=\s*([0-9]+)")
+    for expr in expr_nodes:
+        try:
+            expr_str = cmds.expression(expr, q=True, s=True) or ""
+        except Exception:
+            continue
+        match = lod_re.search(expr_str)
+        if match:
+            try:
+                lods.add(int(match.group(1)))
+            except Exception:
+                pass
+    if not lods:
+        lods.add(1)
+    return sorted(lods)
+
+
+def get_lod_settings(module_grp):
+    """
+    Read per-LOD settings stored on the module_grp as JSON in the 'lodSettings' string attr.
+    Returns a dict keyed by string LOD numbers.
+    """
+    if not cmds.objExists(module_grp):
+        return {}
+    if not cmds.attributeQuery(_LOD_SETTINGS_ATTR, n=module_grp, exists=True):
+        return {}
+    try:
+        raw = cmds.getAttr(f"{module_grp}.{_LOD_SETTINGS_ATTR}") or "{}"
+        data = json.loads(raw)
+        if isinstance(data, dict):
+            return data
+    except Exception:
+        pass
+    return {}
+
+
+def save_lod_settings(module_grp, settings):
+    """Persist the settings dict back onto the module_grp."""
+    if not cmds.objExists(module_grp):
+        return
+    if not cmds.attributeQuery(_LOD_SETTINGS_ATTR, n=module_grp, exists=True):
+        try:
+            cmds.addAttr(module_grp, ln=_LOD_SETTINGS_ATTR, dataType="string")
+        except Exception as e:
+            print(f"[controlObject] Could not add {_LOD_SETTINGS_ATTR} attr to {module_grp}: {e}")
+            return
+    try:
+        cmds.setAttr(f"{module_grp}.{_LOD_SETTINGS_ATTR}", json.dumps(settings), type="string")
+    except Exception as e:
+        print(f"[controlObject] Failed to save LOD settings on {module_grp}: {e}")
+
+
+def ensure_lod_settings_entry(module_grp, lod):
+    """
+    Ensure a settings entry exists for the given LOD, seeding with defaults if missing.
+    """
+    settings = get_lod_settings(module_grp)
+    key = str(int(lod))
+    entry = settings.get(key, {})
+    # Seed missing fields with defaults.
+    for k, v in _LOD_DEFAULTS.items():
+        entry.setdefault(k, v)
+    # If shapeFile is still the default, attempt to discover it from an existing control.
+    if entry.get("shapeFile", DEFAULT_SHAPE_FILE) == DEFAULT_SHAPE_FILE:
+        ns = module_grp.rpartition(":")[0]
+        expr_nodes = cmds.ls(f"{ns}:*_visibility_expression", type="expression") or []
+        lod_re = re.compile(r"\.lod\s*>=\s*([0-9]+)")
+        for expr in expr_nodes:
+            try:
+                expr_str = cmds.expression(expr, q=True, s=True) or ""
+            except Exception:
+                continue
+            match = lod_re.search(expr_str)
+            if not match or int(match.group(1)) != int(lod):
+                continue
+            control_name = expr.rpartition("_visibility_expression")[0]
+            try:
+                if cmds.attributeQuery(_SHAPE_FILE_ATTR, n=control_name, exists=True):
+                    val = cmds.getAttr(control_name + "." + _SHAPE_FILE_ATTR)
+                    if val:
+                        entry["shapeFile"] = Path(val).name
+                        break
+            except Exception:
+                continue
+    settings[key] = entry
+    save_lod_settings(module_grp, settings)
+    return entry
+
+
+def apply_lod_preferences(module_namespace, lod, entry):
+    """
+    Apply stored preferences to controls that belong to the specified LOD.
+    This implementation targets appearance-only attributes on nurbsCurve shapes.
+    """
+    ns = module_namespace
+    target_lod = int(lod)
+    expr_nodes = cmds.ls(f"{ns}:*_visibility_expression", type="expression") or []
+    lod_re = re.compile(r"\.lod\s*>=\s*([0-9]+)")
+    for expr in expr_nodes:
+        try:
+            expr_str = cmds.expression(expr, q=True, s=True) or ""
+        except Exception:
+            continue
+        match = lod_re.search(expr_str)
+        if not match or int(match.group(1)) != target_lod:
+            continue
+
+        control_name = expr.rpartition("_visibility_expression")[0]
+        if not cmds.objExists(control_name):
+            continue
+
+        # Refresh settings entry in case caller provided partial data.
+        ensure_lod_settings_entry(f"{ns}:module_grp", target_lod)
+
+        # Apply simple display tweaks to each nurbsCurve shape.
+        shapes = cmds.listRelatives(control_name, shapes=True, fullPath=True) or []
+        for shape in shapes:
+            if cmds.nodeType(shape) != "nurbsCurve":
+                continue
+            try:
+                cmds.setAttr(shape + ".lineWidth", float(entry.get("lineWidth", _LOD_DEFAULTS["lineWidth"])))
+            except Exception:
+                pass
+            try:
+                color_idx = int(entry.get("color", _LOD_DEFAULTS["color"])) - 1
+                cmds.setAttr(shape + ".overrideEnabled", 1)
+                cmds.setAttr(shape + ".overrideColor", max(0, color_idx))
+            except Exception:
+                pass
+
+        # If a different shape is specified, rebuild the control shapes.
+        shape_file = entry.get("shapeFile")
+        if shape_file:
+            try:
+                # Remove existing non-intermediate nurbsCurve shapes.
+                keep_intermediates = []
+                for shape in shapes:
+                    if cmds.getAttr(shape + ".intermediateObject"):
+                        keep_intermediates.append(shape)
+                    elif cmds.nodeType(shape) == "nurbsCurve":
+                        cmds.delete(shape)
+                # Create new shapes under the control transform.
+                resolved = shape_file
+                if not Path(shape_file).is_absolute():
+                    resolved = _control_objects_dir() / shape_file
+                _create_shapes_from_file(resolved, control_name)
+                _set_shapefile_attr(control_name, Path(shape_file).name)
+                # Keep persisted settings in sync with the applied shape.
+                module_grp = f"{ns}:module_grp"
+                settings = get_lod_settings(module_grp)
+                key = str(target_lod)
+                settings.setdefault(key, entry)
+                settings[key]["shapeFile"] = Path(shape_file).name
+                save_lod_settings(module_grp, settings)
+            except Exception as e:
+                print(f"[controlObject] Failed to apply shape '{shape_file}' to {control_name}: {e}")
+
+        # Apply rotation to the control transform (object-space), if requested.
+        rotation = entry.get("rotation", _LOD_DEFAULTS["rotation"])
+        if rotation and len(rotation) >= 3:
+            try:
+                cmds.setAttr(control_name + ".rotateX", float(rotation[0]))
+                cmds.setAttr(control_name + ".rotateY", float(rotation[1]))
+                cmds.setAttr(control_name + ".rotateZ", float(rotation[2]))
+            except Exception:
+                pass
 
 
 class ControlObject:
@@ -26,6 +311,61 @@ class ControlObject:
 
             self.globalScale = not cmds.getAttr(self.controlObject + ".scaleY", l=True)
 
+    def _create_control_from_shape(self, shape_path):
+        """
+        Create a fresh transform named 'control' and attach shapes defined in the .shape file.
+        """
+        transform = cmds.createNode("transform", name="control")
+        _create_shapes_from_file(shape_path, transform)
+        _set_shapefile_attr(transform, Path(shape_path).name)
+        return transform
+
+    def _load_control_transform(self, controlFile):
+        """
+        Resolve and load the requested control file.
+        Prefers .shape files; falls back to legacy .ma import for compatibility.
+        """
+        controlPath = Path(controlFile)
+        if not controlPath.is_absolute():
+            controlPath = _control_objects_dir() / controlPath
+
+        suffix = controlPath.suffix.lower()
+        if suffix == ".shape":
+            if controlPath.exists():
+                return self._create_control_from_shape(controlPath)
+            ma_candidate = controlPath.with_suffix(".ma")
+            if ma_candidate.exists():
+                print(f"[controlObject] Shape file missing ({controlPath.name}); falling back to legacy {ma_candidate.name}")
+                cmds.file(str(ma_candidate), i=True)
+                return "control"
+            raise RuntimeError(f"[controlObject] Control shape not found: {controlPath}")
+
+        if suffix == ".ma":
+            shape_candidate = controlPath.with_suffix(".shape")
+            if shape_candidate.exists():
+                print(f"[controlObject] Requested legacy .ma ({controlPath.name}); using {shape_candidate.name} instead.")
+                return self._create_control_from_shape(shape_candidate)
+            print(f"[controlObject] Loading legacy control file {controlPath.name}")
+            cmds.file(str(controlPath), i=True)
+            return "control"
+
+        # If no/unknown extension, prefer .shape when available.
+        shape_fallback = controlPath.with_suffix(".shape")
+        if shape_fallback.exists():
+            return self._create_control_from_shape(shape_fallback)
+        ma_fallback = controlPath.with_suffix(".ma")
+        if ma_fallback.exists():
+            print(f"[controlObject] Loading legacy control file {ma_fallback.name}")
+            cmds.file(str(ma_fallback), i=True)
+            return "control"
+
+        if controlPath.exists():
+            print(f"[controlObject] Loading control from {controlPath}")
+            cmds.file(str(controlPath), i=True)
+            return "control"
+
+        raise RuntimeError(f"[controlObject] Control file not found: {controlPath}")
+
     def create(self, name, controlFile, animationModuleInstance, lod=1, translation=True, rotation=True, globalScale=True, spaceSwitching=False):
         if translation == True or translation == False:
             translation = [translation, translation, translation]
@@ -43,11 +383,22 @@ class ControlObject:
 
         animationModuleNamespace = blueprintModuleNamespace + ":" + animationModuleName
 
-        controlObjectFile = Path(os.environ["RIGGING_TOOL_ROOT"]) / "RiggingTool" / "ControlObjects" / "Animation" / controlFile
-        cmds.file(controlObjectFile, i=True)
+        controlTransform = self._load_control_transform(controlFile)
 
-        self.controlObject = cmds.rename("control", animationModuleNamespace + ":" + name)
+        self.controlObject = cmds.rename(controlTransform, animationModuleNamespace + ":" + name)
         self.rootParent = self.controlObject
+
+        # Persist the initial shape choice onto the control and the module's LOD settings for UI discovery.
+        shape_file_name = Path(controlFile).name
+        _set_shapefile_attr(self.controlObject, shape_file_name)
+        module_grp = animationModuleNamespace + ":module_grp"
+        settings = get_lod_settings(module_grp)
+        key = str(int(lod))
+        entry = settings.get(key, {})
+        if not entry.get("shapeFile") or entry.get("shapeFile") == DEFAULT_SHAPE_FILE:
+            entry["shapeFile"] = shape_file_name
+            settings[key] = entry
+            save_lod_settings(module_grp, settings)
 
         self.setupIconScale(animationModuleNamespace)
 

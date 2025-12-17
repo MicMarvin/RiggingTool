@@ -16,6 +16,10 @@ import System.controlObject as controlObject
 importlib.reload(utils)
 importlib.reload(controlObject)
 
+# Paths
+SHAPE_ROOT = Path(os.environ.get("RIGGING_TOOL_ROOT", "")) / "RiggingTool" / "ControlObjects" / "Animation"
+DEFAULT_SHAPE_FILE = getattr(controlObject, "DEFAULT_SHAPE_FILE", "cube.shape")
+
 # Helper to attach our window to Maya's main window.
 def maya_main_window():
     main_window_ptr = omui.MQtUtil.mainWindow()
@@ -62,6 +66,93 @@ MAYA_INDEX_COLORS = [
     QtGui.QColor(160, 48, 105),      # 31: Reddish Purple (0.63,0.189,0.414)
     QtGui.QColor(249, 170, 38),      # 32: Yellowish Orange 
 ]
+
+def list_shape_library():
+    """Return list of available shapes with thumbnails."""
+    shapes = []
+    if not SHAPE_ROOT.exists():
+        return shapes
+    for shape_file in SHAPE_ROOT.glob("*.shape"):
+        thumb = shape_file.with_suffix(".png")
+        if not thumb.exists():
+            continue
+        shapes.append({
+            "name": shape_file.name,
+            "shapePath": shape_file,
+            "thumbPath": thumb
+        })
+    shapes.sort(key=lambda entry: entry["name"].lower())
+    return shapes
+
+
+def _load_thumbnail(pngPath, size=96):
+    pixmap = QtGui.QPixmap()
+    if pngPath and pngPath.exists():
+        pixmap = QtGui.QPixmap(str(pngPath))
+    if pixmap.isNull():
+        pixmap = QtGui.QPixmap(size, size)
+        pixmap.fill(QtGui.QColor(60, 60, 60))
+    return pixmap.scaled(size, size, QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation)
+
+
+class ShapeThumbnailButton(QtWidgets.QPushButton):
+    def __init__(self, shapeName, thumbPath=None, parent=None):
+        super(ShapeThumbnailButton, self).__init__(parent)
+        self.shapeName = shapeName
+        pixmap = _load_thumbnail(thumbPath, size=96)
+        self.setIcon(QtGui.QIcon(pixmap))
+        self.setIconSize(pixmap.size())
+        self.setFixedSize(pixmap.size() + QtCore.QSize(12, 12))
+        self.setFlat(True)
+        self.setToolTip(shapeName)
+
+
+class ShapeGalleryWindow(QtWidgets.QDialog):
+    shapeSelected = QtCore.Signal(str)
+
+    def __init__(self, parent=None):
+        super(ShapeGalleryWindow, self).__init__(parent)
+        self.setWindowTitle("Choose Control Shape")
+        self.setModal(True)
+        self.resize(520, 480)
+
+        layout = QtWidgets.QVBoxLayout(self)
+        scroll = QtWidgets.QScrollArea()
+        scroll.setWidgetResizable(True)
+        content = QtWidgets.QWidget()
+        grid = QtWidgets.QGridLayout(content)
+        grid.setSpacing(10)
+
+        shapes = list_shape_library()
+        cols = 4
+        for idx, info in enumerate(shapes):
+            button = ShapeThumbnailButton(info["name"], info.get("thumbPath"))
+            button.clicked.connect(lambda checked=False, name=info["name"]: self._select(name))
+            nameLabel = QtWidgets.QLabel(info["name"])
+            nameLabel.setAlignment(QtCore.Qt.AlignCenter)
+
+            cell = QtWidgets.QVBoxLayout()
+            cell.addWidget(button, alignment=QtCore.Qt.AlignCenter)
+            cell.addWidget(nameLabel)
+
+            container = QtWidgets.QWidget()
+            container.setLayout(cell)
+            grid.addWidget(container, idx // cols, idx % cols)
+
+        content.setLayout(grid)
+        scroll.setWidget(content)
+        layout.addWidget(scroll)
+
+        btnRow = QtWidgets.QHBoxLayout()
+        closeBtn = QtWidgets.QPushButton("Cancel")
+        closeBtn.clicked.connect(self.reject)
+        btnRow.addStretch(1)
+        btnRow.addWidget(closeBtn)
+        layout.addLayout(btnRow)
+
+    def _select(self, shapeName):
+        self.shapeSelected.emit(shapeName)
+        self.accept()
 
 #---------------------------------------------------------------------
 # ClickToScrollDoubleSpinBox class fix for scroll wheel.
@@ -282,6 +373,65 @@ class ColorControlWidget(QtWidgets.QWidget):
         dialog.accept()
 
 #---------------------------------------------------------------------
+# Simple color selector (index based) decoupled from Maya attributes.
+#---------------------------------------------------------------------
+class ColorIndexSelector(QtWidgets.QWidget):
+    valueChanged = QtCore.Signal(int)
+
+    def __init__(self, labelText, initialValue=1, parent=None):
+        super(ColorIndexSelector, self).__init__(parent)
+        self.indexColors = MAYA_INDEX_COLORS
+        layout = QtWidgets.QHBoxLayout(self)
+        layout.setContentsMargins(2, 2, 2, 2)
+
+        self.label = QtWidgets.QLabel(labelText)
+        self.label.setFixedWidth(180)
+        self.colorButton = QtWidgets.QPushButton()
+        self.colorButton.setFixedSize(40, 20)
+        self.colorButton.clicked.connect(self.openSwatchDialog)
+
+        self.slider = QtWidgets.QSlider(QtCore.Qt.Horizontal)
+        self.slider.setRange(1, 32)
+        self.slider.valueChanged.connect(self.on_slider_changed)
+
+        layout.addWidget(self.label)
+        layout.addWidget(self.colorButton)
+        layout.addWidget(self.slider)
+
+        self.setValue(initialValue)
+
+    def openSwatchDialog(self):
+        dialog = QtWidgets.QDialog(self)
+        dialog.setWindowTitle("Select Control Color")
+        grid = QtWidgets.QGridLayout(dialog)
+        rows = 4
+        cols = 8
+        for i, color in enumerate(self.indexColors):
+            btn = QtWidgets.QPushButton()
+            btn.setFixedSize(30, 30)
+            btn.setStyleSheet("background-color: %s" % color.name())
+            btn.clicked.connect(lambda checked=False, v=i+1, d=dialog: self._set_from_swatch(v, d))
+            grid.addWidget(btn, i // cols, i % cols)
+        dialog.exec_()
+
+    def _set_from_swatch(self, value, dialog):
+        self.slider.setValue(value)
+        dialog.accept()
+
+    def on_slider_changed(self, value):
+        self._update_button_color(value)
+        self.valueChanged.emit(value)
+
+    def _update_button_color(self, value):
+        idx = max(1, min(value, len(self.indexColors)))
+        self.colorButton.setStyleSheet("background-color: %s" % self.indexColors[idx-1].name())
+
+    def setValue(self, value):
+        self.slider.blockSignals(True)
+        self.slider.setValue(int(value))
+        self._update_button_color(int(value))
+        self.slider.blockSignals(False)
+#---------------------------------------------------------------------
 # CollapsibleWidget class using PySide2.
 #---------------------------------------------------------------------
 class CollapsibleWidget(QtWidgets.QWidget):
@@ -386,6 +536,8 @@ class Animation_UI(QtWidgets.QDialog):
         self.previousBlueprintListEntry = None
         self.previousBlueprintModule = None
         self.previousAnimationModule = None
+        self._activeControlModuleNamespace = None
+        self._suppressControlPrefSignals = False
         
         # Flag to indicate whether the UI was initialized properly.
         self.valid = True
@@ -1080,34 +1232,286 @@ class Animation_UI(QtWidgets.QDialog):
                 preferencesWidget.setContentLayout(prefLayout)
                 moduleSpecificPreferencesLayout.addWidget(preferencesWidget)
 
-                # Icon group (Scale + Color)
-                iconGroup = QtWidgets.QGroupBox("Icons")
-                iconLayout = QtWidgets.QVBoxLayout(iconGroup)
+                # Controls group (per-LOD preferences)
+                controlsGroup = QtWidgets.QGroupBox("Controls")
+                controlsLayout = QtWidgets.QVBoxLayout(controlsGroup)
+                controlsLayout.setSpacing(6)
 
-                fullAttrIconScale = self.selectedBlueprintModule + ":" + currentlySelectedModuleNamespace + ":module_grp.iconScale"
-                currentScale = cmds.getAttr(fullAttrIconScale)
-                iconScaleControl = FloatAttrControlWidget(fullAttrIconScale, "Scale:", minVal=0.1, maxVal=5.0,
-                                                          initialValue=currentScale, conversion=1000,
-                                                          callback=lambda newVal: cmds.setAttr(fullAttrIconScale, newVal))
-                iconLayout.addWidget(iconScaleControl)
+                moduleNamespaceFull = f"{self.selectedBlueprintModule}:{currentlySelectedModuleNamespace}"
+                self._activeControlModuleNamespace = moduleNamespaceFull
+                moduleGrpPath = moduleNamespaceFull + ":module_grp"
+                lodLevels = controlObject.get_lod_levels(moduleGrpPath)
+                for lodVal in lodLevels:
+                    controlObject.ensure_lod_settings_entry(moduleGrpPath, lodVal)
 
-                colorAttr = self.selectedBlueprintModule + ":" + currentlySelectedModuleNamespace + ":module_grp.overrideColor"
-                currentColor = cmds.getAttr(colorAttr)
-                colorInitial = currentColor  # UI displays this value
-                colorControl = ColorControlWidget(colorAttr, "Color:",
-                                                  minVal=1, maxVal=31,
-                                                  initialValue=colorInitial,
-                                                  callback=lambda newVal: cmds.setAttr(colorAttr, newVal))
-                iconLayout.addWidget(colorControl)
+                # Control Level dropdown
+                levelRow = QtWidgets.QHBoxLayout()
+                levelLabel = QtWidgets.QLabel("Control Level:")
+                levelLabel.setFixedWidth(180)
+                levelCombo = QtWidgets.QComboBox()
+                for lodVal in lodLevels:
+                    levelCombo.addItem(str(lodVal), lodVal)
+                levelCombo.currentIndexChanged.connect(lambda idx, ns=moduleNamespaceFull: self.on_control_level_changed(ns))
+                levelRow.addWidget(levelLabel)
+                levelRow.addWidget(levelCombo)
+                controlsLayout.addLayout(levelRow)
+                self.UIElements["controlLevelCombo"] = levelCombo
 
-                prefLayout.addWidget(iconGroup)
+                # Shape thumbnail + label
+                shapeRow = QtWidgets.QHBoxLayout()
+                shapeRow.setAlignment(QtCore.Qt.AlignLeft)
+                shapeButton = ShapeThumbnailButton("None", None)
+                shapeButton.clicked.connect(lambda checked=False, ns=moduleNamespaceFull: self.open_shape_gallery(ns))
+                shapeLabel = QtWidgets.QLabel("None")
+                shapeRow.addWidget(shapeButton)
+                shapeRow.addWidget(shapeLabel)
+                controlsLayout.addLayout(shapeRow)
+                self.UIElements["controlShapeButton"] = shapeButton
+                self.UIElements["controlShapeLabel"] = shapeLabel
+
+                # Scale
+                scaleRow = QtWidgets.QHBoxLayout()
+                scaleLabel = QtWidgets.QLabel("Scale:")
+                scaleLabel.setFixedWidth(180)
+                scaleSpin = ClickToScrollDoubleSpinBox()
+                scaleSpin.setRange(-10.0, 10.0)
+                scaleSpin.setDecimals(3)
+                scaleSpin.setSingleStep(0.05)
+                scaleSlider = QtWidgets.QSlider(QtCore.Qt.Horizontal)
+                scaleSlider.setRange(-1000, 1000)  # maps to -10.0 .. 10.0
+
+                def _scale_from_spin(val, ns=moduleNamespaceFull):
+                    if self._suppressControlPrefSignals:
+                        return
+                    scaleSlider.blockSignals(True)
+                    scaleSlider.setValue(int(round(val * 100)))
+                    scaleSlider.blockSignals(False)
+                    self.on_control_pref_changed("scale", val, ns)
+
+                def _scale_from_slider(sliderVal, ns=moduleNamespaceFull):
+                    if self._suppressControlPrefSignals:
+                        return
+                    floatVal = sliderVal / 100.0
+                    scaleSpin.blockSignals(True)
+                    scaleSpin.setValue(floatVal)
+                    scaleSpin.blockSignals(False)
+                    self.on_control_pref_changed("scale", floatVal, ns)
+
+                scaleSpin.valueChanged.connect(_scale_from_spin)
+                scaleSlider.valueChanged.connect(_scale_from_slider)
+
+                scaleRow.addWidget(scaleLabel)
+                scaleRow.addWidget(scaleSpin)
+                scaleRow.addWidget(scaleSlider)
+                controlsLayout.addLayout(scaleRow)
+                self.UIElements["controlScaleSpin"] = scaleSpin
+                self.UIElements["controlScaleSlider"] = scaleSlider
+
+                # Color
+                colorWidget = ColorIndexSelector("Color:", initialValue=1)
+                colorWidget.valueChanged.connect(lambda val, ns=moduleNamespaceFull: self.on_control_pref_changed("color", val, ns))
+                controlsLayout.addWidget(colorWidget)
+                self.UIElements["controlColor"] = colorWidget
+
+                # Line width
+                lineWidthRow = QtWidgets.QHBoxLayout()
+                lwLabel = QtWidgets.QLabel("Line Width:")
+                lwLabel.setFixedWidth(180)
+                lineWidthSpin = ClickToScrollDoubleSpinBox()
+                lineWidthSpin.setRange(0.1, 10.0)
+                lineWidthSpin.setDecimals(2)
+                lineWidthSpin.setSingleStep(0.1)
+                lineWidthSpin.valueChanged.connect(lambda val, ns=moduleNamespaceFull: self.on_control_pref_changed("lineWidth", val, ns))
+                lineWidthRow.addWidget(lwLabel)
+                lineWidthRow.addWidget(lineWidthSpin)
+                controlsLayout.addLayout(lineWidthRow)
+                self.UIElements["controlLineWidthSpin"] = lineWidthSpin
+
+                # Rotation
+                rotGroup = QtWidgets.QGroupBox("Rotation")
+                rotLayout = QtWidgets.QHBoxLayout(rotGroup)
+                rotLayout.setSpacing(6)
+                rotSpins = {}
+                for axis in ["X", "Y", "Z"]:
+                    spin = ClickToScrollDoubleSpinBox()
+                    spin.setRange(-360.0, 360.0)
+                    spin.setDecimals(2)
+                    spin.setSingleStep(1.0)
+                    spin.valueChanged.connect(lambda val, ax=axis, ns=moduleNamespaceFull: self.on_control_rotation_changed(ax, val, ns))
+                    lbl = QtWidgets.QLabel(axis + ":")
+                    axisLayout = QtWidgets.QVBoxLayout()
+                    axisLayout.addWidget(lbl)
+                    axisLayout.addWidget(spin)
+                    rotLayout.addLayout(axisLayout)
+                    rotSpins[axis] = spin
+                controlsLayout.addWidget(rotGroup)
+                self.UIElements["controlRotationSpins"] = rotSpins
+
+                prefLayout.addWidget(controlsGroup)
 
                 moduleInst.UI_preferences(prefLayout)
                 self.UIElements["matchingButton"].setEnabled(matchButtonEnable)
+                self._refresh_controls_preferences_ui(moduleNamespaceFull)
 
         self.previousBlueprintModule = self.selectedBlueprintModule
         self.previousAnimationModule = currentlySelectedModuleNamespace
   
+    def _current_module_namespace_full(self):
+        if self._activeControlModuleNamespace:
+            return self._activeControlModuleNamespace
+        selectedItems = self.UIElements["animationModule_textScroll"].selectedItems()
+        if not selectedItems:
+            return None
+        return f"{self.selectedBlueprintModule}:{selectedItems[0].text()}"
+
+    def _current_control_level(self):
+        combo = self.UIElements.get("controlLevelCombo")
+        if combo is None:
+            return None
+        data = combo.currentData()
+        return int(data) if data is not None else int(combo.currentText())
+
+    def _load_lod_entry(self, moduleNamespaceFull, lod):
+        moduleGrp = moduleNamespaceFull + ":module_grp"
+        controlObject.ensure_lod_settings_entry(moduleGrp, lod)
+        settings = controlObject.get_lod_settings(moduleGrp)
+        entry = settings.get(str(int(lod)), {
+            "scale": 1.0,
+            "color": 6,
+            "lineWidth": 1.0,
+            "rotation": (0.0, 0.0, 0.0),
+            "shapeFile": DEFAULT_SHAPE_FILE,
+        })
+        return settings, entry, moduleGrp
+
+    def _refresh_controls_preferences_ui(self, moduleNamespaceFull=None):
+        if moduleNamespaceFull is None:
+            moduleNamespaceFull = self._current_module_namespace_full()
+        if not moduleNamespaceFull:
+            return
+        lod = self._current_control_level()
+        if lod is None:
+            return
+        settings, entry, _ = self._load_lod_entry(moduleNamespaceFull, lod)
+
+        self._suppressControlPrefSignals = True
+        try:
+            # Shape preview
+            shapeFile = entry.get("shapeFile", DEFAULT_SHAPE_FILE)
+            shapeLabel = self.UIElements.get("controlShapeLabel")
+            shapeButton = self.UIElements.get("controlShapeButton")
+            if shapeLabel:
+                shapeLabel.setText(shapeFile)
+            if shapeButton:
+                thumbPath = SHAPE_ROOT / Path(shapeFile).with_suffix(".png")
+                thumb = _load_thumbnail(thumbPath)
+                shapeButton.setIcon(QtGui.QIcon(thumb))
+                shapeButton.setIconSize(thumb.size())
+
+            # Scale
+            scaleSpin = self.UIElements.get("controlScaleSpin")
+            scaleSlider = self.UIElements.get("controlScaleSlider")
+            if scaleSpin:
+                scaleSpin.blockSignals(True)
+                scaleSpin.setValue(entry.get("scale", 1.0))
+                scaleSpin.blockSignals(False)
+            if scaleSlider:
+                scaleSlider.blockSignals(True)
+                scaleSlider.setValue(int(round(entry.get("scale", 1.0) * 100)))
+                scaleSlider.blockSignals(False)
+
+            # Color
+            colorWidget = self.UIElements.get("controlColor")
+            if colorWidget:
+                colorWidget.setValue(entry.get("color", 6))
+
+            # Line width
+            lineWidthSpin = self.UIElements.get("controlLineWidthSpin")
+            if lineWidthSpin:
+                lineWidthSpin.blockSignals(True)
+                lineWidthSpin.setValue(entry.get("lineWidth", 1.0))
+                lineWidthSpin.blockSignals(False)
+
+            # Rotation
+            rotSpins = self.UIElements.get("controlRotationSpins", {})
+            rotation = entry.get("rotation", (0.0, 0.0, 0.0))
+            for idx, axis in enumerate(["X", "Y", "Z"]):
+                spin = rotSpins.get(axis)
+                if spin:
+                    spin.blockSignals(True)
+                    spin.setValue(rotation[idx] if len(rotation) > idx else 0.0)
+                    spin.blockSignals(False)
+        finally:
+            self._suppressControlPrefSignals = False
+
+    def on_control_level_changed(self, moduleNamespaceFull=None):
+        if self._suppressControlPrefSignals:
+            return
+        if moduleNamespaceFull:
+            self._activeControlModuleNamespace = moduleNamespaceFull
+        self._refresh_controls_preferences_ui(moduleNamespaceFull)
+
+    def _persist_lod_entry(self, moduleNamespaceFull, lod, entry, settings=None, moduleGrp=None):
+        if settings is None or moduleGrp is None:
+            settings, entry, moduleGrp = self._load_lod_entry(moduleNamespaceFull, lod)
+        settings[str(int(lod))] = entry
+        controlObject.save_lod_settings(moduleGrp, settings)
+        print(f"[animation_UI] persist lod ns={moduleNamespaceFull} lod={lod} keyvals={entry}")
+        controlObject.apply_lod_preferences(moduleNamespaceFull, int(lod), entry)
+
+    def on_control_pref_changed(self, key, value, moduleNamespaceFull=None):
+        if self._suppressControlPrefSignals:
+            return
+        ns = moduleNamespaceFull or self._current_module_namespace_full()
+        if not ns:
+            return
+        lod = self._current_control_level()
+        if lod is None:
+            return
+        settings, entry, moduleGrp = self._load_lod_entry(ns, lod)
+        entry = dict(entry)  # copy
+        entry[key] = float(value) if key in ("scale", "lineWidth") else int(value)
+        print(f"[animation_UI] change key={key} val={value} ns={ns} lod={lod}")
+        self._persist_lod_entry(ns, lod, entry, settings=settings, moduleGrp=moduleGrp)
+
+    def on_control_rotation_changed(self, axis, value, moduleNamespaceFull=None):
+        if self._suppressControlPrefSignals:
+            return
+        ns = moduleNamespaceFull or self._current_module_namespace_full()
+        if not ns:
+            return
+        lod = self._current_control_level()
+        if lod is None:
+            return
+        settings, entry, moduleGrp = self._load_lod_entry(ns, lod)
+        rotation = list(entry.get("rotation", (0.0, 0.0, 0.0)))
+        axis_index = {"X": 0, "Y": 1, "Z": 2}[axis]
+        rotation += [0.0] * (3 - len(rotation))
+        rotation[axis_index] = float(value)
+        entry = dict(entry)
+        entry["rotation"] = tuple(rotation)
+        self._persist_lod_entry(ns, lod, entry, settings=settings, moduleGrp=moduleGrp)
+
+    def open_shape_gallery(self, moduleNamespaceFull=None):
+        ns = moduleNamespaceFull or self._current_module_namespace_full()
+        if not ns:
+            return
+        gallery = ShapeGalleryWindow(parent=self)
+        gallery.shapeSelected.connect(lambda shapeName, ns=ns: self.on_shape_selected(shapeName, ns))
+        gallery.exec_()
+
+    def on_shape_selected(self, shapeName, moduleNamespaceFull):
+        if not shapeName:
+            return
+        lod = self._current_control_level()
+        if lod is None:
+            return
+        settings, entry, moduleGrp = self._load_lod_entry(moduleNamespaceFull, lod)
+        entry = dict(entry)
+        entry["shapeFile"] = shapeName
+        self._persist_lod_entry(moduleNamespaceFull, lod, entry, settings=settings, moduleGrp=moduleGrp)
+        self._refresh_controls_preferences_ui(moduleNamespaceFull)
+
     def iconColour_callback(self, currentlySelectedModuleNamespace, value):
         cmds.setAttr(self.selectedBlueprintModule + ":" + currentlySelectedModuleNamespace + ":module_grp.overrideColor", value)
 
