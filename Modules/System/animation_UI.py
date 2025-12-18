@@ -1436,7 +1436,7 @@ class Animation_UI(QtWidgets.QDialog):
     def _discover_current_lod_color(self, moduleNamespaceFull, lod):
         """
         Best-effort discovery of the current curve color for a module+LOD by sampling the first control.
-        If no override is found, returns a neutral gray to represent Maya defaults.
+        If no override is found, returns Maya's default curve color (index 5 deep blue).
         """
         ns = moduleNamespaceFull
         target_lod = int(lod)
@@ -1469,7 +1469,8 @@ class Animation_UI(QtWidgets.QDialog):
                         return QtGui.QColor(colors.MAYA_INDEX_QCOLORS[idx])
                 except Exception:
                     continue
-        return QtGui.QColor(96, 96, 96)
+        # When no override is present, Maya draws curves using its internal defaults (typically index 5).
+        return QtGui.QColor(colors.MAYA_INDEX_QCOLORS[4])
 
     def _refresh_controls_preferences_ui(self, moduleNamespaceFull=None):
         if moduleNamespaceFull is None:
