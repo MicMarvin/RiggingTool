@@ -99,16 +99,65 @@ def _load_thumbnail(pngPath, size=96):
     return pixmap.scaled(size, size, QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation)
 
 
+def _format_shape_display_name(filename):
+    """Readable label for a shape file."""
+    return Path(filename).stem.replace("_", " ")
+
+
+def _elide_text(text, font, width):
+    return QtGui.QFontMetrics(font).elidedText(text, QtCore.Qt.ElideRight, width)
+
+
 class ShapeThumbnailButton(QtWidgets.QPushButton):
-    def __init__(self, shapeName, thumbPath=None, parent=None):
+    """Simple thumbnail button used in module preference rows (non-gallery)."""
+    def __init__(self, shapeName, thumbPath=None, iconSize=48, parent=None):
         super(ShapeThumbnailButton, self).__init__(parent)
+        self.setObjectName("shapeThumbButton")
         self.shapeName = shapeName
-        pixmap = _load_thumbnail(thumbPath, size=96)
+        pixmap = _load_thumbnail(thumbPath, size=iconSize)
         self.setIcon(QtGui.QIcon(pixmap))
-        self.setIconSize(pixmap.size())
-        self.setFixedSize(pixmap.size() + QtCore.QSize(12, 12))
+        self.setIconSize(QtCore.QSize(iconSize, iconSize))
+        padding = 10
+        self.setFixedSize(QtCore.QSize(iconSize + padding, iconSize + padding))
         self.setFlat(True)
         self.setToolTip(shapeName)
+        self.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+
+
+class ShapeTileButton(QtWidgets.QToolButton):
+    def __init__(self, shapeInfo, click_handler, iconSize=96, tileWidth=120, parent=None):
+        super(ShapeTileButton, self).__init__(parent)
+        self.setObjectName("shapeTileButton")
+        self.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon)
+        self.setAutoRaise(False)
+        self.setCheckable(False)
+        self.shapeName = shapeInfo["name"]
+        self.displayName = shapeInfo.get("displayName", self.shapeName)
+        self._tile_width = tileWidth
+        self._icon_size = iconSize
+
+        pixmap = _load_thumbnail(shapeInfo.get("thumbPath"), size=iconSize)
+        self.setIcon(QtGui.QIcon(pixmap))
+        self.setIconSize(QtCore.QSize(iconSize, iconSize))
+
+        font_metrics = QtGui.QFontMetrics(self.font())
+        text_height = font_metrics.height() + 6
+        padding = 8
+        self.setFixedSize(tileWidth, iconSize + text_height + padding)
+        self._update_elided_text()
+        self.setToolTip(self.displayName)
+
+        self.clicked.connect(click_handler)
+
+    def _update_elided_text(self):
+        available = max(10, self.width() - 10)
+        elided = _elide_text(self.displayName, self.font(), available)
+        self.setText(elided)
+
+    def resizeEvent(self, event):
+        super(ShapeTileButton, self).resizeEvent(event)
+        self._update_elided_text()
 
 
 class ShapeGalleryWindow(QtWidgets.QDialog):
@@ -118,34 +167,100 @@ class ShapeGalleryWindow(QtWidgets.QDialog):
         super(ShapeGalleryWindow, self).__init__(parent)
         self.setWindowTitle("Choose Control Shape")
         self.setModal(True)
-        self.resize(520, 480)
+        self.setObjectName("shapeGalleryWindow")
+        self.resize(560, 640)
+
+        # Visual tuning
+        self.setStyleSheet(
+            """
+            #shapeGalleryWindow {
+                background-color: #2f2f2f;
+            }
+            QLineEdit#shapeSearch {
+                background-color: #1f1f1f;
+                border: 1px solid #4a4a4a;
+                border-radius: 4px;
+                padding: 4px 6px;
+                color: #dddddd;
+            }
+            QLineEdit#shapeSearch:focus {
+                border: 1px solid #888888;
+            }
+            QPushButton#shapeThumbButton {
+                background-color: #3a3a3a;
+                border: 1px solid #4a4a4a;
+                border-radius: 4px;
+            }
+            QPushButton#shapeThumbButton:hover {
+                border: 1px solid #b5b5b5;
+                background-color: #444444;
+            }
+            QPushButton#shapeThumbButton:focus {
+                border: 1px solid #b5b5b5;
+            }
+            QToolButton#shapeTileButton {
+                background-color: #3a3a3a;
+                border: 1px solid #2f2f2f;
+                border-radius: 2px;
+                padding: 4px 4px 6px 4px;
+                color: #b0b0b0;
+            }
+            QToolButton#shapeTileButton:hover {
+                background-color: #4a4a4a;
+                border: 1px solid #d0d0d0;
+                color: #e0e0e0;
+            }
+            """
+        )
+
+        self._icon_size = 96
+        self._tile_width = self._icon_size + 18  # consistent fixed width
+        self._default_columns = 4
+        self.current_columns = self._default_columns
+
+        self.allShapes = self._load_shapes()
+        self.filteredShapes = list(self.allShapes)
 
         layout = QtWidgets.QVBoxLayout(self)
-        scroll = QtWidgets.QScrollArea()
-        scroll.setWidgetResizable(True)
-        content = QtWidgets.QWidget()
-        grid = QtWidgets.QGridLayout(content)
-        grid.setSpacing(10)
+        layout.setContentsMargins(8, 8, 8, 8)
+        layout.setSpacing(8)
 
-        shapes = list_shape_library()
-        cols = 4
-        for idx, info in enumerate(shapes):
-            button = ShapeThumbnailButton(info["name"], info.get("thumbPath"))
-            button.clicked.connect(lambda checked=False, name=info["name"]: self._select(name))
-            nameLabel = QtWidgets.QLabel(info["name"])
-            nameLabel.setAlignment(QtCore.Qt.AlignCenter)
+        self.searchField = QtWidgets.QLineEdit()
+        self.searchField.setObjectName("shapeSearch")
+        self.searchField.setPlaceholderText("Search...")
+        self.searchField.setFixedWidth(360)
+        # Prefer a larger, crisper built-in find icon; fall back to search.png
+        find_pix = QtGui.QPixmap(":/RS_find.png")
+        if find_pix.isNull():
+            find_pix = QtGui.QPixmap(":/search.png")
+        if not find_pix.isNull():
+            find_pix = find_pix.scaled(18, 18, QtCore.Qt.KeepAspectRatio, QtCore.Qt.SmoothTransformation)
+        search_icon = QtGui.QIcon(find_pix)
+        search_action = self.searchField.addAction(search_icon, QtWidgets.QLineEdit.LeadingPosition)
+        search_action.setEnabled(False)
+        self.searchField.textChanged.connect(self._on_search_text_changed)
+        searchRow = QtWidgets.QHBoxLayout()
+        searchRow.setContentsMargins(0, 0, 0, 0)
+        searchRow.addStretch(1)
+        searchRow.addWidget(self.searchField)
+        searchRow.addStretch(1)
+        layout.addLayout(searchRow)
 
-            cell = QtWidgets.QVBoxLayout()
-            cell.addWidget(button, alignment=QtCore.Qt.AlignCenter)
-            cell.addWidget(nameLabel)
+        self.scroll = QtWidgets.QScrollArea()
+        self.scroll.setWidgetResizable(True)
+        self.scroll.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.scroll.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
+        self.scroll.setFrameShape(QtWidgets.QFrame.NoFrame)
+        self.scroll.viewport().installEventFilter(self)
 
-            container = QtWidgets.QWidget()
-            container.setLayout(cell)
-            grid.addWidget(container, idx // cols, idx % cols)
-
-        content.setLayout(grid)
-        scroll.setWidget(content)
-        layout.addWidget(scroll)
+        self.content = QtWidgets.QWidget()
+        self.grid = QtWidgets.QGridLayout(self.content)
+        self.grid.setContentsMargins(4, 4, 4, 4)
+        self.grid.setHorizontalSpacing(4)
+        self.grid.setVerticalSpacing(4)
+        self.content.setLayout(self.grid)
+        self.scroll.setWidget(self.content)
+        layout.addWidget(self.scroll)
 
         btnRow = QtWidgets.QHBoxLayout()
         closeBtn = QtWidgets.QPushButton("Cancel")
@@ -154,9 +269,81 @@ class ShapeGalleryWindow(QtWidgets.QDialog):
         btnRow.addWidget(closeBtn)
         layout.addLayout(btnRow)
 
+        self._update_columns_for_width(force=True)
+
     def _select(self, shapeName):
         self.shapeSelected.emit(shapeName)
         self.accept()
+
+    def _load_shapes(self):
+        shapes = []
+        for info in list_shape_library():
+            info["displayName"] = _format_shape_display_name(info["name"])
+            shapes.append(info)
+        return shapes
+
+    def _build_tile(self, shapeInfo):
+        return ShapeTileButton(
+            shapeInfo=shapeInfo,
+            click_handler=partial(self._select, shapeInfo["name"]),
+            iconSize=self._icon_size,
+            tileWidth=self._tile_width,
+            parent=None,
+        )
+
+    def _rebuild_grid(self):
+        clearLayout(self.grid)
+        if not self.filteredShapes:
+            emptyLabel = QtWidgets.QLabel("No shapes match your search.")
+            emptyLabel.setAlignment(QtCore.Qt.AlignCenter)
+            self.grid.addWidget(emptyLabel, 0, 0)
+            return
+
+        for idx, info in enumerate(self.filteredShapes):
+            row = idx // self.current_columns
+            col = idx % self.current_columns
+            self.grid.addWidget(self._build_tile(info), row, col)
+
+    def _on_search_text_changed(self, text):
+        term = text.strip().lower()
+        if not term:
+            self.filteredShapes = list(self.allShapes)
+        else:
+            normalized_term = term.replace("_", " ")
+            filtered = []
+            for shape in self.allShapes:
+                haystack = f"{shape['name']} {shape.get('displayName', '')}".lower().replace("_", " ")
+                if normalized_term in haystack:
+                    filtered.append(shape)
+            self.filteredShapes = filtered
+        self._update_columns_for_width(force=True)
+
+    def _update_columns_for_width(self, force=False):
+        viewport_width = max(1, self.scroll.viewport().width())
+        spacing = self.grid.horizontalSpacing()
+        if spacing is None or spacing < 0:
+            spacing = 0
+        tile_width = self._tile_width
+        total_tile = tile_width + spacing
+        computed_cols = max(1, int(viewport_width // total_tile))
+        computed_cols = min(computed_cols, len(self.filteredShapes)) if self.filteredShapes else 1
+        if computed_cols < 1:
+            computed_cols = 1
+
+        if computed_cols != self.current_columns:
+            self.current_columns = computed_cols
+            self._rebuild_grid()
+        elif force:
+            self._rebuild_grid()
+
+    def eventFilter(self, obj, event):
+        if obj is self.scroll.viewport() and event.type() == QtCore.QEvent.Resize:
+            self._update_columns_for_width()
+        return super(ShapeGalleryWindow, self).eventFilter(obj, event)
+
+    def resizeEvent(self, event):
+        super(ShapeGalleryWindow, self).resizeEvent(event)
+        self._update_columns_for_width()
 
 #---------------------------------------------------------------------
 # ClickToScrollDoubleSpinBox class fix for scroll wheel.
