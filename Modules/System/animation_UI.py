@@ -440,8 +440,10 @@ class PaletteColorDialog(QtWidgets.QDialog):
         self._paletteCombo.currentTextChanged.connect(self._on_palette_changed)
         bottomRow.addWidget(self._paletteCombo)
 
-        self._closeBtn = QtWidgets.QToolButton()
-        self._closeBtn.setIcon(self.style().standardIcon(QtWidgets.QStyle.SP_TitleBarCloseButton))
+        self._closeBtn = QtWidgets.QPushButton("Close")
+        self._closeBtn.setAutoDefault(False)
+        self._closeBtn.setDefault(False)
+        self._closeBtn.setFlat(False)
         self._closeBtn.clicked.connect(self.close)
         bottomRow.addWidget(self._closeBtn)
 
