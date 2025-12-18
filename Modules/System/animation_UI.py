@@ -67,6 +67,39 @@ MAYA_INDEX_COLORS = [
     QtGui.QColor(249, 170, 38),      # 32: Yellowish Orange 
 ]
 
+DEFAULT_CONTROL_COLOR = QtGui.QColor(249, 170, 38)
+
+def _build_palette(steps=20, hue_start=0.0, hue_end=0.80, saturation=0.65, value=1.0):
+    """
+    Build a deterministic spectrum palette.
+    Steps are split across two rows in the UI.
+    """
+    colors = []
+    steps = max(1, int(steps))
+    if steps == 1:
+        return [QtGui.QColor.fromHsvF(hue_start, saturation, value)]
+    for i in range(steps):
+        t = i / float(steps - 1)
+        hue = hue_start + ((hue_end - hue_start) * t)
+        colors.append(QtGui.QColor.fromHsvF(hue, saturation, value))
+    return colors
+
+COLOR_PALETTES = {
+    "Maya Default": MAYA_INDEX_COLORS,
+    "Saturated": _build_palette(saturation=0.95, value=1.0),
+    "Spectrum": _build_palette(saturation=0.65, value=1.0),
+    "Faded": _build_palette(saturation=0.25, value=1.0),
+}
+
+def _display_color_palettes():
+    """Palettes shown in the UI (hide back-compat aliases)."""
+    return {
+        "Maya Default": COLOR_PALETTES["Maya Default"],
+        "Spectrum": COLOR_PALETTES["Spectrum"],
+        "Saturated": COLOR_PALETTES["Saturated"],
+        "Faded": COLOR_PALETTES["Faded"],
+    }
+
 def list_shape_library():
     """Return list of available shapes with thumbnails."""
     shapes = []
@@ -376,61 +409,195 @@ class ColorControlWidget(QtWidgets.QWidget):
 # Simple color selector (index based) decoupled from Maya attributes.
 #---------------------------------------------------------------------
 class ColorIndexSelector(QtWidgets.QWidget):
-    valueChanged = QtCore.Signal(int)
+    """
+    Palette-based RGB color selector (no Maya index slider).
+    Retains the swatch-button workflow, but stores/returns QColor.
+    """
+    colorChanged = QtCore.Signal(QtGui.QColor)
 
-    def __init__(self, labelText, initialValue=1, parent=None):
+    def __init__(self, labelText, initialColor=None, initialPalette="Maya Default", parent=None):
         super(ColorIndexSelector, self).__init__(parent)
-        self.indexColors = MAYA_INDEX_COLORS
+        self._settings = QtCore.QSettings("MicMarvin", "RiggingTool")
+        self._paletteName = initialPalette
+        self._color = initialColor if initialColor is not None else DEFAULT_CONTROL_COLOR
+
         layout = QtWidgets.QHBoxLayout(self)
         layout.setContentsMargins(2, 2, 2, 2)
 
         self.label = QtWidgets.QLabel(labelText)
         self.label.setFixedWidth(180)
-        self.colorButton = QtWidgets.QPushButton()
-        self.colorButton.setFixedSize(40, 20)
-        self.colorButton.clicked.connect(self.openSwatchDialog)
 
-        self.slider = QtWidgets.QSlider(QtCore.Qt.Horizontal)
-        self.slider.setRange(1, 32)
-        self.slider.valueChanged.connect(self.on_slider_changed)
+        self.colorButton = QtWidgets.QPushButton()
+        self.colorButton.setFixedHeight(20)
+        self.colorButton.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
+        self.colorButton.clicked.connect(self.openSwatchDialog)
 
         layout.addWidget(self.label)
         layout.addWidget(self.colorButton)
-        layout.addWidget(self.slider)
 
-        self.setValue(initialValue)
+        self.setColor(self._color, emit=False)
+
+    def paletteName(self):
+        return self._paletteName
+
+    def setPaletteName(self, name):
+        if name in COLOR_PALETTES:
+            self._paletteName = name
+
+    def color(self):
+        return QtGui.QColor(self._color)
+
+    def setColor(self, color, emit=True):
+        self._color = QtGui.QColor(color)
+        self.colorButton.setStyleSheet("background-color: %s; border: none;" % self._color.name())
+        if emit:
+            self.colorChanged.emit(self._color)
 
     def openSwatchDialog(self):
-        dialog = QtWidgets.QDialog(self)
-        dialog.setWindowTitle("Select Control Color")
-        grid = QtWidgets.QGridLayout(dialog)
-        rows = 4
-        cols = 8
-        for i, color in enumerate(self.indexColors):
-            btn = QtWidgets.QPushButton()
-            btn.setFixedSize(30, 30)
-            btn.setStyleSheet("background-color: %s" % color.name())
-            btn.clicked.connect(lambda checked=False, v=i+1, d=dialog: self._set_from_swatch(v, d))
-            grid.addWidget(btn, i // cols, i % cols)
-        dialog.exec_()
+        lastPalette = self._settings.value("AnimationUI/ColorPalette", self._paletteName)
+        if str(lastPalette) == "Spectrum":
+            lastPalette = "Middle"
+        dlg = getattr(self, "_paletteDialog", None)
+        if dlg is not None and dlg.isVisible():
+            dlg.raise_()
+            dlg.activateWindow()
+            return
 
-    def _set_from_swatch(self, value, dialog):
-        self.slider.setValue(value)
-        dialog.accept()
+        dlg = PaletteColorDialog(
+            palettes=_display_color_palettes(),
+            currentColor=self._color,
+            currentPalette=str(lastPalette),
+            parent=self
+        )
+        self._paletteDialog = dlg
 
-    def on_slider_changed(self, value):
-        self._update_button_color(value)
-        self.valueChanged.emit(value)
+        def _cleanup(*args):
+            self._paletteDialog = None
 
-    def _update_button_color(self, value):
-        idx = max(1, min(value, len(self.indexColors)))
-        self.colorButton.setStyleSheet("background-color: %s" % self.indexColors[idx-1].name())
+        dlg.destroyed.connect(_cleanup)
+        dlg.colorPicked.connect(self._on_palette_color_picked)
+        dlg.show()
+        dlg.raise_()
+        dlg.activateWindow()
 
-    def setValue(self, value):
-        self.slider.blockSignals(True)
-        self.slider.setValue(int(value))
-        self._update_button_color(int(value))
-        self.slider.blockSignals(False)
+    def _on_palette_color_picked(self, color, paletteName):
+        self._paletteName = paletteName
+        self._settings.setValue("AnimationUI/ColorPalette", self._paletteName)
+        self.setColor(color, emit=True)
+
+
+class PaletteColorDialog(QtWidgets.QDialog):
+    colorPicked = QtCore.Signal(QtGui.QColor, str)
+
+    def __init__(self, palettes, currentColor=None, currentPalette="Maya Default", parent=None):
+        super(PaletteColorDialog, self).__init__(parent)
+        self.setWindowTitle("Select Control Color")
+        self.setModal(False)
+        self.setWindowModality(QtCore.Qt.NonModal)
+        self.setAttribute(QtCore.Qt.WA_DeleteOnClose, True)
+        self.setWindowFlags(self.windowFlags() | QtCore.Qt.Tool)
+
+        self.palettes = dict(palettes or {})
+        self.selectedPalette = currentPalette if currentPalette in self.palettes else (list(self.palettes.keys())[0] if self.palettes else "")
+        self._currentColor = QtGui.QColor(currentColor) if currentColor is not None else DEFAULT_CONTROL_COLOR
+
+        layout = QtWidgets.QVBoxLayout(self)
+        layout.setContentsMargins(6, 6, 6, 6)
+        layout.setSpacing(6)
+
+        self._swatchRowLayouts = []
+        swatchContainer = QtWidgets.QWidget()
+        swatchContainer.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+        swatchLayout = QtWidgets.QVBoxLayout(swatchContainer)
+        swatchLayout.setContentsMargins(0, 0, 0, 0)
+        swatchLayout.setSpacing(0)
+        for _ in range(2):
+            rowWidget = QtWidgets.QWidget()
+            rowWidget.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+            rowLayout = QtWidgets.QHBoxLayout(rowWidget)
+            rowLayout.setContentsMargins(0, 0, 0, 0)
+            rowLayout.setSpacing(0)
+            swatchLayout.addWidget(rowWidget, stretch=1)
+            self._swatchRowLayouts.append(rowLayout)
+        layout.addWidget(swatchContainer, stretch=1)
+
+        bottomRow = QtWidgets.QHBoxLayout()
+        bottomRow.setSpacing(8)
+        layout.addLayout(bottomRow, stretch=0)
+
+        colorLabel = QtWidgets.QLabel("Color")
+        colorLabel.setFixedWidth(50)
+        bottomRow.addWidget(colorLabel)
+
+        self._currentSwatch = QtWidgets.QPushButton()
+        self._currentSwatch.setEnabled(False)
+        self._currentSwatch.setFixedHeight(20)
+        self._currentSwatch.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
+        bottomRow.addWidget(self._currentSwatch, stretch=1)
+
+        paletteLabel = QtWidgets.QLabel("Palette")
+        paletteLabel.setFixedWidth(60)
+        bottomRow.addWidget(paletteLabel)
+
+        self._paletteCombo = QtWidgets.QComboBox()
+        self._paletteCombo.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        self._paletteCombo.addItems(list(self.palettes.keys()))
+        if self.selectedPalette:
+            idx = self._paletteCombo.findText(self.selectedPalette)
+            if idx >= 0:
+                self._paletteCombo.setCurrentIndex(idx)
+        self._paletteCombo.currentTextChanged.connect(self._on_palette_changed)
+        bottomRow.addWidget(self._paletteCombo)
+
+        self._closeBtn = QtWidgets.QToolButton()
+        self._closeBtn.setIcon(self.style().standardIcon(QtWidgets.QStyle.SP_TitleBarCloseButton))
+        self._closeBtn.clicked.connect(self.close)
+        bottomRow.addWidget(self._closeBtn)
+
+        self._update_current_swatch()
+        self._rebuild_swatch_grid()
+
+        self.resize(540, 200)
+
+    def _update_current_swatch(self):
+        self._currentSwatch.setStyleSheet("background-color: %s; border: none;" % self._currentColor.name())
+
+    def _on_palette_changed(self, name):
+        if name in self.palettes:
+            self.selectedPalette = name
+            self._rebuild_swatch_grid()
+
+    def _clear_grid(self):
+        for rowLayout in self._swatchRowLayouts:
+            while rowLayout.count():
+                item = rowLayout.takeAt(0)
+                w = item.widget()
+                if w:
+                    w.setParent(None)
+
+    def _rebuild_swatch_grid(self):
+        self._clear_grid()
+        colors = list(self.palettes.get(self.selectedPalette, []))
+        if not colors:
+            return
+
+        split = int((len(colors) + 1) / 2)
+        rows = [colors[:split], colors[split:]]
+
+        for rowIndex, rowColors in enumerate(rows):
+            rowLayout = self._swatchRowLayouts[rowIndex]
+            for color in rowColors:
+                btn = QtWidgets.QPushButton()
+                btn.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Expanding)
+                btn.setFocusPolicy(QtCore.Qt.NoFocus)
+                btn.setStyleSheet("background-color: %s; border: none; margin: 0px; padding: 0px;" % color.name())
+                btn.clicked.connect(lambda checked=False, col=QtGui.QColor(color): self._choose_color(col))
+                rowLayout.addWidget(btn, stretch=1)
+
+    def _choose_color(self, color):
+        self._currentColor = QtGui.QColor(color)
+        self._update_current_swatch()
+        self.colorPicked.emit(QtGui.QColor(color), self.selectedPalette)
 #---------------------------------------------------------------------
 # CollapsibleWidget class using PySide2.
 #---------------------------------------------------------------------
@@ -1308,8 +1475,8 @@ class Animation_UI(QtWidgets.QDialog):
                 self.UIElements["controlScaleSlider"] = scaleSlider
 
                 # Color
-                colorWidget = ColorIndexSelector("Color:", initialValue=1)
-                colorWidget.valueChanged.connect(lambda val, ns=moduleNamespaceFull: self.on_control_pref_changed("color", val, ns))
+                colorWidget = ColorIndexSelector("Color:", initialColor=DEFAULT_CONTROL_COLOR)
+                colorWidget.colorChanged.connect(lambda col, ns=moduleNamespaceFull: self.on_control_color_changed(col, ns))
                 controlsLayout.addWidget(colorWidget)
                 self.UIElements["controlColor"] = colorWidget
 
@@ -1358,14 +1525,20 @@ class Animation_UI(QtWidgets.QDialog):
         key = str(int(lod))
         entry = settings.get(key, {
             "scale": 1.0,
-            "color": 6,
+            "colorRGB": [DEFAULT_CONTROL_COLOR.redF(), DEFAULT_CONTROL_COLOR.greenF(), DEFAULT_CONTROL_COLOR.blueF()],
             "lineWidth": 1.0,
             "shapeFile": DEFAULT_SHAPE_FILE,
         })
         entry = dict(entry)
-        # Drop deprecated rotation preference if it lingers in saved data.
+        # Drop deprecated preferences if they linger in saved data.
+        dirty = False
         if "rotation" in entry:
             entry.pop("rotation", None)
+            dirty = True
+        if "color" in entry:
+            entry.pop("color", None)
+            dirty = True
+        if dirty:
             settings[key] = entry
             controlObject.save_lod_settings(moduleGrp, settings)
         return settings, entry, moduleGrp
@@ -1409,7 +1582,13 @@ class Animation_UI(QtWidgets.QDialog):
             # Color
             colorWidget = self.UIElements.get("controlColor")
             if colorWidget:
-                colorWidget.setValue(entry.get("color", 6))
+                rgb = entry.get("colorRGB", [DEFAULT_CONTROL_COLOR.redF(), DEFAULT_CONTROL_COLOR.greenF(), DEFAULT_CONTROL_COLOR.blueF()])
+                try:
+                    r, g, b = rgb
+                    color = QtGui.QColor.fromRgbF(float(r), float(g), float(b))
+                except Exception:
+                    color = QtGui.QColor(DEFAULT_CONTROL_COLOR)
+                colorWidget.setColor(color, emit=False)
 
             # Line width
             lineWidthSpin = self.UIElements.get("controlLineWidthSpin")
@@ -1446,9 +1625,20 @@ class Animation_UI(QtWidgets.QDialog):
             return
         settings, entry, moduleGrp = self._load_lod_entry(ns, lod)
         entry = dict(entry)  # copy
-        entry[key] = float(value) if key in ("scale", "lineWidth") else int(value)
+        if key == "colorRGB":
+            if isinstance(value, QtGui.QColor):
+                entry[key] = [value.redF(), value.greenF(), value.blueF()]
+            else:
+                entry[key] = [float(value[0]), float(value[1]), float(value[2])]
+        else:
+            entry[key] = float(value) if key in ("scale", "lineWidth") else int(value)
         print(f"[animation_UI] change key={key} val={value} ns={ns} lod={lod}")
         self._persist_lod_entry(ns, lod, entry, settings=settings, moduleGrp=moduleGrp)
+
+    def on_control_color_changed(self, color, moduleNamespaceFull=None):
+        if self._suppressControlPrefSignals:
+            return
+        self.on_control_pref_changed("colorRGB", color, moduleNamespaceFull)
 
     def open_shape_gallery(self, moduleNamespaceFull=None):
         ns = moduleNamespaceFull or self._current_module_namespace_full()
