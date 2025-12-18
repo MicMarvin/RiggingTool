@@ -4,6 +4,7 @@ import time
 import importlib
 from pathlib import Path
 from functools import partial
+import re
 
 # Maya and PySide2 imports
 import maya.cmds as cmds
@@ -296,87 +297,7 @@ class FloatAttrControlWidget(QtWidgets.QWidget):
 
 
 #---------------------------------------------------------------------
-# ColorControlWidget class using PySide2.
-#---------------------------------------------------------------------
-class ColorControlWidget(QtWidgets.QWidget):
-    """
-    A widget for controlling a Maya color attribute (an index from 0–31).
-    The UI displays a label, a button showing the current color, and a slider (range 1–32).
-    Clicking the color button opens a dialog with a grid of swatch buttons.
-    When the slider or a swatch is used, the attribute is set (via cmds.setAttr) and an optional callback is called.
-    """
-    def __init__(self, attrName, labelText, minVal=1, maxVal=32, initialValue=1, callback=None, parent=None):
-        super(ColorControlWidget, self).__init__(parent)
-        self.attrName = attrName
-        self.callback = callback
-        # Use our updated Maya index colors.
-        self.indexColors = MAYA_INDEX_COLORS
-
-        layout = QtWidgets.QHBoxLayout(self)
-        layout.setContentsMargins(2, 2, 2, 2)
-        self.label = QtWidgets.QLabel(labelText)
-        self.label.setFixedWidth(180)
-
-        # A button that displays the current color.
-        self.colorButton = QtWidgets.QPushButton()
-        self.colorButton.setFixedSize(40, 20)
-        self.colorButton.clicked.connect(self.openSwatchDialog)
-
-        # A slider for selecting an index (1–32).
-        self.slider = QtWidgets.QSlider(QtCore.Qt.Horizontal)
-        self.slider.setRange(minVal, maxVal)
-        self.slider.setValue(initialValue)
-        self.slider.valueChanged.connect(self.on_slider_changed)
-
-        layout.addWidget(self.label)
-        layout.addWidget(self.colorButton)
-        layout.addWidget(self.slider)
-
-        # Initialize the displayed color.
-        self.updateColorButton(initialValue)
-
-    def updateColorButton(self, value):
-        # Convert slider value (1–32) to a 0–31 index.
-        index = value - 1
-        if 0 <= index < len(self.indexColors):
-            color = self.indexColors[index]
-            # Set the button's background to the color.
-            self.colorButton.setStyleSheet("background-color: %s" % color.name())
-        else:
-            self.colorButton.setStyleSheet("")
-
-    def on_slider_changed(self, value):
-        self.updateColorButton(value)
-        try:
-            # Maya’s attribute is 0-indexed, so subtract 1.
-            cmds.setAttr(self.attrName, value - 1)
-        except Exception as e:
-            print(f"Error setting {self.attrName}: {e}")
-        if self.callback:
-            self.callback(value)
-
-    def openSwatchDialog(self):
-        # Create a dialog with a grid of swatch buttons.
-        dialog = QtWidgets.QDialog(self)
-        dialog.setWindowTitle("Select Icon Color")
-        grid = QtWidgets.QGridLayout(dialog)
-        rows = 4
-        cols = 8
-        for i, color in enumerate(self.indexColors):
-            btn = QtWidgets.QPushButton()
-            btn.setFixedSize(30, 30)
-            btn.setStyleSheet("background-color: %s" % color.name())
-            # Connect using a lambda that accepts the extra "checked" parameter.
-            btn.clicked.connect(lambda checked=False, v=i+1, d=dialog: self.setColorFromSwatch(v, d))
-            grid.addWidget(btn, i // cols, i % cols)
-        dialog.exec_()
-
-    def setColorFromSwatch(self, value, dialog):
-        self.slider.setValue(value)
-        dialog.accept()
-
-#---------------------------------------------------------------------
-# Simple color selector (index based) decoupled from Maya attributes.
+# Palette-based color selector (QColor).
 #---------------------------------------------------------------------
 class ColorIndexSelector(QtWidgets.QWidget):
     """
@@ -1495,7 +1416,6 @@ class Animation_UI(QtWidgets.QDialog):
         key = str(int(lod))
         entry = settings.get(key, {
             "scale": 1.0,
-            "colorRGB": [DEFAULT_CONTROL_COLOR.redF(), DEFAULT_CONTROL_COLOR.greenF(), DEFAULT_CONTROL_COLOR.blueF()],
             "lineWidth": 1.0,
             "shapeFile": DEFAULT_SHAPE_FILE,
         })
@@ -1512,6 +1432,44 @@ class Animation_UI(QtWidgets.QDialog):
             settings[key] = entry
             controlObject.save_lod_settings(moduleGrp, settings)
         return settings, entry, moduleGrp
+
+    def _discover_current_lod_color(self, moduleNamespaceFull, lod):
+        """
+        Best-effort discovery of the current curve color for a module+LOD by sampling the first control.
+        If no override is found, returns a neutral gray to represent Maya defaults.
+        """
+        ns = moduleNamespaceFull
+        target_lod = int(lod)
+        expr_nodes = cmds.ls(f"{ns}:*_visibility_expression", type="expression") or []
+        lod_re = re.compile(r"\\.lod\\s*>=\\s*([0-9]+)")
+        for expr in expr_nodes:
+            try:
+                expr_str = cmds.expression(expr, q=True, s=True) or ""
+            except Exception:
+                continue
+            match = lod_re.search(expr_str)
+            if not match or int(match.group(1)) != target_lod:
+                continue
+
+            control_name = expr.rpartition("_visibility_expression")[0]
+            if not cmds.objExists(control_name):
+                continue
+            shapes = cmds.listRelatives(control_name, shapes=True, fullPath=True) or []
+            for shape in shapes:
+                if cmds.nodeType(shape) != "nurbsCurve":
+                    continue
+                try:
+                    if not cmds.getAttr(shape + ".overrideEnabled"):
+                        continue
+                    if cmds.attributeQuery("overrideRGBColors", n=shape, exists=True) and cmds.getAttr(shape + ".overrideRGBColors"):
+                        r, g, b = cmds.getAttr(shape + ".overrideColorRGB")[0]
+                        return QtGui.QColor.fromRgbF(float(r), float(g), float(b))
+                    idx = int(cmds.getAttr(shape + ".overrideColor"))
+                    if 0 <= idx < len(colors.MAYA_INDEX_QCOLORS):
+                        return QtGui.QColor(colors.MAYA_INDEX_QCOLORS[idx])
+                except Exception:
+                    continue
+        return QtGui.QColor(96, 96, 96)
 
     def _refresh_controls_preferences_ui(self, moduleNamespaceFull=None):
         if moduleNamespaceFull is None:
@@ -1552,12 +1510,14 @@ class Animation_UI(QtWidgets.QDialog):
             # Color
             colorWidget = self.UIElements.get("controlColor")
             if colorWidget:
-                rgb = entry.get("colorRGB", [DEFAULT_CONTROL_COLOR.redF(), DEFAULT_CONTROL_COLOR.greenF(), DEFAULT_CONTROL_COLOR.blueF()])
-                try:
-                    r, g, b = rgb
-                    color = QtGui.QColor.fromRgbF(float(r), float(g), float(b))
-                except Exception:
-                    color = QtGui.QColor(DEFAULT_CONTROL_COLOR)
+                if "colorRGB" in entry:
+                    try:
+                        r, g, b = entry.get("colorRGB", None)
+                        color = QtGui.QColor.fromRgbF(float(r), float(g), float(b))
+                    except Exception:
+                        color = QtGui.QColor(DEFAULT_CONTROL_COLOR)
+                else:
+                    color = self._discover_current_lod_color(moduleNamespaceFull, lod)
                 colorWidget.setColor(color, emit=False)
 
             # Line width

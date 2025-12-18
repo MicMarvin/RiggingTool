@@ -254,7 +254,7 @@ class InterpolatingStretchySpline(controlModule.ControlModule):
 
                 name = utils.stripAllNamespaces(joints[i])[1] + "_offsetControl"
                 controlObjectInstance = controlObject.ControlObject()
-                offsetControlObject = controlObjectInstance.create(name, "cube.shape", self, lod=2, translation=True, rotation=False, globalScale=False, spaceSwitching=False)[0]
+                offsetControlObject = controlObjectInstance.create(name, "cube.shape", self, lod=2, translation=True, rotation=False, globalScale=False, spaceSwitching=False, colorIndex=None)[0]
 
                 cmds.parent(offsetControlObject, offset, relative=True)
 
@@ -372,7 +372,7 @@ class InterpolatingStretchySpline(controlModule.ControlModule):
 
     def createRootEndControl(self, name, orientJoint, posJoint, translation, containedNodes, moduleGrp):
         controlObjectInstance = controlObject.ControlObject()
-        controlObjectInfo = controlObjectInstance.create(name, "flattenedCube.shape", self, lod=1, translation=translation, rotation=True, globalScale=False, spaceSwitching=True)
+        controlObjectInfo = controlObjectInstance.create(name, "flattenedCube.shape", self, lod=1, translation=translation, rotation=True, globalScale=False, spaceSwitching=True, colorIndex=32)
         controlObj = controlObjectInfo[0]
         controlParent = controlObjectInfo[1]
 

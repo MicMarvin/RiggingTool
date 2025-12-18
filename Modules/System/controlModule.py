@@ -70,7 +70,7 @@ class ControlModule():
         cmds.select(moduleGrp)
         cmds.addAttr(at="float", ln="iconScale", min=0.001, softMaxValue=10.0, defaultValue=1, k=True)
         cmds.setAttr(moduleGrp + ".overrideEnabled", 1)
-        cmds.setAttr(moduleGrp + ".overrideColor", 6)
+        #cmds.setAttr(moduleGrp + ".overrideColor", 6)
 
         utilityNodes = self.setupBlueprintWeightBasedBlending()
 

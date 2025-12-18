@@ -19,7 +19,6 @@ DEFAULT_SHAPE_FILE = "cube.shape"
 _LOD_SETTINGS_ATTR = "lodSettings"
 _LOD_DEFAULTS = {
     "scale": 1.0,
-    "colorRGB": list(colors.DEFAULT_COLOR_RGB),
     "lineWidth": 1.0,
     "shapeFile": DEFAULT_SHAPE_FILE,
 }
@@ -205,7 +204,7 @@ def ensure_lod_settings_entry(module_grp, lod):
             entry["colorRGB"] = list(colors.DEFAULT_COLOR_RGB)
         entry.pop("color", None)
     else:
-        rgb = entry.get("colorRGB", colors.DEFAULT_COLOR_RGB)
+        rgb = entry.get("colorRGB", None)
         if isinstance(rgb, tuple):
             entry["colorRGB"] = list(rgb)
 
@@ -258,7 +257,7 @@ def apply_lod_preferences(module_namespace, lod, entry):
             entry["colorRGB"] = list(colors.DEFAULT_COLOR_RGB)
         entry.pop("color", None)
     else:
-        rgb = entry.get("colorRGB", colors.DEFAULT_COLOR_RGB)
+        rgb = entry.get("colorRGB", None)
         if isinstance(rgb, tuple):
             entry["colorRGB"] = list(rgb)
     ns = module_namespace
@@ -285,7 +284,15 @@ def apply_lod_preferences(module_namespace, lod, entry):
 
         # If a different shape is specified, rebuild the control shapes.
         shape_file = entry.get("shapeFile")
-        if shape_file:
+        current_shape_file = None
+        try:
+            if cmds.attributeQuery(_SHAPE_FILE_ATTR, n=control_name, exists=True):
+                current_shape_file = Path(cmds.getAttr(control_name + "." + _SHAPE_FILE_ATTR) or "").name
+        except Exception:
+            current_shape_file = None
+
+        requested_shape_file = Path(shape_file).name if shape_file else None
+        if shape_file and (not current_shape_file or requested_shape_file != current_shape_file):
             try:
                 # Remove existing non-intermediate nurbsCurve shapes.
                 keep_intermediates = []
@@ -312,6 +319,7 @@ def apply_lod_preferences(module_namespace, lod, entry):
 
         # Apply display tweaks to each nurbsCurve shape (after potential rebuild).
         shapes = cmds.listRelatives(control_name, shapes=True, fullPath=True) or []
+        rgb = entry.get("colorRGB", None)
         for shape in shapes:
             if cmds.nodeType(shape) != "nurbsCurve":
                 continue
@@ -319,13 +327,14 @@ def apply_lod_preferences(module_namespace, lod, entry):
                 cmds.setAttr(shape + ".lineWidth", float(entry.get("lineWidth", _LOD_DEFAULTS["lineWidth"])))
             except Exception:
                 pass
-            try:
-                r, g, b = entry.get("colorRGB", colors.DEFAULT_COLOR_RGB)
-                cmds.setAttr(shape + ".overrideEnabled", 1)
-                cmds.setAttr(shape + ".overrideRGBColors", 1)
-                cmds.setAttr(shape + ".overrideColorRGB", float(r), float(g), float(b), type="double3")
-            except Exception:
-                pass
+            if rgb is not None:
+                try:
+                    r, g, b = rgb
+                    cmds.setAttr(shape + ".overrideEnabled", 1)
+                    cmds.setAttr(shape + ".overrideRGBColors", 1)
+                    cmds.setAttr(shape + ".overrideColorRGB", float(r), float(g), float(b), type="double3")
+                except Exception:
+                    pass
 
 
 class ControlObject:
@@ -400,7 +409,7 @@ class ControlObject:
 
         raise RuntimeError(f"[controlObject] Control file not found: {controlPath}")
 
-    def create(self, name, controlFile, animationModuleInstance, lod=1, translation=True, rotation=True, globalScale=True, spaceSwitching=False):
+    def create(self, name, controlFile, animationModuleInstance, lod=1, translation=True, rotation=True, globalScale=True, spaceSwitching=False, colorIndex=None):
         if translation == True or translation == False:
             translation = [translation, translation, translation]
 
@@ -436,9 +445,39 @@ class ControlObject:
 
         self.setupIconScale(animationModuleNamespace)
 
-        cmds.setAttr(self.controlObject + ".overrideEnabled", 1)
-        cmds.setAttr(self.controlObject + ".overrideShading", 0)
-        cmds.connectAttr(animationModuleNamespace + ":module_grp.overrideColor", self.controlObject + ".overrideColor")
+        # Curve color is now driven by per-LOD settings (lodSettings.colorRGB) and/or an optional
+        # create-time colorIndex. We avoid forcing transform-level overrides so that controls can
+        # use Maya defaults when no override is specified.
+        module_grp = animationModuleNamespace + ":module_grp"
+        settings = get_lod_settings(module_grp)
+        key = str(int(lod))
+        entry = dict(settings.get(key, {}))
+
+        rgb = entry.get("colorRGB", None)
+        if colorIndex is not None:
+            try:
+                idx = int(colorIndex)
+            except Exception:
+                idx = None
+            if idx is not None and 1 <= idx <= len(colors.MAYA_INDEX_COLOR_RGB):
+                rgb = list(colors.MAYA_INDEX_COLOR_RGB[idx - 1])
+                entry["colorRGB"] = rgb
+                settings[key] = entry
+                save_lod_settings(module_grp, settings)
+
+        if rgb is not None:
+            # Apply directly to the created control shapes without rebuilding.
+            shapes = cmds.listRelatives(self.controlObject, shapes=True, fullPath=True) or []
+            for shape in shapes:
+                if cmds.nodeType(shape) != "nurbsCurve":
+                    continue
+                try:
+                    r, g, b = rgb
+                    cmds.setAttr(shape + ".overrideEnabled", 1)
+                    cmds.setAttr(shape + ".overrideRGBColors", 1)
+                    cmds.setAttr(shape + ".overrideColorRGB", float(r), float(g), float(b), type="double3")
+                except Exception:
+                    pass
 
         cmds.container(animationModuleNamespace + ":module_container", edit=True, addNode=self.controlObject, ihb=True, includeNetwork=True)
 

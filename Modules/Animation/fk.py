@@ -13,6 +13,9 @@ import maya.cmds as cmds
 import System.controlObject as controlObject
 importlib.reload(controlObject)
 
+import System.colors as colors
+importlib.reload(colors)
+
 import System.controlModule as controlModule
 importlib.reload(controlModule)
 
@@ -86,7 +89,7 @@ class FK(controlModule.ControlModule):
 
         controlObjectInstance = controlObject.ControlObject()
 
-        fkControlInfo = controlObjectInstance.create(name, "sphere.shape", self, lod=1, translation=translationControl, rotation=True, globalScale=False, spaceSwitching=spaceSwitchable)
+        fkControlInfo = controlObjectInstance.create(name, "sphere.shape", self, lod=1, translation=translationControl, rotation=True, globalScale=False, spaceSwitching=spaceSwitchable, colorIndex=32)
         fkControl = fkControlInfo[0]
 
         cmds.connectAttr(joint + ".rotateOrder", fkControl + ".rotateOrder")
@@ -135,4 +138,3 @@ class FK(controlModule.ControlModule):
             index += 1
 
         return (joints, fkControls)
-
