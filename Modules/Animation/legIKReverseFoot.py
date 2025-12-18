@@ -67,7 +67,7 @@ class LegIK_ReverseFoot(circleIK.CircleControlStretchyIK):
 
         name = "footControl"
         controlObjectInstance = controlObject.ControlObject()
-        footControlInfo = controlObjectInstance.create(name, "footControl.shape", self, lod=1, translation=True, rotation=True, globalScale=False, spaceSwitching=True)
+        footControlInfo = controlObjectInstance.create(name, "footControl.shape", self, lod=1, translation=True, rotation=True, globalScale=False, spaceSwitching=True, colorIndex=32)
         footControl = footControlInfo[0]
         footControlRootParent = footControlInfo[1]
 
@@ -96,7 +96,7 @@ class LegIK_ReverseFoot(circleIK.CircleControlStretchyIK):
             jointName = utils.stripAllNamespaces(joint)[1]
             name = jointName + "_ryControl"
 
-            ryControlInfo = controlObjectInstance.create(name, "yAxisCircle.shape", self, lod=2, translation=False, rotation=[False, True, False], globalScale=False, spaceSwitching=False)
+            ryControlInfo = controlObjectInstance.create(name, "yAxisCircle.shape", self, lod=2, translation=False, rotation=[False, True, False], globalScale=False, spaceSwitching=False, colorIndex=32)
             ryControl = ryControlInfo[0]
 
             ballToeControls.append(ryControl)

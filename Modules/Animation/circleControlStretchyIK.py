@@ -84,7 +84,7 @@ class CircleControlStretchyIK(controlModule.ControlModule):
             name = "ikHandleControl"
 
             controlObjectInstance = controlObject.ControlObject()
-            handleControlInfo = controlObjectInstance.create(name, "cube.shape", self, lod=1, translation=True, rotation=False, globalScale=False, spaceSwitching=True)
+            handleControlInfo = controlObjectInstance.create(name, "cube.shape", self, lod=1, translation=True, rotation=False, globalScale=False, spaceSwitching=True, colorIndex=32)
             handleControl = handleControlInfo[0]
             handleRootParent = handleControlInfo[1]
 
@@ -111,7 +111,7 @@ class CircleControlStretchyIK(controlModule.ControlModule):
         cmds.parent(twistControlOffset, rotationCancellation, relative=True)
 
         twistControlObjectInstance = controlObject.ControlObject()
-        twistControlInfo = twistControlObjectInstance.create("twistControl", "zAxisCircle.shape", self, lod=2, translation=False, rotation=[False, False, True], globalScale=False, spaceSwitching=False)
+        twistControlInfo = twistControlObjectInstance.create("twistControl", "zAxisCircle.shape", self, lod=2, translation=False, rotation=[False, False, True], globalScale=False, spaceSwitching=False, colorIndex=32)
         twistControl = twistControlInfo[0]
 
         cmds.parent(twistControl, twistControlOffset, relative=True)

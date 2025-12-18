@@ -46,7 +46,7 @@ class BasicStretchyIK(controlModule.ControlModule):
         name = "ikHandleControl"
 
         controlObjectInstance = controlObject.ControlObject()
-        handleControlInfo = controlObjectInstance.create(name, "cube.shape", self, lod=1, translation=True, rotation=False, globalScale=False, spaceSwitching=True)
+        handleControlInfo = controlObjectInstance.create(name, "cube.shape", self, lod=1, translation=True, rotation=False, globalScale=False, spaceSwitching=True, colorIndex=32)
         handleControl = handleControlInfo[0]
         handleRootParent = handleControlInfo[1]
 

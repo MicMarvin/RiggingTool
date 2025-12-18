@@ -254,7 +254,7 @@ class InterpolatingStretchySpline(controlModule.ControlModule):
 
                 name = utils.stripAllNamespaces(joints[i])[1] + "_offsetControl"
                 controlObjectInstance = controlObject.ControlObject()
-                offsetControlObject = controlObjectInstance.create(name, "cube.shape", self, lod=2, translation=True, rotation=False, globalScale=False, spaceSwitching=False, colorIndex=None)[0]
+                offsetControlObject = controlObjectInstance.create(name, "cube.shape", self, lod=2, translation=True, rotation=False, globalScale=False, spaceSwitching=False, colorIndex=32)[0]
 
                 cmds.parent(offsetControlObject, offset, relative=True)
 
