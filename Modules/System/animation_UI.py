@@ -469,7 +469,7 @@ class AttrControlWidget(QtWidgets.QWidget):
         layout = QtWidgets.QHBoxLayout(self)
         layout.setContentsMargins(2,2,2,2)
 
-        self.label = QtWidgets.QLabel(labelText)
+        self.label = QtWidgets.QLabel(labelText, self)
         self.label.setFixedWidth(180)
 
         self.spinBox = QtWidgets.QSpinBox()
@@ -588,7 +588,7 @@ class ColorIndexSelector(QtWidgets.QWidget):
     """
     colorChanged = QtCore.Signal(QtGui.QColor)
 
-    def __init__(self, labelText, initialColor=None, initialPalette="Maya Default", parent=None):
+    def __init__(self, labelText, initialColor=None, initialPalette="Maya Default", parent=None, showLabel=True, swatchSize=20, labelWidth=180):
         super(ColorIndexSelector, self).__init__(parent)
         self._settings = QtCore.QSettings("MicMarvin", "RiggingTool")
         self._paletteName = initialPalette
@@ -596,17 +596,26 @@ class ColorIndexSelector(QtWidgets.QWidget):
 
         layout = QtWidgets.QHBoxLayout(self)
         layout.setContentsMargins(2, 2, 2, 2)
+        layout.setSpacing(4)
 
         self.label = QtWidgets.QLabel(labelText)
-        self.label.setFixedWidth(180)
+        self.label.setFixedWidth(labelWidth)
+        self.label.setVisible(showLabel)
 
         self.colorButton = QtWidgets.QPushButton()
-        self.colorButton.setFixedHeight(20)
-        self.colorButton.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
+        if swatchSize:
+            self.colorButton.setFixedSize(QtCore.QSize(int(swatchSize), int(swatchSize)))
+            self.colorButton.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        else:
+            self.colorButton.setFixedHeight(20)
+            self.colorButton.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
         self.colorButton.clicked.connect(self.openSwatchDialog)
 
-        layout.addWidget(self.label)
+        if showLabel:
+            layout.addWidget(self.label)
         layout.addWidget(self.colorButton)
+        if not showLabel:
+            self.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
 
         self.setColor(self._color, emit=False)
 
@@ -1575,9 +1584,16 @@ class Animation_UI(QtWidgets.QDialog):
                 moduleSpecificPreferencesLayout.addWidget(preferencesWidget)
 
                 # Controls group (per-LOD preferences)
-                controlsGroup = QtWidgets.QGroupBox("Controls")
+                controlsGroup = QtWidgets.QGroupBox("Curve Controls")
                 controlsLayout = QtWidgets.QVBoxLayout(controlsGroup)
                 controlsLayout.setSpacing(6)
+                controlsGrid = QtWidgets.QGridLayout()
+                controlsGrid.setContentsMargins(0, 0, 0, 0)
+                controlsGrid.setHorizontalSpacing(8)
+                controlsGrid.setVerticalSpacing(6)
+                controlsGrid.setColumnStretch(1, 1)
+                labelWidth = 75
+                shapeThumbSize = 96
 
                 moduleNamespaceFull = f"{self.selectedBlueprintModule}:{currentlySelectedModuleNamespace}"
                 self._activeControlModuleNamespace = moduleNamespaceFull
@@ -1587,34 +1603,70 @@ class Animation_UI(QtWidgets.QDialog):
                     controlObject.ensure_lod_settings_entry(moduleGrpPath, lodVal)
 
                 # Control Level dropdown
-                levelRow = QtWidgets.QHBoxLayout()
-                levelLabel = QtWidgets.QLabel("Control Level:")
-                levelLabel.setFixedWidth(180)
+                levelLabel = QtWidgets.QLabel("Level:")
+                levelLabel.setFixedWidth(labelWidth)
                 levelCombo = QtWidgets.QComboBox()
                 for lodVal in lodLevels:
                     levelCombo.addItem(str(lodVal), lodVal)
                 levelCombo.currentIndexChanged.connect(lambda idx, ns=moduleNamespaceFull: self.on_control_level_changed(ns))
-                levelRow.addWidget(levelLabel)
-                levelRow.addWidget(levelCombo)
-                controlsLayout.addLayout(levelRow)
-                self.UIElements["controlLevelCombo"] = levelCombo
+                controlsGrid.addWidget(levelLabel, 0, 0)
+                controlsGrid.addWidget(levelCombo, 0, 1)
+                controlsGrid.setColumnMinimumWidth(0, labelWidth)
 
-                # Shape thumbnail + label
-                shapeRow = QtWidgets.QHBoxLayout()
-                shapeRow.setAlignment(QtCore.Qt.AlignLeft)
-                shapeButton = ShapeThumbnailButton("None", None)
+                # Shape preview aligned to the right of the level selector
+                shapePreviewLayout = QtWidgets.QVBoxLayout()
+                shapePreviewLayout.setContentsMargins(0, 0, 0, 0)
+                shapePreviewLayout.setSpacing(2)
+                shapeButton = ShapeThumbnailButton("None", None, iconSize=shapeThumbSize)
+                shapeButton.setObjectName("controlShapeButton")
+                shapeButton.setFlat(False)
+                shapeButton.setProperty("shapeThumbSize", shapeThumbSize)
+                shapeButton.setFixedSize(QtCore.QSize(shapeThumbSize + 12, shapeThumbSize + 12))
+                shapeButton.setIconSize(QtCore.QSize(shapeThumbSize, shapeThumbSize))
+                shapeButton.setStyleSheet(
+                    """
+                    QPushButton#controlShapeButton {
+                        border: 1px solid #5f5f5f;
+                        border-top-color: #8a8a8a;
+                        border-left-color: #8a8a8a;
+                        border-right-color: #3c3c3c;
+                        border-bottom-color: #3c3c3c;
+                        border-radius: 4px;
+                        padding: 4px;
+                    }
+                    QPushButton#controlShapeButton:hover {
+                        border-top-color: #a8a8a8;
+                        border-left-color: #a8a8a8;
+                        border-right-color: #a8a8a8;
+                        border-bottom-color: #a8a8a8;
+                    }
+                    QPushButton#controlShapeButton:pressed {
+                        border-top-color: #3c3c3c;
+                        border-left-color: #3c3c3c;
+                        border-right-color: #8a8a8a;
+                        border-bottom-color: #8a8a8a;
+                        padding-top: 5px;
+                        padding-bottom: 3px;
+                    }
+                    """
+                )
                 shapeButton.clicked.connect(lambda checked=False, ns=moduleNamespaceFull: self.open_shape_gallery(ns))
-                shapeLabel = QtWidgets.QLabel("None")
-                shapeRow.addWidget(shapeButton)
-                shapeRow.addWidget(shapeLabel)
-                controlsLayout.addLayout(shapeRow)
+                shapeNameLabel = QtWidgets.QLabel("None")
+                shapeNameLabel.setAlignment(QtCore.Qt.AlignHCenter)
+                shapeNameLabel.setMinimumWidth(shapeThumbSize + 12)
+                shapeNameLabel.setSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Fixed)
+                shapePreviewLayout.addWidget(shapeButton, alignment=QtCore.Qt.AlignRight)
+                shapePreviewLayout.addWidget(shapeNameLabel, alignment=QtCore.Qt.AlignRight)
+                spacer = QtWidgets.QSpacerItem(14, 1, QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Minimum)
+                controlsGrid.addItem(spacer, 0, 2, 3, 1)
+                controlsGrid.addLayout(shapePreviewLayout, 0, 3, 3, 1, alignment=QtCore.Qt.AlignTop | QtCore.Qt.AlignRight)
+                self.UIElements["controlLevelCombo"] = levelCombo
                 self.UIElements["controlShapeButton"] = shapeButton
-                self.UIElements["controlShapeLabel"] = shapeLabel
+                self.UIElements["controlShapeNameLabel"] = shapeNameLabel
 
                 # Scale
-                scaleRow = QtWidgets.QHBoxLayout()
                 scaleLabel = QtWidgets.QLabel("Scale:")
-                scaleLabel.setFixedWidth(180)
+                scaleLabel.setFixedWidth(labelWidth)
                 scaleSpin = ClickToScrollDoubleSpinBox()
                 scaleSpin.setRange(-10.0, 10.0)
                 scaleSpin.setDecimals(3)
@@ -1642,33 +1694,43 @@ class Animation_UI(QtWidgets.QDialog):
                 scaleSpin.valueChanged.connect(_scale_from_spin)
                 scaleSlider.valueChanged.connect(_scale_from_slider)
 
-                scaleRow.addWidget(scaleLabel)
+                scaleRowWidget = QtWidgets.QWidget()
+                scaleRow = QtWidgets.QHBoxLayout(scaleRowWidget)
+                scaleRow.setContentsMargins(0, 0, 0, 0)
+                scaleRow.setSpacing(6)
                 scaleRow.addWidget(scaleSpin)
                 scaleRow.addWidget(scaleSlider)
-                controlsLayout.addLayout(scaleRow)
+                controlsGrid.addWidget(scaleLabel, 1, 0)
+                controlsGrid.addWidget(scaleRowWidget, 1, 1)
                 self.UIElements["controlScaleSpin"] = scaleSpin
                 self.UIElements["controlScaleSlider"] = scaleSlider
 
                 # Color
-                colorWidget = ColorIndexSelector("Color:", initialColor=DEFAULT_CONTROL_COLOR)
+                colorLabel = QtWidgets.QLabel("Color:")
+                colorLabel.setFixedWidth(labelWidth)
+                colorWidget = ColorIndexSelector("Color:", initialColor=DEFAULT_CONTROL_COLOR, showLabel=False, swatchSize=26)
                 colorWidget.colorChanged.connect(lambda col, ns=moduleNamespaceFull: self.on_control_color_changed(col, ns))
-                controlsLayout.addWidget(colorWidget)
+                widthLabel = QtWidgets.QLabel("Width:")
+                widthLabel.setFixedWidth(60)
+                lineWidthSlider = QtWidgets.QSlider(QtCore.Qt.Horizontal)
+                lineWidthSlider.setRange(1, 10)
+                lineWidthSlider.setTickInterval(1)
+                lineWidthSlider.setSingleStep(1)
+                lineWidthSlider.valueChanged.connect(lambda val, ns=moduleNamespaceFull: self.on_control_pref_changed("lineWidth", val, ns))
+                colorRowWidget = QtWidgets.QWidget()
+                colorRow = QtWidgets.QHBoxLayout(colorRowWidget)
+                colorRow.setContentsMargins(0, 0, 0, 0)
+                colorRow.setSpacing(6)
+                colorRow.addWidget(colorWidget)
+                colorRow.addSpacing(6)
+                colorRow.addWidget(widthLabel)
+                colorRow.addWidget(lineWidthSlider)
+                controlsGrid.addWidget(colorLabel, 2, 0)
+                controlsGrid.addWidget(colorRowWidget, 2, 1)
                 self.UIElements["controlColor"] = colorWidget
+                self.UIElements["controlLineWidthSlider"] = lineWidthSlider
 
-                # Line width
-                lineWidthRow = QtWidgets.QHBoxLayout()
-                lwLabel = QtWidgets.QLabel("Line Width:")
-                lwLabel.setFixedWidth(180)
-                lineWidthSpin = ClickToScrollDoubleSpinBox()
-                lineWidthSpin.setRange(0.1, 10.0)
-                lineWidthSpin.setDecimals(2)
-                lineWidthSpin.setSingleStep(0.1)
-                lineWidthSpin.valueChanged.connect(lambda val, ns=moduleNamespaceFull: self.on_control_pref_changed("lineWidth", val, ns))
-                lineWidthRow.addWidget(lwLabel)
-                lineWidthRow.addWidget(lineWidthSpin)
-                controlsLayout.addLayout(lineWidthRow)
-                self.UIElements["controlLineWidthSpin"] = lineWidthSpin
-
+                controlsLayout.addLayout(controlsGrid)
                 prefLayout.addWidget(controlsGroup)
 
                 moduleInst.UI_preferences(prefLayout)
@@ -1770,15 +1832,20 @@ class Animation_UI(QtWidgets.QDialog):
         try:
             # Shape preview
             shapeFile = entry.get("shapeFile", DEFAULT_SHAPE_FILE)
-            shapeLabel = self.UIElements.get("controlShapeLabel")
+            shapeLabel = self.UIElements.get("controlShapeNameLabel")
             shapeButton = self.UIElements.get("controlShapeButton")
+            displayName = _format_shape_display_name(shapeFile) if shapeFile else "None"
             if shapeLabel:
-                shapeLabel.setText(shapeFile)
+                shapeLabel.setText(displayName)
+                shapeLabel.setToolTip(str(shapeFile))
             if shapeButton:
                 thumbPath = SHAPE_ROOT / Path(shapeFile).with_suffix(".png")
-                thumb = _load_thumbnail(thumbPath)
+                icon_size = shapeButton.property("shapeThumbSize") or shapeButton.iconSize().width() or 72
+                thumb = _load_thumbnail(thumbPath, size=int(icon_size))
                 shapeButton.setIcon(QtGui.QIcon(thumb))
-                shapeButton.setIconSize(thumb.size())
+                shapeButton.setIconSize(QtCore.QSize(int(icon_size), int(icon_size)))
+                shapeButton.setFixedSize(QtCore.QSize(int(icon_size) + 12, int(icon_size) + 12))
+                shapeButton.setToolTip(displayName)
 
             # Scale
             scaleSpin = self.UIElements.get("controlScaleSpin")
@@ -1806,11 +1873,14 @@ class Animation_UI(QtWidgets.QDialog):
                 colorWidget.setColor(color, emit=False)
 
             # Line width
-            lineWidthSpin = self.UIElements.get("controlLineWidthSpin")
-            if lineWidthSpin:
-                lineWidthSpin.blockSignals(True)
-                lineWidthSpin.setValue(entry.get("lineWidth", 1.0))
-                lineWidthSpin.blockSignals(False)
+            lineWidthSlider = self.UIElements.get("controlLineWidthSlider")
+            if lineWidthSlider:
+                lineWidthSlider.blockSignals(True)
+                raw_val = entry.get("lineWidth", 1.0)
+                sliderVal = int(round(raw_val))
+                sliderVal = max(lineWidthSlider.minimum(), min(lineWidthSlider.maximum(), sliderVal))
+                lineWidthSlider.setValue(sliderVal)
+                lineWidthSlider.blockSignals(False)
         finally:
             self._suppressControlPrefSignals = False
 
