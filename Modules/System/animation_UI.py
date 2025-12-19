@@ -132,6 +132,7 @@ class ShapeTileButton(QtWidgets.QToolButton):
         self.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon)
         self.setAutoRaise(False)
         self.setCheckable(False)
+        self.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         self.shapeName = shapeInfo["name"]
         self.displayName = shapeInfo.get("displayName", self.shapeName)
         self._tile_width = tileWidth
@@ -221,9 +222,9 @@ class ShapeGalleryWindow(QtWidgets.QDialog):
         self.allShapes = self._load_shapes()
         self.filteredShapes = list(self.allShapes)
 
-        layout = QtWidgets.QVBoxLayout(self)
-        layout.setContentsMargins(8, 8, 8, 8)
-        layout.setSpacing(8)
+        self.mainLayout = QtWidgets.QVBoxLayout(self)
+        self.mainLayout.setContentsMargins(8, 8, 8, 8)
+        self.mainLayout.setSpacing(8)
 
         self.searchField = QtWidgets.QLineEdit()
         self.searchField.setObjectName("shapeSearch")
@@ -244,7 +245,7 @@ class ShapeGalleryWindow(QtWidgets.QDialog):
         searchRow.addStretch(1)
         searchRow.addWidget(self.searchField)
         searchRow.addStretch(1)
-        layout.addLayout(searchRow)
+        self.mainLayout.addLayout(searchRow)
 
         self.scroll = QtWidgets.QScrollArea()
         self.scroll.setWidgetResizable(True)
@@ -254,22 +255,31 @@ class ShapeGalleryWindow(QtWidgets.QDialog):
         self.scroll.viewport().installEventFilter(self)
 
         self.content = QtWidgets.QWidget()
-        self.grid = QtWidgets.QGridLayout(self.content)
+        self.contentLayout = QtWidgets.QVBoxLayout(self.content)
+        self.contentLayout.setContentsMargins(0, 0, 0, 0)
+        self.contentLayout.setAlignment(QtCore.Qt.AlignTop | QtCore.Qt.AlignHCenter)
+
+        self.gridWidget = QtWidgets.QWidget()
+        self.gridWidget.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        self.grid = QtWidgets.QGridLayout(self.gridWidget)
         self.grid.setContentsMargins(4, 4, 4, 4)
         self.grid.setHorizontalSpacing(4)
         self.grid.setVerticalSpacing(4)
-        self.content.setLayout(self.grid)
+        self.gridWidget.setLayout(self.grid)
+
+        self.contentLayout.addWidget(self.gridWidget, alignment=QtCore.Qt.AlignTop | QtCore.Qt.AlignHCenter)
         self.scroll.setWidget(self.content)
-        layout.addWidget(self.scroll)
+        self.mainLayout.addWidget(self.scroll)
 
         btnRow = QtWidgets.QHBoxLayout()
         closeBtn = QtWidgets.QPushButton("Cancel")
         closeBtn.clicked.connect(self.reject)
         btnRow.addStretch(1)
         btnRow.addWidget(closeBtn)
-        layout.addLayout(btnRow)
+        self.mainLayout.addLayout(btnRow)
 
         self._update_columns_for_width(force=True)
+        self._resize_to_preferred_width()
 
     def _select(self, shapeName):
         self.shapeSelected.emit(shapeName)
@@ -297,12 +307,14 @@ class ShapeGalleryWindow(QtWidgets.QDialog):
             emptyLabel = QtWidgets.QLabel("No shapes match your search.")
             emptyLabel.setAlignment(QtCore.Qt.AlignCenter)
             self.grid.addWidget(emptyLabel, 0, 0)
+            self._update_grid_width(1)
             return
 
         for idx, info in enumerate(self.filteredShapes):
             row = idx // self.current_columns
             col = idx % self.current_columns
             self.grid.addWidget(self._build_tile(info), row, col)
+        self._update_grid_width(self.current_columns)
 
     def _on_search_text_changed(self, text):
         term = text.strip().lower()
@@ -344,6 +356,27 @@ class ShapeGalleryWindow(QtWidgets.QDialog):
     def resizeEvent(self, event):
         super(ShapeGalleryWindow, self).resizeEvent(event)
         self._update_columns_for_width()
+
+    def _update_grid_width(self, columns):
+        spacing = self.grid.horizontalSpacing() or 0
+        margins = self.grid.contentsMargins()
+        total_width = (columns * self._tile_width) + max(columns - 1, 0) * spacing + margins.left() + margins.right()
+        self.gridWidget.setFixedWidth(total_width)
+
+    def _preferred_width(self):
+        cols = min(max(1, len(self.filteredShapes)), self._default_columns)
+        spacing = self.grid.horizontalSpacing() or 0
+        gm = self.grid.contentsMargins()
+        main_margins = self.mainLayout.contentsMargins()
+        grid_width = (cols * self._tile_width) + max(cols - 1, 0) * spacing + gm.left() + gm.right()
+        search_width = self.searchField.width()
+        # Allow a bit of slack for scrollbar/frame padding.
+        padding = main_margins.left() + main_margins.right() + 16
+        return max(grid_width + padding, search_width + padding)
+
+    def _resize_to_preferred_width(self):
+        target_width = self._preferred_width()
+        self.resize(target_width, max(self.height(), 520))
 
 #---------------------------------------------------------------------
 # ClickToScrollDoubleSpinBox class fix for scroll wheel.
