@@ -124,41 +124,92 @@ class ShapeThumbnailButton(QtWidgets.QPushButton):
         self.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 
 
-class ShapeTileButton(QtWidgets.QToolButton):
-    def __init__(self, shapeInfo, click_handler, iconSize=96, tileWidth=120, parent=None):
-        super(ShapeTileButton, self).__init__(parent)
-        self.setObjectName("shapeTileButton")
+class ShapeTileWidget(QtWidgets.QWidget):
+    """Tile with icon + single-line label; unified hover/click handling."""
+    def __init__(self, shapeInfo, click_handler, iconSize=128, tileWidth=128, parent=None):
+        super(ShapeTileWidget, self).__init__(parent)
+        self.setObjectName("shapeTile")
         self.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        self.setToolButtonStyle(QtCore.Qt.ToolButtonTextUnderIcon)
-        self.setAutoRaise(False)
-        self.setCheckable(False)
-        self.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
-        self.shapeName = shapeInfo["name"]
-        self.displayName = shapeInfo.get("displayName", self.shapeName)
+        self.setAttribute(QtCore.Qt.WA_Hover, True)
+        self.setAttribute(QtCore.Qt.WA_StyledBackground, True)
+        self._click_handler = click_handler
         self._tile_width = tileWidth
         self._icon_size = iconSize
+        self.shapeName = shapeInfo["name"]
+        self.displayName = shapeInfo.get("displayName", self.shapeName)
+        self._inner_pad = 2
 
+        # Layout
+        layout = QtWidgets.QVBoxLayout(self)
+        layout.setContentsMargins(self._inner_pad, self._inner_pad, self._inner_pad, self._inner_pad)
+        layout.setSpacing(0)
+
+        self.iconLabel = QtWidgets.QLabel()
+        self.iconLabel.setObjectName("shapeIcon")
+        self.iconLabel.setAutoFillBackground(True)
+        self.iconLabel.setAttribute(QtCore.Qt.WA_StyledBackground, True)
         pixmap = _load_thumbnail(shapeInfo.get("thumbPath"), size=iconSize)
-        self.setIcon(QtGui.QIcon(pixmap))
-        self.setIconSize(QtCore.QSize(iconSize, iconSize))
+        self.iconLabel.setPixmap(pixmap)
+        self.iconLabel.setAlignment(QtCore.Qt.AlignCenter)
+        inner_width = tileWidth - (self._inner_pad * 2)
+        self.iconLabel.setFixedSize(QtCore.QSize(inner_width, iconSize))
 
-        font_metrics = QtGui.QFontMetrics(self.font())
-        text_height = font_metrics.height() + 6
-        padding = 8
-        self.setFixedSize(tileWidth, iconSize + text_height + padding)
-        self._update_elided_text()
-        self.setToolTip(self.displayName)
+        self.textLabel = QtWidgets.QLabel(self.displayName)
+        self.textLabel.setObjectName("shapeLabel")
+        self.textLabel.setAutoFillBackground(True)
+        self.textLabel.setAttribute(QtCore.Qt.WA_StyledBackground, True)
+        self.textLabel.setAlignment(QtCore.Qt.AlignCenter)
+        self.textLabel.setWordWrap(False)
+        fm = self.textLabel.fontMetrics()
+        self.textLabel.setFixedHeight(fm.height() + 6)
+        text_width = inner_width
+        self.textLabel.setFixedWidth(text_width)
+        self.textLabel.setText(_elide_text(self.displayName, self.textLabel.font(), text_width - 6))
+        self.textLabel.setToolTip(self.displayName)
 
-        self.clicked.connect(click_handler)
+        layout.addWidget(self.iconLabel, alignment=QtCore.Qt.AlignCenter)
+        layout.addWidget(self.textLabel, alignment=QtCore.Qt.AlignCenter)
+        self.setLayout(layout)
+        total_height = iconSize + self.textLabel.height() + (self._inner_pad * 2)
+        self.setFixedSize(QtCore.QSize(tileWidth, total_height))
+        self.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
 
-    def _update_elided_text(self):
-        available = max(10, self.width() - 10)
-        elided = _elide_text(self.displayName, self.font(), available)
-        self.setText(elided)
+        # Track hover via child events too
+        self.setMouseTracking(True)
+        self.iconLabel.installEventFilter(self)
+        self.textLabel.installEventFilter(self)
 
-    def resizeEvent(self, event):
-        super(ShapeTileButton, self).resizeEvent(event)
-        self._update_elided_text()
+    def enterEvent(self, event):
+        self._apply_hover_state(True)
+        super(ShapeTileWidget, self).enterEvent(event)
+
+    def leaveEvent(self, event):
+        self._apply_hover_state(False)
+        super(ShapeTileWidget, self).leaveEvent(event)
+
+    def mouseReleaseEvent(self, event):
+        if event.button() == QtCore.Qt.LeftButton:
+            if self._click_handler:
+                self._click_handler()
+        super(ShapeTileWidget, self).mouseReleaseEvent(event)
+
+    def eventFilter(self, obj, event):
+        if obj in (self.iconLabel, self.textLabel):
+            if event.type() == QtCore.QEvent.Enter:
+                self.enterEvent(event)
+            elif event.type() == QtCore.QEvent.Leave:
+                # Only clear hover if the mouse truly left the tile
+                if not self.rect().contains(self.mapFromGlobal(QtGui.QCursor.pos())):
+                    self.leaveEvent(event)
+            return False
+        return super(ShapeTileWidget, self).eventFilter(obj, event)
+
+    def _apply_hover_state(self, hovering):
+        self.setProperty("hover", hovering)
+        for w in (self, self.iconLabel, self.textLabel):
+            w.setProperty("hover", hovering)
+            w.style().unpolish(w)
+            w.style().polish(w)
 
 
 class ShapeGalleryWindow(QtWidgets.QDialog):
@@ -199,17 +250,28 @@ class ShapeGalleryWindow(QtWidgets.QDialog):
             QPushButton#shapeThumbButton:focus {
                 border: 1px solid #b5b5b5;
             }
-            QToolButton#shapeTileButton {
-                background-color: #3a3a3a;
-                border: 1px solid #2f2f2f;
-                border-radius: 2px;
-                padding: 4px 4px 6px 4px;
-                color: #b0b0b0;
+            QWidget#shapeTile {
+                background-color: #1f1f1f;
             }
-            QToolButton#shapeTileButton:hover {
+            QWidget#shapeTile[hover=\"true\"] {
+                background-color: #888888;
+                border: 1px solid #888888;
+            }
+            QLabel#shapeIcon {
+                background-color: #3a3a3a;
+                border: 1px solid #3a3a3a;
+            }
+            QWidget#shapeTile[hover=\"true\"] QLabel#shapeIcon {
                 background-color: #4a4a4a;
-                border: 1px solid #d0d0d0;
-                color: #e0e0e0;
+                border: 0px solid #FFFF00;
+            }
+            QLabel#shapeLabel {
+                background-color: #1f1f1f;
+                color: #8f8f8f;
+            }
+            QWidget#shapeTile[hover=\"true\"] QLabel#shapeLabel {
+                background-color: #888888;
+                color: #ffffff;
             }
             """
         )
@@ -293,7 +355,7 @@ class ShapeGalleryWindow(QtWidgets.QDialog):
         return shapes
 
     def _build_tile(self, shapeInfo):
-        return ShapeTileButton(
+        return ShapeTileWidget(
             shapeInfo=shapeInfo,
             click_handler=partial(self._select, shapeInfo["name"]),
             iconSize=self._icon_size,
