@@ -118,6 +118,106 @@ def _set_shapefile_attr(control_transform, shape_file_name):
         print(f"[controlObject] Failed to record shape file on {control_transform}: {e}")
 
 
+def _find_icon_scale_cluster_handle(control_name):
+    """Locate the icon scale cluster handle parented under the control, if present."""
+    handle_name = control_name + "_icon_scale_clusterHandle"
+    if cmds.objExists(handle_name):
+        return handle_name
+    children = cmds.listRelatives(control_name, children=True, fullPath=True) or []
+    for child in children:
+        if cmds.nodeType(child) == "clusterHandle":
+            clusters = cmds.listConnections(child, type="cluster") or []
+            for cluster in clusters:
+                if "_icon_scale_cluster" in cluster:
+                    return child
+    return None
+
+
+def ensure_lod_icon_scale_attr(module_grp, lod):
+    """Ensure per-LOD icon scale attr exists; returns the full attr name."""
+    attr = f"{module_grp}.iconScale_LOD{int(lod)}"
+    if not cmds.attributeQuery(f"iconScale_LOD{int(lod)}", n=module_grp, exists=True):
+        try:
+            cmds.addAttr(module_grp, ln=f"iconScale_LOD{int(lod)}", at="float", minValue=0.001, defaultValue=1.0, k=True)
+        except Exception:
+            pass
+    return attr
+
+
+def ensure_lod_icon_scale_driver(module_grp, lod):
+    """
+    Ensure the multiplyDivide node driving per-LOD scale exists and is wired:
+    output = iconScale * iconScale_LOD#.
+    Returns the multiplyDivide node name.
+    """
+    lod = int(lod)
+    attr = ensure_lod_icon_scale_attr(module_grp, lod)
+    md_name = f"{module_grp}_iconScale_LOD{lod}_md"
+    md_node = md_name if cmds.objExists(md_name) else cmds.shadingNode("multiplyDivide", asUtility=True, n=md_name)
+    try:
+        cmds.setAttr(md_node + ".operation", 1)  # Multiply
+    except Exception:
+        pass
+
+    def _connect(source, target):
+        existing = cmds.listConnections(target, s=True, d=False, plugs=True) or []
+        if source in existing:
+            return
+        try:
+            cmds.connectAttr(source, target, force=True)
+        except Exception:
+            pass
+
+    base_attr = module_grp + ".iconScale"
+    for axis in ("X", "Y", "Z"):
+        in1 = md_node + f".input1{axis}"
+        in2 = md_node + f".input2{axis}"
+        out = md_node + f".output{axis}"
+        _connect(base_attr, in1)
+        _connect(attr, in2)
+    return md_node
+
+
+def _ensure_icon_scale_cluster(control_name, module_namespace, lod):
+    """
+    Guarantee a cluster exists for icon scaling and is connected to the per-LOD driver.
+    Returns the cluster handle transform.
+    """
+    handle = _find_icon_scale_cluster_handle(control_name)
+    module_grp = f"{module_namespace}:module_grp"
+    driver = ensure_lod_icon_scale_driver(module_grp, lod)
+    if handle is None:
+        cluster_nodes = cmds.cluster(control_name, n=control_name + "_icon_scale_cluster", relative=True)
+        cmds.container(module_namespace + ":module_container", edit=True, addNode=cluster_nodes, ihb=True, includeNetwork=True)
+        handle = cluster_nodes[1]
+        try:
+            cmds.setAttr(handle + ".scalePivotX", 0)
+            cmds.setAttr(handle + ".scalePivotY", 0)
+            cmds.setAttr(handle + ".scalePivotZ", 0)
+        except Exception:
+            pass
+        cmds.parent(handle, control_name, absolute=True)
+        try:
+            cmds.setAttr(handle + ".visibility", 0)
+        except Exception:
+            pass
+    # Wire to per-LOD driver outputs.
+    def _connect(source, target):
+        existing = cmds.listConnections(target, s=True, d=False, plugs=True) or []
+        if source in existing:
+            return
+        try:
+            cmds.connectAttr(source, target, force=True)
+        except Exception:
+            pass
+
+    for axis in ("X", "Y", "Z"):
+        target = handle + f".scale{axis}"
+        source = driver + f".output{axis}"
+        _connect(source, target)
+    return handle
+
+
 def get_lod_levels(module_grp):
     """
     Discover the set of LOD levels referenced by visibility expressions in this module.
@@ -237,33 +337,13 @@ def ensure_lod_settings_entry(module_grp, lod):
     return entry
 
 
-def apply_lod_preferences(module_namespace, lod, entry):
-    """
-    Apply stored preferences to controls that belong to the specified LOD.
-    This implementation targets appearance-only attributes on nurbsCurve shapes.
-    """
-    entry = dict(entry)
-    entry.pop("rotation", None)  # rotation preferences are deprecated
-    if "color" in entry:
-        idx = entry.get("color", None)
-        if idx is not None:
-            try:
-                idx = int(idx)
-            except Exception:
-                idx = None
-        if idx is not None and 1 <= idx <= len(colors.MAYA_INDEX_COLOR_RGB):
-            entry["colorRGB"] = list(colors.MAYA_INDEX_COLOR_RGB[idx - 1])
-        else:
-            entry["colorRGB"] = list(colors.DEFAULT_COLOR_RGB)
-        entry.pop("color", None)
-    else:
-        rgb = entry.get("colorRGB", None)
-        if isinstance(rgb, tuple):
-            entry["colorRGB"] = list(rgb)
+def get_controls_for_lod(module_namespace, lod):
+    """Return all control transforms that participate in the given LOD via visibility expressions."""
     ns = module_namespace
     target_lod = int(lod)
     expr_nodes = cmds.ls(f"{ns}:*_visibility_expression", type="expression") or []
     lod_re = re.compile(r"\.lod\s*>=\s*([0-9]+)")
+    controls = []
     for expr in expr_nodes:
         try:
             expr_str = cmds.expression(expr, q=True, s=True) or ""
@@ -272,18 +352,108 @@ def apply_lod_preferences(module_namespace, lod, entry):
         match = lod_re.search(expr_str)
         if not match or int(match.group(1)) != target_lod:
             continue
-
         control_name = expr.rpartition("_visibility_expression")[0]
-        if not cmds.objExists(control_name):
-            continue
+        if cmds.objExists(control_name):
+            controls.append(control_name)
+    return controls
 
-        # Refresh settings entry in case caller provided partial data.
-        ensure_lod_settings_entry(f"{ns}:module_grp", target_lod)
+
+def _first_curve_shape(control_name):
+    shapes = cmds.listRelatives(control_name, shapes=True, fullPath=True) or []
+    for shape in shapes:
+        try:
+            if cmds.getAttr(shape + ".intermediateObject"):
+                continue
+        except Exception:
+            pass
+        if cmds.nodeType(shape) == "nurbsCurve":
+            return shape
+    return None
+
+
+def get_lod_visual_state(module_namespace, lod):
+    """
+    Best-effort discovery of current LOD visuals: shape file name, color, line width, and scale factor.
+    """
+    controls = get_controls_for_lod(module_namespace, lod)
+    entry = {
+        "shapeFile": DEFAULT_SHAPE_FILE,
+        "colorRGB": list(colors.DEFAULT_COLOR_RGB),
+        "lineWidth": _LOD_DEFAULTS["lineWidth"],
+        "scale": 1.0,
+        "_hasColorOverride": False,
+    }
+    if controls:
+        control = controls[0]
+        try:
+            if cmds.attributeQuery(_SHAPE_FILE_ATTR, n=control, exists=True):
+                val = cmds.getAttr(control + "." + _SHAPE_FILE_ATTR)
+                if val:
+                    entry["shapeFile"] = Path(val).name
+        except Exception:
+            pass
+        shape = _first_curve_shape(control)
+        if shape:
+            try:
+                entry["lineWidth"] = cmds.getAttr(shape + ".lineWidth")
+                if entry["lineWidth"] is None or entry["lineWidth"] <= 0:
+                    entry["lineWidth"] = _LOD_DEFAULTS["lineWidth"]
+            except Exception:
+                pass
+            try:
+                if cmds.getAttr(shape + ".overrideEnabled"):
+                    if cmds.getAttr(shape + ".overrideRGBColors"):
+                        r, g, b = cmds.getAttr(shape + ".overrideColorRGB")[0]
+                        entry["colorRGB"] = [float(r), float(g), float(b)]
+                        entry["_hasColorOverride"] = True
+                    else:
+                        idx = int(cmds.getAttr(shape + ".overrideColor"))
+                        if 0 <= idx < len(colors.MAYA_INDEX_COLOR_RGB):
+                            r, g, b = colors.MAYA_INDEX_COLOR_RGB[idx]
+                            entry["colorRGB"] = [float(r), float(g), float(b)]
+                            entry["_hasColorOverride"] = True
+            except Exception:
+                pass
+    module_grp = f"{module_namespace}:module_grp"
+    lod_attr = f"{module_grp}.iconScale_LOD{int(lod)}"
+    try:
+        if cmds.attributeQuery(f"iconScale_LOD{int(lod)}", n=module_grp, exists=True):
+            entry["scale"] = cmds.getAttr(lod_attr)
+    except Exception:
+        pass
+    return entry
+
+
+def apply_lod_preferences(module_namespace, lod, entry):
+    """
+    Apply preferences to controls that belong to the specified LOD.
+    This implementation targets appearance-only attributes on nurbsCurve shapes
+    and per-LOD icon scaling, without persisting to module_grp.lodSettings.
+    """
+    ns = module_namespace
+    target_lod = int(lod)
+    entry = dict(entry or {})
+    module_grp = f"{ns}:module_grp"
+
+    # Scale: update the per-LOD attr and ensure driver exists.
+    if "scale" in entry:
+        scale_attr = ensure_lod_icon_scale_attr(module_grp, target_lod)
+        try:
+            cmds.setAttr(scale_attr, float(entry["scale"]))
+        except Exception:
+            pass
+        ensure_lod_icon_scale_driver(module_grp, target_lod)
+
+    controls = get_controls_for_lod(ns, target_lod)
+    for control_name in controls:
+        # Ensure the icon scale cluster is wired to the correct driver for this LOD.
+        _ensure_icon_scale_cluster(control_name, ns, target_lod)
 
         shapes = cmds.listRelatives(control_name, shapes=True, fullPath=True) or []
 
-        # If a different shape is specified, rebuild the control shapes.
+        # If a different shape is specified, rebuild the control shapes only when the change was explicit.
         shape_file = entry.get("shapeFile")
+        shape_change_requested = bool(entry.get("_shapeExplicit", False))
         current_shape_file = None
         try:
             if cmds.attributeQuery(_SHAPE_FILE_ATTR, n=control_name, exists=True):
@@ -292,42 +462,40 @@ def apply_lod_preferences(module_namespace, lod, entry):
             current_shape_file = None
 
         requested_shape_file = Path(shape_file).name if shape_file else None
-        if shape_file and (not current_shape_file or requested_shape_file != current_shape_file):
+        if shape_change_requested and shape_file and (not current_shape_file or requested_shape_file != current_shape_file):
             try:
-                # Remove existing non-intermediate nurbsCurve shapes.
-                keep_intermediates = []
                 for shape in shapes:
-                    if cmds.getAttr(shape + ".intermediateObject"):
-                        keep_intermediates.append(shape)
-                    elif cmds.nodeType(shape) == "nurbsCurve":
+                    try:
+                        if cmds.getAttr(shape + ".intermediateObject"):
+                            continue
+                    except Exception:
+                        pass
+                    if cmds.nodeType(shape) == "nurbsCurve":
                         cmds.delete(shape)
-                # Create new shapes under the control transform.
                 resolved = shape_file
                 if not Path(shape_file).is_absolute():
                     resolved = _control_objects_dir() / shape_file
                 _create_shapes_from_file(resolved, control_name)
                 _set_shapefile_attr(control_name, Path(shape_file).name)
-                # Keep persisted settings in sync with the applied shape.
-                module_grp = f"{ns}:module_grp"
-                settings = get_lod_settings(module_grp)
-                key = str(target_lod)
-                settings.setdefault(key, entry)
-                settings[key]["shapeFile"] = Path(shape_file).name
-                save_lod_settings(module_grp, settings)
+                shapes = cmds.listRelatives(control_name, shapes=True, fullPath=True) or []
             except Exception as e:
                 print(f"[controlObject] Failed to apply shape '{shape_file}' to {control_name}: {e}")
 
-        # Apply display tweaks to each nurbsCurve shape (after potential rebuild).
-        shapes = cmds.listRelatives(control_name, shapes=True, fullPath=True) or []
         rgb = entry.get("colorRGB", None)
+        apply_color = entry.get("_hasColorOverride", False)
+        line_width = entry.get("lineWidth", None)
+        if line_width is None or line_width <= 0:
+            line_width = _LOD_DEFAULTS["lineWidth"]
+
         for shape in shapes:
             if cmds.nodeType(shape) != "nurbsCurve":
                 continue
             try:
-                cmds.setAttr(shape + ".lineWidth", float(entry.get("lineWidth", _LOD_DEFAULTS["lineWidth"])))
+                if line_width is not None:
+                    cmds.setAttr(shape + ".lineWidth", float(line_width))
             except Exception:
                 pass
-            if rgb is not None:
+            if apply_color and rgb is not None:
                 try:
                     r, g, b = rgb
                     cmds.setAttr(shape + ".overrideEnabled", 1)
@@ -419,6 +587,7 @@ class ControlObject:
         self.translation = translation
         self.rotation = rotation
         self.globalScale = globalScale
+        self.lod = lod
 
         animationModuleName = animationModuleInstance.moduleNamespace
         blueprintModuleNamespace = animationModuleInstance.blueprintNamespace
@@ -434,26 +603,23 @@ class ControlObject:
         # Persist the initial shape choice onto the control and the module's LOD settings for UI discovery.
         shape_file_name = Path(controlFile).name
         _set_shapefile_attr(self.controlObject, shape_file_name)
-        module_grp = animationModuleNamespace + ":module_grp"
-        settings = get_lod_settings(module_grp)
-        key = str(int(lod))
-        entry = settings.get(key, {})
-        if not entry.get("shapeFile") or entry.get("shapeFile") == DEFAULT_SHAPE_FILE:
-            entry["shapeFile"] = shape_file_name
-            settings[key] = entry
-            save_lod_settings(module_grp, settings)
 
-        self.setupIconScale(animationModuleNamespace)
+        self.setupIconScale(animationModuleNamespace, lod)
+        module_grp = animationModuleNamespace + ":module_grp"
+        lod_scale_attr = ensure_lod_icon_scale_attr(module_grp, lod)
+        try:
+            blueprintName = utils.stripLeadingNamespace(blueprintModuleNamespace)[1].partition("__")[2]
+            publishedName = f"{blueprintName}_{animationModuleName}_Icon_Scale_LOD{int(lod)}"
+            existing = cmds.container(animationModuleInstance.moduleContainer, q=True, publishName=True) or []
+            if publishedName not in existing:
+                animationModuleInstance.publishNameToModuleContainer(lod_scale_attr, f"Icon_Scale_LOD{int(lod)}", publishToOuterContainers=True)
+        except Exception:
+            animationModuleInstance.publishNameToModuleContainer(lod_scale_attr, f"Icon_Scale_LOD{int(lod)}", publishToOuterContainers=True)
 
         # Curve color is now driven by per-LOD settings (lodSettings.colorRGB) and/or an optional
         # create-time colorIndex. We avoid forcing transform-level overrides so that controls can
         # use Maya defaults when no override is specified.
-        module_grp = animationModuleNamespace + ":module_grp"
-        settings = get_lod_settings(module_grp)
-        key = str(int(lod))
-        entry = dict(settings.get(key, {}))
-
-        rgb = entry.get("colorRGB", None)
+        rgb = None
         if colorIndex is not None:
             try:
                 idx = int(colorIndex)
@@ -461,9 +627,6 @@ class ControlObject:
                 idx = None
             if idx is not None and 1 <= idx <= len(colors.MAYA_INDEX_COLOR_RGB):
                 rgb = list(colors.MAYA_INDEX_COLOR_RGB[idx - 1])
-                entry["colorRGB"] = rgb
-                settings[key] = entry
-                save_lod_settings(module_grp, settings)
 
         if rgb is not None:
             # Apply directly to the created control shapes without rebuilding.
@@ -547,22 +710,9 @@ class ControlObject:
 
         return (self.controlObject, self.rootParent)
 
-    def setupIconScale(self, animationModuleNamespace):
-        clusterNodes = cmds.cluster(self.controlObject, n=self.controlObject + "_icon_scale_cluster", relative=True)
-        cmds.container(animationModuleNamespace + ":module_container", edit=True, addNode=clusterNodes, ihb=True, includeNetwork=True)
-
-        clusterHandle = clusterNodes[1]
-
-        cmds.setAttr(clusterHandle + ".scalePivotX", 0)
-        cmds.setAttr(clusterHandle + ".scalePivotY", 0)
-        cmds.setAttr(clusterHandle + ".scalePivotZ", 0)
-
-        cmds.connectAttr(animationModuleNamespace + ":module_grp.iconScale", clusterHandle + ".scaleX")
-        cmds.connectAttr(animationModuleNamespace + ":module_grp.iconScale", clusterHandle + ".scaleY")
-        cmds.connectAttr(animationModuleNamespace + ":module_grp.iconScale", clusterHandle + ".scaleZ")
-
-        cmds.parent(clusterHandle, self.controlObject, absolute=True)
-        cmds.setAttr(clusterHandle + ".visibility", 0)
+    def setupIconScale(self, animationModuleNamespace, lod=1):
+        lod_val = lod if lod is not None else getattr(self, "lod", 1)
+        _ensure_icon_scale_cluster(self.controlObject, animationModuleNamespace, lod_val)
 
     def setupMirroring(self, blueprintModuleNamespace, animationModuleNamespace, axisInverse):
         moduleGrp = blueprintModuleNamespace + ":module_grp"

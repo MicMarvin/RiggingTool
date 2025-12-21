@@ -1599,8 +1599,6 @@ class Animation_UI(QtWidgets.QDialog):
                 self._activeControlModuleNamespace = moduleNamespaceFull
                 moduleGrpPath = moduleNamespaceFull + ":module_grp"
                 lodLevels = controlObject.get_lod_levels(moduleGrpPath)
-                for lodVal in lodLevels:
-                    controlObject.ensure_lod_settings_entry(moduleGrpPath, lodVal)
 
                 # Control Level dropdown
                 levelLabel = QtWidgets.QLabel("Level:")
@@ -1668,17 +1666,24 @@ class Animation_UI(QtWidgets.QDialog):
                 scaleLabel = QtWidgets.QLabel("Scale:")
                 scaleLabel.setFixedWidth(labelWidth)
                 scaleSpin = ClickToScrollDoubleSpinBox()
-                scaleSpin.setRange(-10.0, 10.0)
-                scaleSpin.setDecimals(3)
-                scaleSpin.setSingleStep(0.05)
+                # Allow manual entry beyond slider range; show two decimals; nudge in 0.25 steps.
+                scaleSpin.setRange(-1000.0, 1000.0)
+                scaleSpin.setDecimals(2)
+                scaleSpin.setSingleStep(0.25)
                 scaleSlider = QtWidgets.QSlider(QtCore.Qt.Horizontal)
-                scaleSlider.setRange(-1000, 1000)  # maps to -10.0 .. 10.0
+                # Slider: 0.25–10.00 in 0.25 increments (map to ints by *100).
+                scaleSlider.setRange(25, 1000)
+                scaleSlider.setSingleStep(25)
+                scaleSlider.setTickInterval(25)
 
                 def _scale_from_spin(val, ns=moduleNamespaceFull):
                     if self._suppressControlPrefSignals:
                         return
+                    # Clamp slider to its range while allowing spin to hold custom values.
+                    slider_val = int(round(val * 100))
+                    slider_val = max(scaleSlider.minimum(), min(scaleSlider.maximum(), slider_val))
                     scaleSlider.blockSignals(True)
-                    scaleSlider.setValue(int(round(val * 100)))
+                    scaleSlider.setValue(slider_val)
                     scaleSlider.blockSignals(False)
                     self.on_control_pref_changed("scale", val, ns)
 
@@ -1757,66 +1762,8 @@ class Animation_UI(QtWidgets.QDialog):
 
     def _load_lod_entry(self, moduleNamespaceFull, lod):
         moduleGrp = moduleNamespaceFull + ":module_grp"
-        controlObject.ensure_lod_settings_entry(moduleGrp, lod)
-        settings = controlObject.get_lod_settings(moduleGrp)
-        key = str(int(lod))
-        entry = settings.get(key, {
-            "scale": 1.0,
-            "lineWidth": 1.0,
-            "shapeFile": DEFAULT_SHAPE_FILE,
-        })
-        entry = dict(entry)
-        # Drop deprecated preferences if they linger in saved data.
-        dirty = False
-        if "rotation" in entry:
-            entry.pop("rotation", None)
-            dirty = True
-        if "color" in entry:
-            entry.pop("color", None)
-            dirty = True
-        if dirty:
-            settings[key] = entry
-            controlObject.save_lod_settings(moduleGrp, settings)
-        return settings, entry, moduleGrp
-
-    def _discover_current_lod_color(self, moduleNamespaceFull, lod):
-        """
-        Best-effort discovery of the current curve color for a module+LOD by sampling the first control.
-        If no override is found, returns Maya's default curve color (index 5 deep blue).
-        """
-        ns = moduleNamespaceFull
-        target_lod = int(lod)
-        expr_nodes = cmds.ls(f"{ns}:*_visibility_expression", type="expression") or []
-        lod_re = re.compile(r"\\.lod\\s*>=\\s*([0-9]+)")
-        for expr in expr_nodes:
-            try:
-                expr_str = cmds.expression(expr, q=True, s=True) or ""
-            except Exception:
-                continue
-            match = lod_re.search(expr_str)
-            if not match or int(match.group(1)) != target_lod:
-                continue
-
-            control_name = expr.rpartition("_visibility_expression")[0]
-            if not cmds.objExists(control_name):
-                continue
-            shapes = cmds.listRelatives(control_name, shapes=True, fullPath=True) or []
-            for shape in shapes:
-                if cmds.nodeType(shape) != "nurbsCurve":
-                    continue
-                try:
-                    if not cmds.getAttr(shape + ".overrideEnabled"):
-                        continue
-                    if cmds.attributeQuery("overrideRGBColors", n=shape, exists=True) and cmds.getAttr(shape + ".overrideRGBColors"):
-                        r, g, b = cmds.getAttr(shape + ".overrideColorRGB")[0]
-                        return QtGui.QColor.fromRgbF(float(r), float(g), float(b))
-                    idx = int(cmds.getAttr(shape + ".overrideColor"))
-                    if 0 <= idx < len(colors.MAYA_INDEX_QCOLORS):
-                        return QtGui.QColor(colors.MAYA_INDEX_QCOLORS[idx])
-                except Exception:
-                    continue
-        # When no override is present, Maya draws curves using its internal defaults (typically index 5).
-        return QtGui.QColor(colors.MAYA_INDEX_QCOLORS[4])
+        entry = controlObject.get_lod_visual_state(moduleNamespaceFull, lod)
+        return entry, moduleGrp
 
     def _refresh_controls_preferences_ui(self, moduleNamespaceFull=None):
         if moduleNamespaceFull is None:
@@ -1826,7 +1773,7 @@ class Animation_UI(QtWidgets.QDialog):
         lod = self._current_control_level()
         if lod is None:
             return
-        settings, entry, _ = self._load_lod_entry(moduleNamespaceFull, lod)
+        entry, _ = self._load_lod_entry(moduleNamespaceFull, lod)
 
         self._suppressControlPrefSignals = True
         try:
@@ -1856,20 +1803,19 @@ class Animation_UI(QtWidgets.QDialog):
                 scaleSpin.blockSignals(False)
             if scaleSlider:
                 scaleSlider.blockSignals(True)
-                scaleSlider.setValue(int(round(entry.get("scale", 1.0) * 100)))
+                slider_val = int(round(entry.get("scale", 1.0) * 100))
+                slider_val = max(scaleSlider.minimum(), min(scaleSlider.maximum(), slider_val))
+                scaleSlider.setValue(slider_val)
                 scaleSlider.blockSignals(False)
 
             # Color
             colorWidget = self.UIElements.get("controlColor")
             if colorWidget:
-                if "colorRGB" in entry:
-                    try:
-                        r, g, b = entry.get("colorRGB", None)
-                        color = QtGui.QColor.fromRgbF(float(r), float(g), float(b))
-                    except Exception:
-                        color = QtGui.QColor(DEFAULT_CONTROL_COLOR)
-                else:
-                    color = self._discover_current_lod_color(moduleNamespaceFull, lod)
+                try:
+                    r, g, b = entry.get("colorRGB", colors.DEFAULT_COLOR_RGB)
+                    color = QtGui.QColor.fromRgbF(float(r), float(g), float(b))
+                except Exception:
+                    color = QtGui.QColor(DEFAULT_CONTROL_COLOR)
                 colorWidget.setColor(color, emit=False)
 
             # Line width
@@ -1877,6 +1823,8 @@ class Animation_UI(QtWidgets.QDialog):
             if lineWidthSlider:
                 lineWidthSlider.blockSignals(True)
                 raw_val = entry.get("lineWidth", 1.0)
+                if raw_val is None or raw_val <= 0:
+                    raw_val = 1.0
                 sliderVal = int(round(raw_val))
                 sliderVal = max(lineWidthSlider.minimum(), min(lineWidthSlider.maximum(), sliderVal))
                 lineWidthSlider.setValue(sliderVal)
@@ -1891,12 +1839,8 @@ class Animation_UI(QtWidgets.QDialog):
             self._activeControlModuleNamespace = moduleNamespaceFull
         self._refresh_controls_preferences_ui(moduleNamespaceFull)
 
-    def _persist_lod_entry(self, moduleNamespaceFull, lod, entry, settings=None, moduleGrp=None):
-        if settings is None or moduleGrp is None:
-            settings, entry, moduleGrp = self._load_lod_entry(moduleNamespaceFull, lod)
-        settings[str(int(lod))] = entry
-        controlObject.save_lod_settings(moduleGrp, settings)
-        print(f"[animation_UI] persist lod ns={moduleNamespaceFull} lod={lod} keyvals={entry}")
+    def _persist_lod_entry(self, moduleNamespaceFull, lod, entry):
+        print(f"[animation_UI] apply lod ns={moduleNamespaceFull} lod={lod} keyvals={entry}")
         controlObject.apply_lod_preferences(moduleNamespaceFull, int(lod), entry)
 
     def on_control_pref_changed(self, key, value, moduleNamespaceFull=None):
@@ -1908,17 +1852,18 @@ class Animation_UI(QtWidgets.QDialog):
         lod = self._current_control_level()
         if lod is None:
             return
-        settings, entry, moduleGrp = self._load_lod_entry(ns, lod)
-        entry = dict(entry)  # copy
+        entry, _ = self._load_lod_entry(ns, lod)
+        entry = dict(entry)  # copy so we can modify
         if key == "colorRGB":
             if isinstance(value, QtGui.QColor):
                 entry[key] = [value.redF(), value.greenF(), value.blueF()]
             else:
                 entry[key] = [float(value[0]), float(value[1]), float(value[2])]
+            entry["_hasColorOverride"] = True
         else:
             entry[key] = float(value) if key in ("scale", "lineWidth") else int(value)
         print(f"[animation_UI] change key={key} val={value} ns={ns} lod={lod}")
-        self._persist_lod_entry(ns, lod, entry, settings=settings, moduleGrp=moduleGrp)
+        self._persist_lod_entry(ns, lod, entry)
 
     def on_control_color_changed(self, color, moduleNamespaceFull=None):
         if self._suppressControlPrefSignals:
@@ -1939,10 +1884,11 @@ class Animation_UI(QtWidgets.QDialog):
         lod = self._current_control_level()
         if lod is None:
             return
-        settings, entry, moduleGrp = self._load_lod_entry(moduleNamespaceFull, lod)
+        entry, _ = self._load_lod_entry(moduleNamespaceFull, lod)
         entry = dict(entry)
         entry["shapeFile"] = shapeName
-        self._persist_lod_entry(moduleNamespaceFull, lod, entry, settings=settings, moduleGrp=moduleGrp)
+        entry["_shapeExplicit"] = True
+        self._persist_lod_entry(moduleNamespaceFull, lod, entry)
         self._refresh_controls_preferences_ui(moduleNamespaceFull)
 
     def iconColour_callback(self, currentlySelectedModuleNamespace, value):

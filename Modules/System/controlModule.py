@@ -69,6 +69,8 @@ class ControlModule():
 
         cmds.select(moduleGrp)
         cmds.addAttr(at="float", ln="iconScale", min=0.001, softMaxValue=10.0, defaultValue=1, k=True)
+        if not cmds.attributeQuery("iconScale_LOD1", n=moduleGrp, exists=True):
+            cmds.addAttr(at="float", ln="iconScale_LOD1", min=0.001, softMaxValue=10.0, defaultValue=1, k=True)
         cmds.setAttr(moduleGrp + ".overrideEnabled", 1)
         #cmds.setAttr(moduleGrp + ".overrideColor", 6)
 
@@ -94,6 +96,7 @@ class ControlModule():
 
         self.publishNameToModuleContainer(moduleGrp + ".lod", "Control_LOD")
         self.publishNameToModuleContainer(moduleGrp + ".iconScale", "Icon_Scale")
+        self.publishNameToModuleContainer(moduleGrp + ".iconScale_LOD1", "Icon_Scale_LOD1")
         self.publishNameToModuleContainer(moduleGrp + ".overrideColor", "Icon_Colour")
         self.publishNameToModuleContainer(moduleGrp + ".visibility", "Vis", publishToOuterContainers=False)
 
