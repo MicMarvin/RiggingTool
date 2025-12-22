@@ -212,26 +212,19 @@ def _ensure_neutral_cvs(shape_node, scale_hint=1.0, current_cvs=None):
 
 
 def _combined_icon_scale(module_namespace, lod):
-    """Compute iconScale * iconScale_LOD# for the given module namespace."""
+    """Return the per-LOD icon scale (iconScale_LOD#)."""
     module_grp = f"{module_namespace}:module_grp"
-    base_scale = 1.0
-    lod_scale = 1.0
-    if cmds.objExists(module_grp):
-        try:
-            if cmds.attributeQuery("iconScale", n=module_grp, exists=True):
-                val = cmds.getAttr(module_grp + ".iconScale")
-                if val is not None:
-                    base_scale = float(val)
-        except Exception:
-            pass
-        try:
-            lod_attr = ensure_lod_icon_scale_attr(module_grp, lod)
-            lod_val = cmds.getAttr(lod_attr)
-            if lod_val is not None:
-                lod_scale = float(lod_val)
-        except Exception:
-            pass
-    return base_scale * lod_scale
+    if not cmds.objExists(module_grp):
+        return 1.0
+
+    lod_attr = ensure_lod_icon_scale_attr(module_grp, lod)
+    try:
+        val = cmds.getAttr(lod_attr)
+        if val is not None:
+            return max(0.001, float(val))
+    except Exception:
+        pass
+    return 1.0
 
 
 def _set_shape_cvs(shape_node, cvs):
@@ -245,7 +238,7 @@ def _set_shape_cvs(shape_node, cvs):
 
 def _apply_icon_scale_to_control(control_name, module_namespace, lod):
     """
-    Scale control CVs directly based on iconScale * iconScale_LOD#.
+    Scale control CVs directly based on the per-LOD icon scale.
     Neutral CVs are cached so repeated scaling does not drift.
     """
     scale_factor = _combined_icon_scale(module_namespace, lod)
@@ -457,11 +450,8 @@ def get_lod_visual_state(module_namespace, lod):
                             entry["_hasColorOverride"] = True
             except Exception:
                 pass
-    module_grp = f"{module_namespace}:module_grp"
-    lod_attr = f"{module_grp}.iconScale_LOD{int(lod)}"
     try:
-        if cmds.attributeQuery(f"iconScale_LOD{int(lod)}", n=module_grp, exists=True):
-            entry["scale"] = cmds.getAttr(lod_attr)
+        entry["scale"] = _combined_icon_scale(module_namespace, lod)
     except Exception:
         pass
     return entry
