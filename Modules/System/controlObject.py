@@ -24,6 +24,7 @@ _LOD_DEFAULTS = {
 }
 
 _SHAPE_FILE_ATTR = "shapeFile"
+_NEUTRAL_CVS_ATTR = "iconNeutralCvs"
 
 
 def _control_objects_dir():
@@ -118,19 +119,20 @@ def _set_shapefile_attr(control_transform, shape_file_name):
         print(f"[controlObject] Failed to record shape file on {control_transform}: {e}")
 
 
-def _find_icon_scale_cluster_handle(control_name):
-    """Locate the icon scale cluster handle parented under the control, if present."""
-    handle_name = control_name + "_icon_scale_clusterHandle"
-    if cmds.objExists(handle_name):
-        return handle_name
-    children = cmds.listRelatives(control_name, children=True, fullPath=True) or []
-    for child in children:
-        if cmds.nodeType(child) == "clusterHandle":
-            clusters = cmds.listConnections(child, type="cluster") or []
-            for cluster in clusters:
-                if "_icon_scale_cluster" in cluster:
-                    return child
-    return None
+def _curve_shapes(control_name):
+    """Return nurbsCurve shapes parented under control_name (excluding intermediates)."""
+    shapes = cmds.listRelatives(control_name, shapes=True, fullPath=True) or []
+    result = []
+    for shape in shapes:
+        if cmds.nodeType(shape) != "nurbsCurve":
+            continue
+        try:
+            if cmds.getAttr(shape + ".intermediateObject"):
+                continue
+        except Exception:
+            pass
+        result.append(shape)
+    return result
 
 
 def ensure_lod_icon_scale_attr(module_grp, lod):
@@ -144,78 +146,119 @@ def ensure_lod_icon_scale_attr(module_grp, lod):
     return attr
 
 
-def ensure_lod_icon_scale_driver(module_grp, lod):
-    """
-    Ensure the multiplyDivide node driving per-LOD scale exists and is wired:
-    output = iconScale * iconScale_LOD#.
-    Returns the multiplyDivide node name.
-    """
-    lod = int(lod)
-    attr = ensure_lod_icon_scale_attr(module_grp, lod)
-    md_name = f"{module_grp}_iconScale_LOD{lod}_md"
-    md_node = md_name if cmds.objExists(md_name) else cmds.shadingNode("multiplyDivide", asUtility=True, n=md_name)
+def _get_current_cvs(shape_node):
+    """Return the current CV positions for a nurbsCurve shape."""
     try:
-        cmds.setAttr(md_node + ".operation", 1)  # Multiply
+        raw = cmds.getAttr(shape_node + ".cv[*]")
+    except Exception:
+        return []
+    cvs = []
+    for cv in raw or []:
+        if isinstance(cv, (list, tuple)) and len(cv) >= 3:
+            cvs.append((float(cv[0]), float(cv[1]), float(cv[2])))
+    return cvs
+
+
+def _read_neutral_cvs(shape_node):
+    """Load cached neutral CVs if present and valid."""
+    if not cmds.attributeQuery(_NEUTRAL_CVS_ATTR, n=shape_node, exists=True):
+        return None
+    try:
+        raw = cmds.getAttr(f"{shape_node}.{_NEUTRAL_CVS_ATTR}") or ""
+        data = json.loads(raw)
+    except Exception:
+        return None
+    cvs = []
+    if isinstance(data, list):
+        for cv in data:
+            if isinstance(cv, (list, tuple)) and len(cv) >= 3:
+                cvs.append((float(cv[0]), float(cv[1]), float(cv[2])))
+    return cvs or None
+
+
+def _store_neutral_cvs(shape_node, cvs):
+    """Persist neutral CVs onto the shape for drift-free scaling."""
+    if not cvs:
+        return
+    try:
+        if not cmds.attributeQuery(_NEUTRAL_CVS_ATTR, n=shape_node, exists=True):
+            cmds.addAttr(shape_node, ln=_NEUTRAL_CVS_ATTR, dataType="string")
+        cmds.setAttr(f"{shape_node}.{_NEUTRAL_CVS_ATTR}", json.dumps(cvs), type="string")
     except Exception:
         pass
 
-    def _connect(source, target):
-        existing = cmds.listConnections(target, s=True, d=False, plugs=True) or []
-        if source in existing:
-            return
-        try:
-            cmds.connectAttr(source, target, force=True)
-        except Exception:
-            pass
 
-    base_attr = module_grp + ".iconScale"
-    for axis in ("X", "Y", "Z"):
-        in1 = md_node + f".input1{axis}"
-        in2 = md_node + f".input2{axis}"
-        out = md_node + f".output{axis}"
-        _connect(base_attr, in1)
-        _connect(attr, in2)
-    return md_node
-
-
-def _ensure_icon_scale_cluster(control_name, module_namespace, lod):
+def _ensure_neutral_cvs(shape_node, scale_hint=1.0, current_cvs=None):
     """
-    Guarantee a cluster exists for icon scaling and is connected to the per-LOD driver.
-    Returns the cluster handle transform.
+    Ensure we have a cached neutral CV list. If none exists or the count is stale,
+    derive it from the current positions (optionally normalized by scale_hint).
     """
-    handle = _find_icon_scale_cluster_handle(control_name)
+    cached = _read_neutral_cvs(shape_node)
+    source_cvs = list(current_cvs) if current_cvs is not None else _get_current_cvs(shape_node)
+    source_count = len(source_cvs)
+    if cached and (not source_count or len(cached) == source_count):
+        return cached
+    if not source_cvs:
+        return []
+    try:
+        safe_scale = float(scale_hint)
+    except Exception:
+        safe_scale = 1.0
+    if abs(safe_scale) < 1e-8:
+        safe_scale = 1.0
+    neutral = [(cv[0] / safe_scale, cv[1] / safe_scale, cv[2] / safe_scale) for cv in source_cvs]
+    _store_neutral_cvs(shape_node, neutral)
+    return neutral
+
+
+def _combined_icon_scale(module_namespace, lod):
+    """Compute iconScale * iconScale_LOD# for the given module namespace."""
     module_grp = f"{module_namespace}:module_grp"
-    driver = ensure_lod_icon_scale_driver(module_grp, lod)
-    if handle is None:
-        cluster_nodes = cmds.cluster(control_name, n=control_name + "_icon_scale_cluster", relative=True)
-        cmds.container(module_namespace + ":module_container", edit=True, addNode=cluster_nodes, ihb=True, includeNetwork=True)
-        handle = cluster_nodes[1]
+    base_scale = 1.0
+    lod_scale = 1.0
+    if cmds.objExists(module_grp):
         try:
-            cmds.setAttr(handle + ".scalePivotX", 0)
-            cmds.setAttr(handle + ".scalePivotY", 0)
-            cmds.setAttr(handle + ".scalePivotZ", 0)
+            if cmds.attributeQuery("iconScale", n=module_grp, exists=True):
+                val = cmds.getAttr(module_grp + ".iconScale")
+                if val is not None:
+                    base_scale = float(val)
         except Exception:
             pass
-        cmds.parent(handle, control_name, absolute=True)
         try:
-            cmds.setAttr(handle + ".visibility", 0)
+            lod_attr = ensure_lod_icon_scale_attr(module_grp, lod)
+            lod_val = cmds.getAttr(lod_attr)
+            if lod_val is not None:
+                lod_scale = float(lod_val)
         except Exception:
             pass
-    # Wire to per-LOD driver outputs.
-    def _connect(source, target):
-        existing = cmds.listConnections(target, s=True, d=False, plugs=True) or []
-        if source in existing:
-            return
+    return base_scale * lod_scale
+
+
+def _set_shape_cvs(shape_node, cvs):
+    """Apply CV positions to a nurbsCurve shape in object space."""
+    for idx, (x, y, z) in enumerate(cvs):
         try:
-            cmds.connectAttr(source, target, force=True)
+            cmds.xform(f"{shape_node}.cv[{idx}]", objectSpace=True, translation=(x, y, z))
         except Exception:
             pass
 
-    for axis in ("X", "Y", "Z"):
-        target = handle + f".scale{axis}"
-        source = driver + f".output{axis}"
-        _connect(source, target)
-    return handle
+
+def _apply_icon_scale_to_control(control_name, module_namespace, lod):
+    """
+    Scale control CVs directly based on iconScale * iconScale_LOD#.
+    Neutral CVs are cached so repeated scaling does not drift.
+    """
+    scale_factor = _combined_icon_scale(module_namespace, lod)
+    shapes = _curve_shapes(control_name)
+    if not shapes:
+        return
+    current_cvs = {shape: _get_current_cvs(shape) for shape in shapes}
+    for shape in shapes:
+        neutral = _ensure_neutral_cvs(shape, scale_hint=scale_factor, current_cvs=current_cvs.get(shape))
+        if not neutral:
+            continue
+        scaled = [(cv[0] * scale_factor, cv[1] * scale_factor, cv[2] * scale_factor) for cv in neutral]
+        _set_shape_cvs(shape, scaled)
 
 
 def get_lod_levels(module_grp):
@@ -442,14 +485,10 @@ def apply_lod_preferences(module_namespace, lod, entry):
             cmds.setAttr(scale_attr, float(entry["scale"]))
         except Exception:
             pass
-        ensure_lod_icon_scale_driver(module_grp, target_lod)
 
     controls = get_controls_for_lod(ns, target_lod)
     for control_name in controls:
-        # Ensure the icon scale cluster is wired to the correct driver for this LOD.
-        _ensure_icon_scale_cluster(control_name, ns, target_lod)
-
-        shapes = cmds.listRelatives(control_name, shapes=True, fullPath=True) or []
+        shapes = _curve_shapes(control_name)
 
         # If a different shape is specified, rebuild the control shapes only when the change was explicit.
         shape_file = entry.get("shapeFile")
@@ -503,6 +542,7 @@ def apply_lod_preferences(module_namespace, lod, entry):
                     cmds.setAttr(shape + ".overrideColorRGB", float(r), float(g), float(b), type="double3")
                 except Exception:
                     pass
+        _apply_icon_scale_to_control(control_name, ns, target_lod)
 
 
 class ControlObject:
@@ -712,7 +752,9 @@ class ControlObject:
 
     def setupIconScale(self, animationModuleNamespace, lod=1):
         lod_val = lod if lod is not None else getattr(self, "lod", 1)
-        _ensure_icon_scale_cluster(self.controlObject, animationModuleNamespace, lod_val)
+        module_grp = f"{animationModuleNamespace}:module_grp"
+        ensure_lod_icon_scale_attr(module_grp, lod_val)
+        _apply_icon_scale_to_control(self.controlObject, animationModuleNamespace, lod_val)
 
     def setupMirroring(self, blueprintModuleNamespace, animationModuleNamespace, axisInverse):
         moduleGrp = blueprintModuleNamespace + ":module_grp"
